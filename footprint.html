@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+    <meta content="width=device-width,initial-scale=1.0, user-scalable=0" name="viewport"/>
+    <meta name="x5-orientation" content="portrait">
+    <meta content="yes" name="apple-mobile-web-app-capable"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta content="black" name="apple-mobile-web-app-status-bar-style"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <link rel="stylesheet" type="text/css" href="css/reset.css" media="screen"/>
+    <link rel="stylesheet" type="text/css" href="css/common.css" media="screen"/>
+    <link rel="stylesheet" type="text/css" href="css/person.css" media="screen"/>
+    <title>我的足迹</title>
+</head>
+<body onload="load()">
+<!--头部开始-->
+<header class="head-container common-head">
+	<a href="javascript:history.back();" class="back-button"></a>
+	<h4>我的足迹</h4>
+</header>
+<!--头部结束-->
+
+<!--底部开始,可以操作加active-->
+<footer class="footer-container item-footer active">
+	<a href="javascript:;" class="item-footer-cart"><em><i class="badge">5</i></em></a>
+	<div class="item-footer-price">
+		<em>0.00</em>
+		<p>配送费<span>0</span>元</p>
+	</div>
+	<a href="javascript:void(0);" class="item-buy-button">去结算</a>
+</footer>
+<!--底部结束-->
+
+<!--购物车弹出层开始-->
+<div class="cart-popover-content">
+	<div class="cart-popover-title">
+		<h4>购物车</h4>
+		<a href="javascript:;">清空</a>
+	</div>
+	<div class="scroll-wrapper cart-popover-wrapper">
+		<ul class="scroll-container">
+			<!--<li>
+				<h5 class="text-ellipsis-2">鸡蛋卷</h5>
+				<p class="item-price">5.00</p>
+				<div class="number-handle-container">
+					<em class="reduce-button"></em>
+					<input type="tel" readonly="readonly" value="4" />
+					<em class="plus-button"></em>
+				</div>
+			</li>-->
+		</ul>
+	</div>
+</div>
+<div class="over-bg"></div>
+<!--购物车弹出层结束-->
+
+<section id="scroll-wrapper">
+	<div id="scroll-container">
+		<div class="slide-list-container collect-list-container">			
+			<!--<div class="slide-list-wrapper">
+				<a class="slide-info-container" href="">
+					<div class="production-image">
+						<img data-src="image/indexBanner.jpg" class="img-responsive wait-load" alt="" />
+					</div>
+					<div class="production-info">
+						<h4 class="text-ellipsis-2"></h4>
+						<p class="production-price">25.8</p>
+						&lt;!&ndash;加入购物车按钮&ndash;&gt;
+						<em class="search-buy-icon"></em>
+					</div>
+				</a>
+				&lt;!&ndash;删除按钮&ndash;&gt;
+				<button class="slide-delete-button">删除</button>
+			</div>-->
+
+		</div>
+	</div>
+</section>
+
+</body>
+</html>
+<script type="text/javascript" src="js/zepto.min.js"></script>
+<script type="text/javascript" src="js/size.js"></script>
+<script type="text/javascript" src="js/common.js"></script>
+<script type="text/javascript" src="js/md5.js"></script>
+<script type="text/javascript" src="js/secret.js"></script>
+<script type="text/javascript" src="js/TouchScroll.js"></script>
+<script type="text/javascript" src="js/lazyLoad.js"></script>
+<script type="text/javascript" src="js/common.js"></script>
+<script type="text/javascript" src="js/slideDelete.js"></script>
+<script type="text/javascript">
+	var page = 1,pullUp = true;
+	function load() {
+		var Myscroll = new IScroll('#scroll-wrapper', {
+            touchend:true,
+            preventDefault: false,
+            preventDefaultException: { tagName: /^(INPUT|BUTTON|A|SPAN)$/ },
+            bindToWrapper: true,
+            scrollbars: true,
+            fadeScrollbars: true,
+            shrinkScrollbars: 'scale'
+	    });
+
+		//请求获取当前用户的收藏数据
+		if(getCookieVal('username') != null){
+			getCollInfo(page);
+		}else{
+			setStorage('urlReference',window.location.href);
+			window.location.href = 'register.html';
+			return false;
+		}
+
+		if(document.readyState == 'complete'){
+		  setTimeout(function(){checkShow($(".collect-list-container"));Myscroll.refresh();},400);
+		}
+
+
+	    Myscroll.on('scrollEnd', function () {	
+			//上拉加载更多收藏数据
+			if (pullUp) {
+				//页面上拉加载
+				var curScrollDirection = Myscroll.directionY, maxScroll = Myscroll.maxScrollY + 80, y = Myscroll.y;
+				if (y <= maxScroll && curScrollDirection == 1) {
+					pullUp = true;
+					//开始请求后台数据
+					getCollInfo(page++);
+				} else {
+					pullUp = false;
+				}
+			}
+			checkShow($(".collect-list-container"));//懒加载
+			Myscroll.refresh();
+	    });
+   	}
+
+
+	function getCollInfo(pg){
+		var method = 'GetMyCollection',
+				param = {
+					shopid: "3",
+					device: "3",
+					u_id: getCookieVal('userid'),
+					coll_type:2,
+					pageIndex:pg
+				};
+
+		sign = md5(JSON.stringify(param) + method + reqtime + API_KEY);
+		$.ajax({
+			url: "../API/WebApi.ashx",
+			async: true,
+			type: "post",
+			dataType: 'json',
+			data: {
+				param: JSON.stringify(param),
+				method: method,
+				reqtime: reqtime,
+				sign: getSecret(param, method, reqtime)
+			},
+			success: function (collData) {
+				console.log(collData);
+				var str = '';
+				$(collData.data).each(function(i,t){
+					str+='<div data-id = '+ t.f_id+' class="slide-list-wrapper">'+
+							'<label>'+
+							'<input type="checkbox" value="'+ t.f_id+'" name="collect" />'+
+							'</label>'+
+							'<a class="slide-info-container" href="detail.html?p_id='+ t.p_id +'>'+
+							'<div class="production-image">'+
+							'<img data-src="'+ t.l_pic+'" class="img-responsive wait-load" alt="" /></div>'+
+							'<div class="production-info">'+
+							'<h4 class="text-ellipsis-2">'+ t.l_name+'</h4><p class="production-price">'+ t.l_danjia+'</p><em class="search-buy-icon"></em>'+
+							'</div></a><button data-id='+ t.f_id+' class="slide-delete-button">删除</button></div>';
+
+				});
+				//$('.collect-list-container').append(str);
+				slideDelete();
+			},
+			error: function (XMLHttpRequest, textStatus, errorThrown) {
+
+			}
+		});
+
+	}
+
+	cartPopover()//购物车弹出层
+	numberHandle();//数量加减
+</script>

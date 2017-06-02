@@ -1,0 +1,191 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+    <meta content="width=device-width,initial-scale=1.0, user-scalable=0" name="viewport"/>
+    <meta name="x5-orientation" content="portrait">
+    <meta content="yes" name="apple-mobile-web-app-capable"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta content="black" name="apple-mobile-web-app-status-bar-style"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <link rel="stylesheet" type="text/css" href="css/reset.css" media="screen"/>
+    <link rel="stylesheet" type="text/css" href="css/common.css" media="screen"/>
+    <link rel="stylesheet" type="text/css" href="css/item.css" media="screen"/>
+    <title>产品列表</title>
+    <style>
+    	html{ background-color: #fff;}
+    </style>
+</head>
+<body>
+<!--头部开始-->
+<header class="head-container common-head">
+	<a href="index.html" class="back-button"></a>
+	<h4>商品列表</h4>
+	<a href="index.html" class="home-button"></a>
+</header>
+<!--头部结束-->
+
+<section class="positionRelative">
+	<!--切换导航开始-->
+	<div class="item-tab-container">
+		<a href="javascript:;" class="active">选购</a>
+		<a href="javascript:;">店铺详情</a>
+		<b class="item-tab-border"></b>
+	</div>
+	<!--切换导航结束-->
+	<div class="item-section-container">
+		<!--选购开始-->
+		<div class="item-section-content item-choose-content">
+			<div class="search-padding-container">
+				<div class="search-container">
+					<span>搜索你喜欢的商品</span>
+				</div>
+			</div>
+			<!--选购列表开始-->
+			<div class="item-box">
+				<!--左侧菜单开始-->
+				<div class="item-box-nav">
+					<div class="item-nav scroll-wrapper">
+                        <ul class="scroll-container" id="typeList"></ul>
+					</div>
+				</div>
+				<!--左侧菜单结束-->
+				
+				<!--右侧列表开始--><!--plus-button使用飞入动画加fly-add-->
+				<div class="item-box-content">
+					<div class="item-content scroll-wrapper">
+						<div class="scroll-container" id="typeListContentPanel">							
+							<!--<div class="item-box-0">
+								<ul>
+                                 
+								</ul>
+							</div>-->
+							
+						</div>
+					</div>
+				</div>
+				<!--右侧列表结束-->
+			</div>
+			<!--选购列表结束-->
+			<!--底部开始,可以操作加active-->
+			<footer class="footer-container item-footer ">
+				<a href="javascript:;" class="item-footer-cart"><em><i class="badge">5</i></em></a>
+				<div class="item-footer-price">
+					<em id="allPrice">0.00</em>
+					<p>配送费<span>0</span>元</p>
+				</div>
+				<a href='javascript:void(0);' class="item-buy-button get-btn">去结算</a>
+			</footer>
+			<!--底部结束-->
+			
+			<!--购物车弹出层开始-->
+			<div class="cart-popover-content">
+				<div class="cart-popover-title">
+					<h4>购物车</h4>
+					<a href="javascript:void(0);" class="clearBtn">清空购物车</a>
+				</div>
+				<div class="scroll-wrapper cart-popover-wrapper">
+					<ul class="scroll-container" id="cart">
+
+					</ul>
+				</div>
+			</div>
+			<div class="over-bg"></div>
+			<!--购物车弹出层结束-->
+		</div>
+		<!--选购结束-->
+		
+		<!--店铺详情开始-->
+		<div class="item-section-content" style="display: none">
+			<!--轮播图开始-->
+			<div class="swiper-container">
+				<div class="swiper-wrapper" id="shopImg">
+					<!--<div class="swiper-slide">
+						<img class="img-responsive" src="image/indexBanner.jpg" alt="" />
+					</div>-->
+
+				</div>
+				<div class="swiper-pagination"></div>
+			</div>
+			<!--轮播图结束-->
+			
+			<div class="shop-info-container">
+				<h4 id="shopName"></h4>
+				<div class="shop-info">
+					。
+				</div>
+			</div>
+		</div>
+		<!--店铺详情结束-->
+	</div>
+	
+</section>
+
+<!--搜索页面开始-->
+<aside class="search-panel">
+	<!--搜索框-->
+	<form action=""role="form" method="post">
+		<div class="search-box">
+			<a href="javascript:void(0);" class="close-panel"></a>			
+			<div class="search-content">
+				<input type="search" />
+				<a href="javascript:void(0);" class="clear-button"></a>
+			</div>			
+			<a href="javascript:void(0);" class="search-button">搜索</a>
+		</div>
+	</form>
+	
+	<div class="search-related-container fuzzy-search">
+		<div class="fuzzy-wrapper">
+		</div>
+	</div>
+	
+	<div class="search-related-container">
+		<!--历史记录-->
+		<div class="search-related-box searchHistoryBox">
+			<h4>历史记录</h4>
+			<div class="search-related searchHistory">
+			</div>
+		</div>	
+		<!--热门搜索-->
+		<div class="search-related-box searchHotBox">
+			<h4>热门搜索</h4>
+			<div class="search-related searchHot">
+
+			</div>
+		</div>
+	</div>
+</aside>
+<!--搜索页面结束-->
+
+<div class="DOM-loadLayer">
+	<div class="rotate-load">
+		<div class="load-box">
+
+		</div>
+		 <!--load-box-->
+	</div>
+	<!--rotate-load-->
+</div>
+<!--DOM-loadLayer-->
+
+<!--飞入动画开始-->
+<div class="fly-item"></div>
+<!--飞入动画结束-->
+</body>
+</html>
+<script type="text/javascript" src="js/zepto.min.js"></script>
+<script type="text/javascript" src="js/size.js"></script>
+<script type="text/javascript" src="js/TouchScroll.js"></script>
+<script type="text/javascript" src="js/swiper.min.js"></script>
+<script type="text/javascript" src="js/lazyLoad.js"></script>
+<script type="text/javascript" src="js/parabola.js"></script>
+<script type="text/javascript" src="js/md5.js"></script>
+<script type="text/javascript" src="js/secret.js"></script>
+<script type="text/javascript" src="js/common.js"></script>
+<script type="text/javascript" src="js/getList.js"></script>
+<script type="text/javascript" src="js/cartPublic.js"></script>
+<script type="text/javascript" src="js/item.js"></script>
+<script type="text/javascript">
+
+</script>

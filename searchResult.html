@@ -1,0 +1,158 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta content="width=device-width,initial-scale=1.0, user-scalable=0" name="viewport"/>
+	<meta name="x5-orientation" content="portrait">
+	<meta content="yes" name="apple-mobile-web-app-capable"/>
+	<meta name="format-detection" content="telephone=no"/>
+	<meta content="black" name="apple-mobile-web-app-status-bar-style"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+	<link rel="stylesheet" type="text/css" href="css/reset.css" media="screen"/>
+	<link rel="stylesheet" type="text/css" href="css/common.css" media="screen"/>
+	<title>搜索结果</title>
+</head>
+<body>
+<!--头部开始-->
+<header class="head-container common-head">
+	<a href="javascript:void(0);" onclick="self.location=document.referrer;" class="back-button"></a>
+	<h4>搜索结果</h4>
+    <a href="index.html" class="home-button"></a>
+</header>
+<!--头部结束-->
+<!--底部开始,可以操作加active-->
+<footer class="footer-container item-footer">
+	<a href="javascript:;" class="item-footer-cart"><em><i class="badge">0</i></em></a>
+	<div class="item-footer-price">
+		<em id="allPrice">0.00</em>
+		<p>
+			配送费
+			<span>0</span>元
+		</p>
+	</div>
+	<a href="javascript:void(0);" class="item-buy-button get-btn">去结算</a>
+</footer>
+<!--底部结束-->
+<!--购物车弹出层开始-->
+<div class="cart-popover-content">
+	<div class="cart-popover-title">
+		<h4>购物车</h4>
+		<a href="javascript:void(0);" class="clearBtn">清空购物车</a>
+	</div>
+	<div class="scroll-wrapper cart-popover-wrapper">
+		<ul class="scroll-container" id="cart">
+		</ul>
+	</div>
+</div>
+<div class="over-bg">
+</div>
+<!--购物车弹出层结束-->
+<section id="scroll-wrapper">
+	<div id="scroll-container">
+
+		<!--没有搜索结果-->
+		<div class="default-page-container" style="display: none;">
+			<em class="default-result"></em>
+			<p>啊哦，没有您要找的宝贝~</p>
+			<a href="productionList.html">随便逛逛</a>
+		</div>
+
+		<!--搜索结果结束-->
+		<!--搜索结果列表开始-->
+		<div class="search-list-container">
+			<ul class="search-list">
+
+			</ul>
+		</div>
+		<!--搜索结果列表结束-->
+	</div>
+</section>
+
+<div class="DOM-loadLayer">
+	<div class="rotate-load">
+		<div class="load-box">
+
+		</div>
+
+	</div>
+	<!--rotate-load-->
+</div>
+<!--DOM-loadLayer-->
+
+<script type="text/javascript" src="js/zepto.min.js"></script>
+<script type="text/javascript" src="js/size.js"></script>
+<script type="text/javascript" src="js/md5.js"></script>
+<script type="text/javascript" src="js/secret.js"></script>
+<script type="text/javascript" src="js/TouchScroll.js"></script>
+<script type="text/javascript" src="js/lazyLoad.js"></script>
+<script type="text/javascript" src="js/common.js"></script>
+<script type="text/javascript" src="js/cartPublic.js"></script>
+<script type="text/javascript">
+	var Myscroll = popoverWrapper = cartInfo = '',
+			pullUp = false,
+			ary = jry = [];
+
+	//产品搜索
+	var key = decodeURI(window.location.search.split('?')[1].split('&')[0].split('=')[1]),
+
+			pageIndex = window.location.search.split('?')[1].split('&')[1].split('=')[1];
+	searResult(key, pageIndex);
+
+	document.onreadystatechange = function() {
+		if (document.readyState == 'complete') {
+			load();
+			changeCart();
+		}
+	}
+
+	function load() {
+		Myscroll = new IScroll('#scroll-wrapper', {
+			click: true,
+			touchend: true,
+			preventDefaultException: {
+				tagName: /^(INPUT|BUTTON|A|SPAN|EM)$/
+			},
+			bindToWrapper: true,
+			scrollbars: true,
+			fadeScrollbars: true,
+			shrinkScrollbars: 'clip'
+		});
+
+		popoverWrapper = new IScroll(".cart-popover-wrapper", {
+			preventDefaultException: {
+				tagName: /^(INPUT|A|SPAN)$/
+			},
+			bindToWrapper: true,
+			scrollbars: true,
+			fadeScrollbars: true,
+			click: true,
+			tap: true
+		});
+
+		setTimeout(function() {
+			layerState();
+			Myscroll.refresh();
+			checkShow($(".search-list"));
+		}, 600);
+
+		Myscroll.on('scrollEnd', function() {
+			//是否启用上拉加载
+			if (pullUp) {
+				//页面上拉加载
+				curScrollDirection = Myscroll.directionY, maxScroll = Myscroll.maxScrollY + 80, y = Myscroll.y;
+				if (y <= maxScroll && curScrollDirection == 1) {
+					pullUp = true;
+					//开始请求后台数据
+					searResult(key,++page);
+				} else {
+					pullUp = false;
+				}
+			}
+			checkShow($(".search-list")); //懒加载
+
+		});
+	}
+	cartPopover();//购物车弹出层
+</script>
+</body>
+</html>

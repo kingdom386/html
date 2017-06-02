@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+    <meta content="width=device-width,initial-scale=1.0, user-scalable=0" name="viewport"/>
+    <meta name="x5-orientation" content="portrait">
+    <meta content="yes" name="apple-mobile-web-app-capable"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta content="black" name="apple-mobile-web-app-status-bar-style"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <link rel="stylesheet" type="text/css" href="css/reset.css" media="screen"/>
+    <link rel="stylesheet" type="text/css" href="css/common.css" media="screen"/>
+    <link rel="stylesheet" type="text/css" href="css/person.css" media="screen"/>
+    <title>账号设置</title>
+</head>
+<body>
+<!--头部开始-->
+<header class="head-container common-head">
+	<a href="javascript:history.back();" class="back-button"></a>
+	<h4>账号设置</h4>
+	<a href="index.html" class="home-button"></a>
+</header>
+<!--头部结束-->
+
+<!--底部开始-->
+<footer class="footer-container">
+	<a href="javascript:void(0);" class="log-off-button">退出当前帐号</a>
+</footer>
+<!--底部结束-->
+
+<section class="positionRelative config-container">
+	<a href="updatePhoneStep1.html" class="altMobile">修改手机号码</a>
+	<a href="javascript:void(0);" class="userPwd">登录密码管理</a>
+	<a href="javascript:void(0);" class="payPwdMgmt">支付密码管理</a>
+	<a href="addressList.html" class="addrMgmt">收货地址管理</a>
+</section>
+
+</body>
+</html>
+<script type="text/javascript" src="js/zepto.min.js"></script>
+<script type="text/javascript" src="js/size.js"></script>
+<script type="text/javascript" src="js/common.js"></script>
+<script type="text/javascript" src="js/md5.js"></script>
+<script type="text/javascript" src="js/secret.js"></script>
+<script type="text/javascript">
+    $('.log-off-button').on('touchend', function() {
+        removeCookie('username');
+        removeCookie('userid');
+        window.location.href = './person.html';
+    });
+
+    $('.altMobile').on('touchend', function() {
+        if (getCookies('username')) {
+            window.location.href = 'register.html';
+            return false;
+        }
+    });
+
+    $('.userPwd').bind('touchend',function(){
+        if(getCookieVal('pwd_user') != 1){
+            //当前用户没有设置支付密码
+            window.location.href = 'updatePasswordStep1.html';
+        }else{
+            window.location.href = 'updatePasswordStep2.html';
+        }
+    });
+
+    $('.payPwdMgmt').bind('touchend', function() {
+        if(getCookieVal('pwd_pay') == 1){
+            //当前用户没有设置支付密码
+            window.location.href = 'updatePayPassword.html';
+        }else{
+            window.location.href = 'payPwd.html';
+        }
+    });
+
+    $('.addrMgmt').bind('touchend',function(){
+        setStorage('urlReference',window.location.href);
+        window.location.href = 'addressList.html';
+    });
+
+</script>
+

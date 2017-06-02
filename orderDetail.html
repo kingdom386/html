@@ -1,0 +1,361 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+    <meta content="width=device-width,initial-scale=1.0, user-scalable=0" name="viewport"/>
+    <meta name="x5-orientation" content="portrait">
+    <meta content="yes" name="apple-mobile-web-app-capable"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta content="black" name="apple-mobile-web-app-status-bar-style"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <link rel="stylesheet" type="text/css" href="css/reset.css" media="screen"/>
+    <link rel="stylesheet" type="text/css" href="css/common.css" media="screen"/>
+    <link rel="stylesheet" type="text/css" href="css/order.css" media="screen"/>
+    <title>订单详情</title>
+    <style>
+        html, body, #scroll-container {
+            -webkit-user-select: all;
+            -moz-user-select: all;
+            user-select: all;
+            -webkit-touch-callout:default;
+        }
+    </style>
+</head>
+<body onload="load()">
+<!--头部开始-->
+<header class="head-container common-head">
+	<a href="javascript:history.back();" class="back-button"></a>
+	<h4>订单详情</h4>
+</header>
+<!--头部结束-->
+
+<!--底部开始-->
+<!--待付款-->
+<footer class="footer-container order-detail-footer">
+</footer>
+<!--底部结束-->
+
+<!--底部开始-->
+<!--配送中-->
+<!--<footer class="footer-container order-detail-footer">
+	<a href="" class="yellow-footer-button">确认收货</a>
+</footer>-->
+<!--底部结束-->
+
+<!--底部开始-->
+<!--已付款-->
+<!--<footer class="footer-container order-detail-footer">
+	<a href="" class="yellow-footer-button">催单</a>
+</footer>-->
+<!--底部结束-->
+
+<!--底部开始-->
+<!--已完成-->
+<!--<footer class="footer-container order-detail-footer">
+	<a href="" class="grey-footer-button">删除订单</a>
+	<a href="" class="yellow-footer-button">再来一单</a>
+</footer>-->
+<!--底部结束-->
+
+<section id="scroll-wrapper">
+    <div id="scroll-container">
+	    <!--订单进程开始-->
+	    <div class="order-process">
+	    	<!--剩余时间-->
+	    	<div class="remaining-time">
+	    		<span>剩余时间：</span>
+                <em class="days">0</em>
+	    		<em class="hours">0</em>
+	    		<em class="minutes">0</em>
+	    		<em class="seconds">0</em>
+	    		<span>（超出自动关闭）</span>
+	    	</div>
+	    	<!--待付款为process-1，已付款为process-2，配送中为process-3,已完成为process-4-->
+	    	<ul class="process">
+	    		<li>
+	    			<em></em>
+	    			待付款
+	    		</li>
+	    		<li>
+	    			<em></em>
+	    			已付款
+	    		</li>
+	    		<li>
+	    			<em></em>
+	    			配送中
+	    		</li>
+	    		<li>
+	    			<em></em>
+	    			已完成
+	    		</li>
+	    	</ul>
+	    </div>
+	    <!--订单进程结束-->
+	    
+	    <!--收货地址开始-->
+	    <div class="order-detail-address">
+		    <p class="positionRelative">
+			    <span id="receiver"></span>
+			    <span id="receiver-mobile"> </span>
+		    </p>
+		    <h5 id="receiver-addr"></h5>
+		</div>
+	    <!--收货地址结束-->
+	    
+	    <!--商品列表开始-->
+	    <div class="order-list-container">
+	    	<!--<a href="" class="order-list">
+	    		<div class="production-image">
+					<img data-src="image/indexBanner.jpg" class="img-responsive wait-load" alt="" />
+				</div>
+				<div class="production-info">
+					<h4 class="text-ellipsis-2"></h4>
+					<div class="production-price">
+						<span>6</span>
+						<em>9.66</em>
+					</div>
+				</div>
+	    	</a>-->
+	    </div>
+	    <!--商品列表结束-->
+	    
+	    <!--应付款-->
+	    <p class="payables">应付款：<em id="sumAll">56.2</em></p>
+	    
+	    <!--联系客服-->
+	    <div class="chat-service">
+	    	<a href="">联系客服</a>
+	    </div>
+	    
+	    <ul class="order-tip-container bgWhite">
+	    	<li>
+	    		<span>下单时间：</span>
+	    		<div class="order-tip-content starTime">
+
+	    		</div>
+	    	</li>
+	    	<li>
+	    		<span>支付方式：</span>
+	    		<div class="order-tip-content">
+	    			在线支付
+	    		</div>
+	    	</li>
+	    	<li>
+	    		<span>订单编号：</span>
+	    		<div class="order-tip-content">
+	    			<em class="order-number orderNo">5454545477799</em>
+	    		</div>
+	    	</li>
+	    	<li>
+	    		<span>买家留言：</span>
+	    		<div class="order-tip-content orderNote">
+	    		</div>
+	    	</li>
+	    </ul>
+    </div>
+</section>
+
+
+
+</body>
+</html>
+<script type="text/javascript" src="js/zepto.min.js"></script>
+<script type="text/javascript" src="js/size.js"></script>
+<script type="text/javascript" src="js/common.js"></script>
+<script type="text/javascript" src="js/md5.js"></script>
+<script type="text/javascript" src="js/secret.js"></script>
+<script type="text/javascript" src="js/TouchScroll.js"></script>
+<script type="text/javascript" src="js/lazyLoad.js"></script>
+<script type="text/javascript" src="js/common.js"></script>
+<script type="text/javascript">
+	var API_KEY = "gVzKTvzJyRTCkdDQ4AcQaCgp5iIpskbq",
+		reqtime = Date.parse(new Date()),
+		Myscroll = restTime = '',
+		oid = window.location.search.replace('?',"").split('&')[0].split('=')[1],
+		tp =  window.location.search.replace('?',"").split('&')[1].split('=')[1];
+
+    function load() {
+            Myscroll = new IScroll('#scroll-wrapper', {
+            click: true,
+            touchend: true,
+            preventDefaultException: { tagName: /^(INPUT|BUTTON|A|SPAN|EM)$/ },
+            bindToWrapper: true,
+            scrollbars: true,
+            fadeScrollbars: true,
+            shrinkScrollbars: 'clip'
+        });
+
+		//初始化节点
+		$('footer').empty();
+
+		if(tp == 1){
+			$('.process').addClass('process-1');
+			$('footer').append('<a href="javascript:void(0);" class="cancleOrder grey-footer-button">取消订单</a><a href="" class=" yellow-footer-button">立即支付</a>');
+		}
+
+		if(tp == 2){
+			$('.process').addClass('process-2');
+			$('footer').append('<a href="javascript:void(0);" class=" yellow-footer-button">催单</a>');
+		}
+
+		if(tp == 3){
+			$('.process').addClass('process-3');
+			$('footer').append('<a href="javascript:void(0);" class="cfrmReceipt yellow-footer-button">确认收货</a>');
+		}
+
+		if(tp == 4){
+			$('.process').addClass('process-4');
+			$('footer').append('<a href="" class="grey-footer-button">删除订单</a><a href="" class="yellow-footer-button">再来一单</a>');
+		}
+
+		//根据传递过来的oid
+		var method = 'GetOrderDetail',
+				param = {
+					shopid: "3",
+					device: "3",
+					o_id:oid
+				};
+		sign = md5(JSON.stringify(param) + method + reqtime + API_KEY);
+		$.ajax({
+			url: "../API/WebApi.ashx",
+			async: true,
+			type: "post",
+			dataType: 'json',
+			data: {
+				param: JSON.stringify(param),
+				method: method,
+				reqtime: reqtime,
+				sign: getSecret(param, method, reqtime)
+			},
+			success: function (oDeMsg) {
+				restTime = oDeMsg.data.start_date;
+				var str='',subPrice = 0;
+				$(oDeMsg.data).each(function(i,t){
+					$('#receiver').html(t.sh_name);
+					$('#receiver-mobile').html(t.sh_sj);
+					$('#receiver-addr').html(t.sh_addr);
+					$('.starTime').html(t.start_date);
+					$('.orderNo').html(t.o_dh);
+					$('.orderNote').html(t.ordNote);
+
+					for(var i=0;i< t.l_orderinfo.length;i++){
+						subPrice+=t.l_orderinfo[i].prod_mxmony;
+						str+='<a href="detail.html?p_id="'+t.l_orderinfo[i].id+' class="order-list">'+
+								'<div class="production-image">'+
+								'<img data-src="'+t.l_orderinfo[i].prod_pic+'" class="img-responsive wait-load" alt="" />'+
+								'</div><div class="production-info">'+
+								'<h4 class="text-ellipsis-2">'+t.l_orderinfo[i].prod_name+'</h4>'+
+								'<div class="production-price">'+
+								'<span>'+t.l_orderinfo[i].prod_numb+'</span>'+
+								'<em>'+t.l_orderinfo[i].prod_mony+'</em>'+
+								'</div></div></a>';
+					}
+					$('.order-list-container').append(str);
+					$('#sumAll').html(subPrice);
+
+				});
+			},
+			error: function(XMLHttpRequest, textStatus, errorThrown) {
+
+			}
+		});
+
+        checkShow($(".order-list-container"));//懒加载
+
+	    Myscroll.on('scrollEnd', function () {
+			Myscroll.refresh();
+			checkShow($(".order-list-container"));//懒加载
+	    });
+
+	    countTime(); //剩余时间倒计时事件
+    }
+    //剩余时间倒计时事件
+    function countTime() {
+        //获取当前时间  
+        var date = new Date(),
+            now = date.getTime(),d = h = m = s = 0,
+        	//设置截止时间
+            startDate = new Date(restTime);
+		var end = startDate.getTime()+0.5*60*60*1000,
+        	//时间差
+       		leftTime = end - now;
+        if (leftTime >= 0) {
+            d = Math.floor(leftTime / 1000 / 60 / 60 / 24);
+            h = Math.floor(leftTime / 1000 / 60 / 60 % 24);
+            m = Math.floor(leftTime / 1000 / 60 % 60);
+            s = Math.floor(leftTime / 1000 % 60);
+
+			//递归每秒调用countTime方法，显示动态时间效果
+        }
+		$(".days").html(d);
+		$(".hours").html(h);
+		$(".minutes").html(m);
+		$(".seconds").html(s);
+		var timers = setTimeout(countTime, 1000);
+    }
+
+	//订单操作
+	//取消订单
+	$('.cancleOrder').live('touchend',function(){
+		var method = 'CancelOrder',
+				param = {
+					shopid: "3",
+					device: "3",
+					o_id: oid
+				};
+		sign = md5(JSON.stringify(param) + method + reqtime + API_KEY);
+		$.ajax({
+			url: "../API/WebApi.ashx",
+			async: true,
+			type: "post",
+			dataType: 'json',
+			data: {
+				param: JSON.stringify(param),
+				method: method,
+				reqtime: reqtime,
+				sign: getSecret(param, method, reqtime)
+			},
+			success: function (delMsg) {
+				if(delMsg.status == 1){
+					window.location.href = getStorage('urlReference');
+				}
+			},
+			error: function (XMLHttpRequest, textStatus, errorThrown) {
+
+			}
+		});
+	});
+
+	//确认收货
+	$('.cfrmReceipt').live('touchend',function(){
+		var method = 'CancelOrder',
+				param = {
+					shopid: "3",
+					device: "3",
+					o_id: oid
+				};
+		sign = md5(JSON.stringify(param) + method + reqtime + API_KEY);
+		/*$.ajax({
+			url: "../API/WebApi.ashx",
+			async: true,
+			type: "post",
+			dataType: 'json',
+			data: {
+				param: JSON.stringify(param),
+				method: method,
+				reqtime: reqtime,
+				sign: getSecret(param, method, reqtime)
+			},
+			success: function (delMsg) {
+				if(delMsg.status == 1){
+					window.location.href = getStorage('urlReference');
+				}
+			},
+			error: function (XMLHttpRequest, textStatus, errorThrown) {
+
+			}
+		});*/
+
+	});
+
+</script>

@@ -1,0 +1,130 @@
+/*个人中心头部*/
+.person-head{ position: fixed; top: 0; z-index: 8; left: 0; right: 0;}
+.person-head h4{ font-size: 0.36rem; color: #1d1d1d; line-height: 0.88rem; text-align: center; position:relative; z-index:10;}
+.person-head a{ position: absolute; top: 0; color: #666; font-size: 0.5rem; padding: 0 0.2rem; line-height: 0.88rem; z-index:10;}
+.person-head a:before{ content: "\e6cd"; font-family: iconfont;}
+.person-head a.config-button{ right: 0.88rem;}
+.person-head a.config-button:before{ content: "\e60f"; vertical-align: 0.06rem;}
+.person-head a.message-button{ right:0;}
+.person-head a.message-button:before{ content: "\e60e";}
+.person-head a.message-button.active:after{ content: ""; width: 0.12rem; height: 0.12rem; display: block; background-color: #CC0000; position: absolute; border-radius: 50%; top: 25%; right: 0.2rem;}
+.head-mask{ position:absolute; top:0; left:0; width:100%; height:100%; background-color:#000; opacity:0;}
+
+header.person-head~ section#scroll-wrapper{ top: 0;}
+/*个人信息开始*/
+.person-info-container{ height: 3.64rem; background-size: cover; background-position: center center; background-repeat: no-repeat; position: relative;}
+.person-info-container .person-info{ position: absolute; bottom: 0.74rem; left: 0.66rem; display: -webkit-box; display: -webkit-flex; display: flex; align-items: center; -webkit-align-items: center;}
+.person-info-container .person-image{ width: 1.3rem; height: 1.3rem; border: 0.01rem solid #ddd; background-color: #fff; overflow: hidden; border-radius: 50%; font-size: 0; line-height: 1.3rem; text-align: center;}
+.person-info-container .person-image img{ vertical-align: middle; display: inline-block;}
+.person-info-container .person-info-text{ padding-left: 0.2rem; font-size: 0.28rem; -webkit-box-flex: 1; -webkit-flex: 1; flex: 1;}
+.person-info-container .person-info-text p em{ color: #d1a907; font-size: 0.2rem; font-weight: bold;}
+.person-info-container .person-info-text p em:before{ content: "\e63d"; font-family: iconfont; font-size: 0.3rem; margin-right: -0.1rem; vertical-align: 0.05rem;}
+.person-info-container .person-info-text a{ width: 1.12rem; height: 0.5rem; border-radius: 0.08rem; margin-top: 0.15rem; text-align: center; line-height: 0.5rem; display: block; background-color: #FCCF18; font-size: 0.24rem;}
+.person-info-login{ height: 0.72rem; line-height: 0.72rem; color: #333; padding: 0 0.12rem; border-radius: 0.04rem; font-size: 0.28rem; background-color: rgba(196,178,166,0.4); border: 0.01rem solid #c4b2a6; display: inline-block; position: absolute; bottom: 0.92rem; left: 50%; transform: translate3d(-50%,0,0); -webkit-transform: translate3d(-50%,0,0);}
+
+/*我的订单*/
+.my-order-container{ border-width: 0.01rem 0 0.01rem 0; border-style: solid; border-color: #eee;}
+.my-order-container > a{ font-size: 0.28rem; position: relative; color: #333; height: 0.8rem; line-height: 0.8rem; display: block; padding: 0 0.2rem;}
+.my-order-container > a span{ font-size: 0.24rem; color: #888; position: absolute; right: 0.2rem;}
+.my-order-container > a:after{ content: ""; display: block; height: 1px; left: 0.2rem; right: 0.2rem; bottom: 0; background-color: #ddd;}
+.my-order-container ul, .person-service-container{ display: -webkit-box; display: -webkit-flex; display: flex; align-items: center; -webkit-align-items: center;}
+.my-order-container li, .person-service-container a{ -webkit-box-flex: 1; -webkit-flex: 1; flex: 1; text-align: center;}
+.my-order-container li a{ display: block; font-size: 0.24rem; color:#666; padding: 0.3rem 0;}
+.my-order-container li a em{ width: 0.52rem; height: 0.52rem; display: block; margin: 0 auto 0.2rem; background-image: url(../image/myOrderIcon.png); background-size: auto 0.52rem;}
+.my-order-container li:nth-child(2) a em{ background-position: -0.52rem 0;}
+.my-order-container li:nth-child(3) a em{ background-position: -1.04rem 0;}
+.my-order-container li:nth-child(4) a em{ background-position: -1.56rem 0;}
+
+.person-quick-menu{ padding-top: 0.2rem;}
+.person-quick-menu a{ position: relative; padding: 0 0.2rem 0 0.68rem; height: 1rem; line-height: 1rem; border-bottom: 0.01rem solid #eee; background-color: #fff; display: block; font-size: 0.24rem;}
+.person-quick-menu a span{ color: #666;}
+.person-quick-menu a em{ color: #999;}
+.person-quick-menu a:before{ content: "\e6dd"; font-family: iconfont; font-size: 0.38rem; color: #666; position: absolute; left: 0.2rem; top: 0;}
+.person-quick-menu a:nth-child(2):before{ content: "\e626";}
+.person-quick-menu a:nth-child(3):before{ content: "\e659";}
+.person-quick-menu a:nth-child(4):before{ content: "\e626";}
+.person-quick-menu a em{ position: absolute; right: 0.2rem; top: 0; padding-right: 0.3rem;}
+.person-quick-menu a:nth-child(1) em:before{ content: "¥";}
+.person-quick-menu a em:after{ content: "\e741"; font-family: iconfont; position: absolute; right: 0; top: 0;}
+
+.person-service-container a{ display: block; border-right: 0.01rem solid #ddd; font-size: 0.24rem; color: #666; padding:1rem 0 0.4rem ; position: relative;}
+.person-service-container a:before{ content: "\e667"; font-family: iconfont; font-size: 0.6rem; display: block; position: absolute; top: 0.36rem; left: 50%; transform: translate3d(-50%,0,0); -webkit-transform: translate3d(-50%,0,0);}
+.person-service-container a:last-child{ border-right-color: #fff;}
+.person-service-container a:nth-child(2):before{ content: "\e764";}
+.person-service-container a:nth-child(3):before{ content: "\e612";}
+
+.tel-container{ position: relative; padding-left: 0.2rem; line-height: 0.96rem; background-color: #fff; height: 0.96rem; display: block; font-size: 0.2rem; color: #888; white-space: nowrap;}
+.tel-container span{ color: #5394ff; font-size: 0.28rem; vertical-align: -0.03rem;}
+.tel-container:after{ content: "\e686"; font-family: iconfont; font-size: 0.4rem; position: absolute; display: block; top: 0.19rem; right: 0.9rem; width: 0.58rem; height: 0.58rem; background-color: #97beff; text-align: center; line-height: 0.58rem; color: #fff; border-radius: 50%;}
+
+/*账号管理*/
+.config-container a{ position: relative; height: 1rem; line-height: 1rem; font-size: 0.28rem; color: #666; display: block; background-color: #fff; border-bottom: 0.01rem solid #ddd; padding: 0 0.6rem;}
+.config-container a:before, .config-container a:after{ content: ""; font-size: 0.34rem; font-family:iconfont; position: absolute; top: 50%; left: 0.2rem; transform: translate3d(0,-50%,0); -webkit-transform: translate3d(0,-50%,0);}
+.config-container a:nth-child(1):before{ content: "\e604"; top: 54%;}
+.config-container a:nth-child(2):before{ content: "\e69d"; top: 54%;}
+.config-container a:nth-child(3):before{ content: "\e629"; top: 54%;}
+.config-container a:nth-child(4):before{ content: "\e640"; font-size: 0.3rem;}
+.config-container a:after{ content: "\e741"; right: 0.2rem; left: auto; font-size: 0.24rem; color:#ccc;}
+.log-off-button{ display: block; width: 100%; font-size: 0.32rem; background-color: #474749; color: #FCCF18; height: 0.98rem; line-height: 0.98rem; text-align: center;}
+
+/*积分*/
+.integral-head ~ section#scroll-wrapper{ top:2.8rem;}
+.integral-head{ height: 2.8rem; background-image: url(../image/integralHead.jpg); background-repeat: no-repeat; background-size: cover; text-align: center; position:relative;}
+.integral-head-content{ position:absolute; bottom:0.5rem; left:50%; transform:translate3d(-50%,0,0); -webkit-transform:translate3d(-50%,0,0); padding: 0 0.2rem; border-radius: 1rem; height: 0.8rem; line-height: 0.8rem; background-color: rgba(100,89,3,0.5); color: #fff; display: inline-block; font-size: 0.36rem;}
+.integral-head-content:after{ content: "积分"; font-size: 0.2rem; padding-left: 0.08rem;}
+.integral-head-content:before{ content: "\e70a"; font-family: iconfont; font-size: 0.6rem; padding-right: 0.35rem; vertical-align: -0.05rem; line-height: 1;}
+
+.account-list li{ border-bottom: 0.01rem solid #eee; padding: 0 0.2rem; height: 1rem; display: -webkit-box; display: -webkit-flex; display: flex; align-items: center; -webkit-align-items: center;}
+.account-list li p{ -webkit-box-flex: 1; -webkit-flex: 1; flex: 1;}
+.account-list p span{ display: block; color: #1d1d1d; font-size: 0.28rem;}
+.account-list p em{ display: block; color: #888; font-size: 0.24rem; padding-top: 0.1rem;}
+.account-list li > em{ color: #888; font-size: 0.28rem;}
+.account-list li > em:before{ content: "-"; font-size: 0.3rem;}
+.account-list li > em:after{ content: "元";}
+.account-list li > em.income{ color: #CC0000;}
+.account-list li > em.income:before{ content: "+";}
+/*积分规则弹出层*/
+.integral-popover{ transition:all 0.4s ease 0s; -webkit-transition:all 0.4s ease 0s; opacity:0; pointer-events:none; z-index:11; padding:0 0.3rem 1.74rem; width:5.4rem; position:fixed; top:50%; left:50%; transform:translate3d(-50%,-50%,0); -webkit-transform:translate3d(-50%,-50%,0); background-color:#fff; border-radius:0.08rem; background-image:url(../image/integralPopoverBg.png); background-repeat:no-repeat; background-size:5.4rem auto; background-position:center bottom;}
+.integral-popover.active{ opacity:1; pointer-events:all;}
+.integral-popover h4{ font-size:0.36rem; text-align:center; height:0.88rem; line-height:0.88rem; border-bottom:1px solid #aaa; margin-bottom:0.2rem;}
+.integral-popover .integral-rule{ height:5.4rem; overflow:auto;}
+.integral-rule h5{ font-size:0.26rem; line-height:1.4; padding:0.15rem 0;}
+.integral-rule p{ font-size:0.24rem; color:#666; line-height:1.4;}
+.close-integral-rule{ width:0.76rem; height:0.76rem; position:absolute; top:-0.23rem; display:block; right:-0.23rem; background-color:#fff; border-radius:50%;}
+.close-integral-rule:before{ content:"\e6b3"; color:#666; font-size:0.7rem; font-family:iconfont;position:absolute; top:0.06rem; left:0.02rem;}
+
+
+
+
+/*账户*/
+.account-head{ z-index: 2; height: 3.18rem; background-color: #FCCF18; color: #fff; position: fixed; left: 0; right: 0; top: 0;}
+/*header ~ .account-head{ top: 0.88rem;}*/
+.account-head-content{ position: absolute; padding: 0 0 0 1.9rem; bottom:0.7rem;}
+.account-head-content em{ font-size: 0.24rem; display: block; padding-bottom: 0.15rem;}
+.account-head-content p{ font-size: 0.36rem;}
+.account-head-content p:before, .slide-info-container .production-info .production-price:before{ content: "￥"; font-size: 0.2rem;}
+.account-head-content:before{ content: "\e684"; font-family: iconfont; position: absolute; left: 0.75rem; top: -0.1rem;}
+.account-head a{ font-size: 0.28rem; position: absolute; display: block; padding: 0.13rem 0.55rem; border-radius: 1rem; border: 0.02rem solid #fff; right: 0.2rem; bottom:0.7rem;}
+header ~ .account-filter{ top: 3.18rem;}
+.account-filter{ z-index: 2; position: fixed; left: 0; right: 0; top: 2.3rem; height: 0.9rem; font-size: 0; background-color: #fff; border-bottom: 0.01rem solid #ddd;}
+.account-filter a{ display: inline-block; font-size: 0.28rem; width: 33.3%; text-align: center; line-height: 0.9rem;}
+.account-filter b{ position: absolute; width: 33.3%; display: block; height: 0.04rem; background-color: #FCCF18; bottom: 0; left: 0; transition: left 0.3s ease 0s; -webkit-transition: left 0.3s ease 0s;}
+/*.account-list-container{ padding-top: 3.2rem;}*/
+.account-list-container .account-list{ background-color: #f8f8f8;}
+
+/*我的收藏*/
+.collect-list-container{ padding: 0;}
+.collect-list-container .slide-list-wrapper{ margin-bottom: 0; border-top-width: 0;}
+a.slide-info-container{ padding: 0.25rem 0.2rem;}
+.slide-info-container .production-image{ width: 1.6rem; height: 1.6rem; position: absolute; top: 0.25rem; left: 0.2rem; font-size: 0; line-height: 1.6rem; vertical-align: middle; background-image: url(../image/222x222.jpg); background-repeat: no-repeat; background-size: contain; border: 0.01rem solid #eee; border-radius: 0.08rem;}
+.slide-info-container .production-image img{ display: inline-block; vertical-align: middle; opacity: 0; transition: opacity 0.4s ease-in;  -webkit-transition: opacity 0.4s ease-in;}
+.slide-info-container .search-buy-icon{ color: #888;}
+.slide-info-container .production-info{ position: relative; padding: 0 0 0 1.8rem;}
+.slide-info-container .production-info h4{ line-height: 1.2; height: 0.67rem;}
+.slide-info-container .production-info .production-price{ font-size: 0.36rem; color: #CC0000; padding: 0.56rem 0 0;}
+.slide-info-container .search-buy-icon{ bottom: 0; right: 0;}
+.slide-list-wrapper > label{ position: absolute; top: 0; bottom: 0; left: 0; width: 0.84rem; pointer-events: none; opacity: 0; visibility: hidden;}
+.slide-list-wrapper > label.active{ pointer-events: auto; opacity: 1; visibility: visible;}
+.slide-list-wrapper > label input{ width: 0.44rem; height: 0.44rem; position: absolute; top: 50%; left: 50%; transform: translate3d(-50%,-50%,0); -webkit-transform: translate3d(-50%,-50%,0); -webkit-appearance: none; text-align: center; line-height: 0.44rem; border: 1px solid #ddd; border-radius: 50%;}
+.slide-list-wrapper > label input:checked{ background-color: #FCCF18; border-color: #FCCF18;}
+.slide-list-wrapper > label input:before{ content:"\e627"; font-size: 0.28rem; font-family: iconfont; color: #fff;}

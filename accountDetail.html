@@ -1,0 +1,222 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+    <meta content="width=device-width,initial-scale=1.0, user-scalable=0" name="viewport"/>
+    <meta name="x5-orientation" content="portrait">
+    <meta content="yes" name="apple-mobile-web-app-capable"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta content="black" name="apple-mobile-web-app-status-bar-style"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <link rel="stylesheet" type="text/css" href="css/reset.css" media="screen"/>
+    <link rel="stylesheet" type="text/css" href="css/common.css" media="screen"/>
+    <link rel="stylesheet" type="text/css" href="css/person.css" media="screen"/>
+    <title>账户</title>
+    <style>
+        .head-container {
+            background-color: transparent;
+        }
+
+        header ~ section#scroll-wrapper {
+            top: 4.08rem;
+        }
+    </style>
+</head>
+<body onload="load()">
+<!--头部开始-->
+<header class="head-container common-head">
+	<a href="javascript:history.back();" class="back-button"></a>
+	<h4>账户</h4>
+</header>
+<!--头部结束-->
+<div class="account-head">
+	<div class="account-head-content">
+		<em>余额</em>
+		<p class="restMoney">3620.00</p>
+	</div>
+	<a href="recharge.html">充值</a>
+</div>
+<!--切换导航开始-->
+<div class="account-filter">
+	<a href="javascript:void(0);">全部</a>
+	<a href="javascript:void(0);">收入</a>
+	<a href="javascript:void(0);">支出</a>
+	<b class="account-border"></b>
+</div>
+<!--切换导航结束-->
+<section id="scroll-wrapper">
+	<div id="scroll-container">		
+		<div class="account-list-container">
+			<!--全部开始-->
+			<ul class="account-list">
+				<!--<li>
+					<p>
+						<span>消费积分</span>
+						<em>2017-02-12</em>
+					</p>
+					<em class="income">200</em>
+				</li>
+				<li>
+					<p>
+						<span>消费积分</span>
+						<em>2017-02-12</em>
+					</p>
+					<em>200</em>
+				</li>-->
+               
+			</ul>
+			<!--全部结束-->
+		</div>
+	</div>
+</section>
+
+</body>
+</html>
+<script type="text/javascript" src="js/zepto.min.js"></script>
+<script type="text/javascript" src="js/size.js"></script>
+<script type="text/javascript" src="js/common.js"></script>
+<script type="text/javascript" src="js/md5.js"></script>
+<script type="text/javascript" src="js/secret.js"></script>
+<script type="text/javascript" src="js/TouchScroll.js"></script>
+<script type="text/javascript">
+	var pullUp = true,page = 1,ptype = '';//上拉加载开启标记
+function load() {
+	var Myscroll = new IScroll('#scroll-wrapper', {
+        click:true,
+        touchend:true,
+        preventDefaultException: { tagName: /^(INPUT|BUTTON|A|SPAN)$/ },
+        bindToWrapper: true,
+        scrollbars: true,
+        fadeScrollbars: true,
+        shrinkScrollbars: 'clip'
+    });
+
+	//tab 事件
+
+    $(".account-filter").on("touchend","a",function(){
+		$(this).addClass("active").siblings("a").removeClass("active");
+		$(".account-list").eq($(this).index()).show().siblings().hide();
+		$(this).siblings(".account-border").css("left",$(this).width()*$(this).index());
+		var indx = $(this).index();
+		if(indx == 0){
+			ptype = '';$(".account-list li").show();
+		   }else if(indx == 1){
+			ptype = 1;
+			showList();
+		}else{
+			ptype = 2;
+			showList();
+		}
+		Myscroll.refresh();
+		Myscroll.scrollTo(0,0);
+	});
+
+	getUserinfo();
+	getAcountInfo(page,getCookieVal('userid'),ptype);
+
+	Myscroll.on('scrollEnd', function(){
+		//是否启用上拉加载
+		if (pullUp) {
+			//页面上拉加载
+			var curScrollDirection = Myscroll.directionY, maxScroll = Myscroll.maxScrollY + 80, y = Myscroll.y;
+			if (y <= maxScroll && curScrollDirection == 1) {
+				pullUp = true;
+				//开始请求后台数据
+				getAcountInfo(++page,getCookieVal('userid'),ptype);
+			} else {
+				pullUp = false;
+			}
+		}
+		//checkShow($(".production-list")); //懒加载
+		Myscroll.refresh();
+	});
+
+}
+
+	//列表显示/隐藏
+	function showList(){
+		$(".account-list li").each(function(i,t){
+			 if($(t).data('type') == ptype ){
+				 $(t).show();
+			 }else{
+				 $(t).hide();
+			 }
+		});
+	}
+
+	function getUserinfo(){
+		var method = 'GetUserInfo',
+				param = {
+					shopid: "3",
+					device: "3",
+					u_id: getCookieVal('userid')
+				};
+
+		sign = md5(JSON.stringify(param) + method + reqtime + API_KEY);
+		$.ajax({
+			url: "../API/WebApi.ashx",
+			async: true,
+			type: "post",
+			dataType: 'json',
+			data: {
+				param: JSON.stringify(param),
+				method: method,
+				reqtime: reqtime,
+				sign: getSecret(param, method, reqtime)
+			},
+			success: function (userData) {
+				$('.restMoney').html(userData.data.moneyLeft);
+			},
+			error: function (XMLHttpRequest, textStatus, errorThrown) {
+
+			}
+		});
+
+	}
+
+	function getAcountInfo(pg,uid,p_type){
+		//获取当前用户的账户的详情
+		var method = 'GetWalletList',
+				param = {
+					shopid: "3",
+					device: "3",
+					u_id: uid,
+					pageIndex:pg,
+					p_type:p_type
+				};
+
+		sign = md5(JSON.stringify(param) + method + reqtime + API_KEY);
+		$.ajax({
+			url: "../API/WebApi.ashx",
+			async: true,
+			type: "post",
+			dataType: 'json',
+			data: {
+				param: JSON.stringify(param),
+				method: method,
+				reqtime: reqtime,
+				sign: getSecret(param, method, reqtime)
+			},
+			success: function (walletData) {
+				var str='';
+				$(walletData.data).each(function(i,t){
+					//type  1 消费获得积分  2 兑换物品获得积分
+					if(t.type == 1){
+						str+='<li data-type='+ t.type +' data-id = '+ t.id +'><p><span>消费积分获得</span><em>'+ (t.createtime).replace('T',' ')+'</em></p><em class="income">200</em></li>';
+					}else{
+						str+='<li data-type='+ t.type +' data-id = '+ t.id +'><p><span>兑换物品消耗</span><em>'+ (t.createtime).replace('T',' ')+'</em></p><em>200</em></li>';
+					}
+
+					$('.account-list').append(str);
+
+				});
+			},
+			error: function (XMLHttpRequest, textStatus, errorThrown) {
+
+			}
+		});
+
+
+	}
+
+</script>

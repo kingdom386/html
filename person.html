@@ -1,0 +1,238 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width,initial-scale=1.0, user-scalable=0" name="viewport" />
+    <meta name="x5-orientation" content="portrait">
+    <meta content="yes" name="apple-mobile-web-app-capable" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <link rel="stylesheet" type="text/css" href="css/reset.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="css/common.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="css/person.css" media="screen" />
+    <title>我的生活馆</title>
+</head>
+<body onload="load()">
+    <!--头部开始-->
+    <header class="head-container person-head">
+        <a href="" class="service-button"></a>
+        <h4>我的生活馆</h4>
+        <a href="config.html" class="config-button"></a>
+        <!--有未读信息加active-->
+        <a href="" class="message-button active"></a>
+        <div class="head-mask"></div>
+    </header>
+    <!--头部结束-->
+    <!--底部开始-->
+    <footer class="footer-container common-footer">
+        <!--活动块加active-->
+        <a href="index.html"><em></em>首页</a>
+        <a href="hot.html"><em></em>热卖</a>
+        <a href="productionList.html"><em></em>点我下单</a>
+        <a href="orderList.html"><em></em>订单</a>
+        <a href="person.html" class="active"><em></em>我的生活馆</a>
+    </footer>
+    <!--底部结束-->
+
+    <section id="scroll-wrapper">
+        <div id="scroll-container">
+            <!--个人中心头部开始-->
+            <div class="person-info-container" style="background-image: url(image/centerBg.jpg);">
+                <!--已登录显示开始-->
+                <!--<div class="person-info">
+                    <div class="person-image">
+                        <img src="image/2.jpg" class="img-responsive" alt="" />
+                    </div>
+                    <div class="person-info-text">
+                        <p>
+                            <span>156****5555</span>
+                            <em>3</em>
+                        </p>
+                        <a href="">去充值</a>
+                    </div>
+                </div>-->
+                <!--已登录显示结束-->
+                <!--未登录显示开始-->
+                <!--<a href="register.html" class="person-info-login">请登录/注册</a>-->
+                <!--未登录显示结束-->
+            </div>
+            <!--个人中心头部结束-->
+            <!--我的订单开始-->
+            <div class="my-order-container bgWhite">
+                <a href="javascript:void(0);" class="moreOrderList">我的订单<span>查看更多订单</span></a>
+                <ul>
+                    <li>
+                        <a href="orderList.html?#1"><em></em>待付款</a>
+                    </li>
+                    <li>
+                        <a href="orderList.html?#2"><em></em>已付款</a>
+                    </li>
+                    <li>
+                        <a href="orderList.html?#3"><em></em>配送中</a>
+                    </li>
+                    <li>
+                        <a href="orderList.html?#4"><em></em>已完成</a>
+                    </li>
+                </ul>
+            </div>
+            <!--我的订单结束-->
+            <!--快捷按钮-->
+            <div class="person-quick-menu marginB20">
+                <a href="accountDetail.html">
+                    <span>我的钱包</span>
+                    <em id="myWallet">0</em>
+                </a>
+                <a href="integral.html">
+                    <span>我的积分</span>
+                    <em id="myIntegral">0</em>
+                </a>
+                <a href="collect.html">
+                    <span>我的收藏</span>
+                    <em id="myColl">0</em>
+                </a>
+                <a href="footprint.html">
+                    <span>我的足迹</span>
+                    <em id="myFootprint">0</em>
+                </a>
+            </div>
+
+            <!--服务-->
+            <div class="person-service-container bgWhite marginB20">
+                <a href="express.html">代收快递</a>
+                <a href="wash.html">干洗代收</a>
+                <a href="life.html">生活咨询</a>
+            </div>
+
+            <!--电话-->
+            <a class="tel-container" href="tel:0576-88888888">
+                <span>0576-88888888</span>
+                （客服工作时间8:00至18:00）
+            </a>
+        </div>
+    </section>
+
+    <div class="DOM-loadLayer">
+        <div class="rotate-load">
+            <div class="load-box">
+                <!--<div class="load-pane">
+                    <div class="load-pane-left">
+                    </div>
+                    &lt;!&ndash;load-pane-left&ndash;&gt;
+                    <div class="load-pane-right">
+                    </div>
+                    &lt;!&ndash;load-pane-right&ndash;&gt;
+                </div>
+                &lt;!&ndash;load-pane&ndash;&gt;-->
+            </div>
+            <!--<p class="txt-center">加载中...</p>-->
+        </div>
+        <!--rotate-load-->
+    </div>
+    <!--DOM-loadLayer-->
+
+</body>
+</html>
+<script type="text/javascript" src="js/zepto.min.js"></script>
+<script type="text/javascript" src="js/size.js"></script>
+<script type="text/javascript" src="js/common.js"></script>
+<script type="text/javascript" src="js/md5.js"></script>
+<script type="text/javascript" src="js/secret.js"></script>
+<script type="text/javascript" src="js/iscroll-probe.js"></script>
+<script type="text/javascript">
+    var API_KEY = "gVzKTvzJyRTCkdDQ4AcQaCgp5iIpskbq";
+    var reqtime = Date.parse(new Date()), Myscroll = '';
+
+    function load() {
+        Myscroll = new IScroll('#scroll-wrapper', {
+            click: true,
+            touchend: true,
+            preventDefaultException: { tagName: /^(INPUT|BUTTON|A|SPAN)$/ },
+            bindToWrapper: true,
+            probeType: 3,
+            scrollbars: true,
+            fadeScrollbars: true,
+            shrinkScrollbars: 'clip'
+        });
+        //头部背景颜色随滚动距离变化
+        Myscroll.on('scroll', function () {
+            $(".head-mask").css("opacity", 3 * (Math.abs(this.y) / 1000));
+            if (3 * (Math.abs(this.y) / 1000) > 0.4) {
+                $(".head-container").find("h4, a").css("color", "#fff");
+            }
+            else {
+                $(".head-container").find("h4").css("color", "#1d1d1d");
+                $(".head-container").find("a").css("color", "#666");
+            }
+        });
+
+        if (getCookies('username')) {
+            setStorage('urlReference', window.location.href);
+            $('.person-info-container').html('<a href="register.html" class="person-info-login">请登录/注册</a>');
+        } else {
+            $('.person-info-container').html('<div class="person-info">' +
+					'<div class="person-image">' +
+					'<img src="image/2.jpg" class="img-responsive" alt="" />' +
+					'</div><div class="person-info-text">' +
+					'<p><span>' + getCookieVal('username').substring(0, 3) + '****' + getCookieVal('username').substring(7, 11) + '</span><em id="uLevel"></em>' +
+					'</p><a href="recharge.html">去充值</a>' +
+					'</div></div>');
+        }
+
+
+        //请求获取个人信息
+        if (getCookieVal('username') != null) {
+            //用户当前的状态是登录就请求当前用户的个人信息
+            getPersonInfo();
+        }
+
+        layerState();
+        setTimeout(function () {
+            $(".DOM-loadLayer").hide();
+            Myscroll.refresh();
+        }, 600);
+
+        $('.moreOrderList').on('touchend', function () {
+            window.location.href = 'orderList.html';
+        });
+
+    }
+
+    function getPersonInfo() {
+        var method = 'GetUserCenter',
+				param = {
+				    shopid: "3",
+				    device: "3",
+				    u_id: getCookieVal('userid')
+				};
+        sign = md5(JSON.stringify(param) + method + reqtime + API_KEY);
+
+        $.ajax({
+            url: "../API/WebApi.ashx",
+            async: true,
+            type: "post",
+            dataType: 'json',
+            data: {
+                param: JSON.stringify(param),
+                method: method,
+                reqtime: reqtime,
+                sign: getSecret(param, method, reqtime)
+            },
+            success: function (infoData) {
+                infoData
+                setCookie('pwd_pay', infoData.data.pwd_pay);
+                setCookie('pwd_user', infoData.data.u_pwd);
+                $('#uLevel').html(infoData.data.u_level);
+                $('#myWallet').html(infoData.data.u_balance);
+                $('#myIntegral').html(infoData.data.u_integral);
+                $('#myColl').html(infoData.data.u_collect);
+                $('#myFootprint').html(infoData.data.u_foot);
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+
+            }
+        });
+
+    }
+
+</script>

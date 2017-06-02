@@ -1,0 +1,213 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+    <meta content="width=device-width,initial-scale=1.0, user-scalable=0" name="viewport"/>
+    <meta name="x5-orientation" content="portrait">
+    <meta content="yes" name="apple-mobile-web-app-capable"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta content="black" name="apple-mobile-web-app-status-bar-style"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+	<script type="text/javascript" src="js/size.js"></script>
+	<script type="text/javascript" src="js/md5.js"></script>
+	<script type="text/javascript" src="js/secret.js"></script>
+	<link rel="stylesheet" type="text/css" href="css/reset.css" media="screen"/>
+    <link rel="stylesheet" type="text/css" href="css/common.css" media="screen"/>
+    <link rel="stylesheet" type="text/css" href="css/index.css" media="screen"/>
+    <title>首页</title>
+</head>
+<body>
+<!--头部搜索开始-->
+<header class="head-container search-head">
+	<div class="logo">
+		<img src="image/logo.png" class="img-responsive" alt="" />
+	</div>
+	<div class="search-container">
+		<span>搜索你喜欢的商品</span>
+	</div>
+</header>
+<!--头部搜索结束-->
+
+<!--底部开始-->
+<footer class="footer-container common-footer">
+	<!--活动块加active-->
+	<a href="index.html" class="active"><em></em>首页</a>
+	<a href="hot.html"><em></em>热卖</a>
+	<a href="productionList.html"><em></em>点我下单</a>
+	<a href="orderList.html"><em></em>订单</a>
+	<a href="person.html"><em></em>我的生活馆</a>
+</footer>
+<!--底部结束-->
+
+<section id="scroll-wrapper">
+	<div id="scroll-container">			
+		<!--轮播图开始-->
+		<div class="index-banner">
+			<!--定位开始-->
+			<a class="location-container" id="address-box" href="javascript:;"><em>定位中...</em><i></i></a>
+			<!--定位结束-->
+			<div class="swiper-container">
+				<div class="swiper-wrapper">
+				 
+				</div>
+				<div class="swiper-pagination"></div>
+			</div>
+		</div>
+		<!--轮播图结束-->
+		
+		<!--快速导航开始-->
+		<div class="quick-menu marginB20 bgWhite">
+			<a href="express.html"><em></em>快递代收</a>
+			<a href="wash.html"><em></em>干洗代收</a>
+			<a href="life.html"><em></em>生活咨询</a>
+			<a href="productionList.html"><em></em>所有分类</a>
+		</div>
+		<!--快速导航结束-->
+		
+		<!--店铺精选开始-->
+		<div class="production-list-container bgWhite">
+			<div class="list-title"><em></em><span>店铺精选</span><em></em></div>
+			<ul class="production-list">			
+			</ul>
+		</div>
+		<!--店铺精选结束-->
+	</div>
+</section>
+
+<!--搜索页面开始-->
+<aside class="search-panel">
+	<!--搜索框-->
+	<form action="">
+		<div class="search-box">
+			<a href="javascript:void(0);" class="close-panel"></a>			
+			<div class="search-content">
+				<input type="search" class="searchKeyWord" />
+				<a href="javascript:void(0);" class="clear-button"></a>
+			</div>			
+			<a href="javascript:void(0);" class="search-button">搜索</a>
+		</div>
+	</form>
+	
+	<div class="search-related-container fuzzy-search">
+        <!-- 根据输入框关键词 搜索的结果-->
+		<div class="fuzzy-wrapper">
+          
+		</div>
+	</div>
+	
+	<div class="search-related-container">
+		<!--历史记录-->
+        <div class="search-related-box searchHistoryBox">
+            <h4>历史记录</h4>
+            <div class="search-related searchHistory">
+
+            </div>
+        </div>	
+		<!--热门搜索-->
+        <div class="search-related-box searchHotBox">
+            <h4>热门搜索</h4>
+            <div class="search-related searchHot">
+            </div>
+        </div>
+	</div>
+</aside>
+<!--搜索页面结束-->
+<!--定位进入页-->
+<div class="iframe-box hide" id="iframe-box"> </div>
+<!--定位出地址-->
+
+<div class="DOM-loadLayer">
+	<div class="rotate-load">
+		<div class="load-box">
+		</div>
+	</div>
+	<!--rotate-load-->
+</div>
+<!--DOM-loadLayer-->
+
+</body>
+</html>
+<script type="text/javascript" src="js/zepto.min.js"></script>
+<script type="text/javascript" src="js/common.js"></script>
+<script type="text/javascript" src="js/TouchScroll.js"></script>
+<script type="text/javascript" src="js/swiper.min.js"></script>
+<script type="text/javascript" src="js/lazyLoad.js"></script>
+<script type="text/javascript" src="js/getIndexData.js"></script>
+<script src="https://3gimg.qq.com/lightmap/components/geolocation/geolocation.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="js/location.js"></script>
+<script type="text/javascript">
+	var Myscroll = mySwiper = '',
+			curScrollDirection = y = maxScroll = 0,
+			pullUp = true,
+			page = 1; //开关 启用上拉加载
+
+	//页面的整体整天js css 加载完成
+	document.addEventListener('DOMContentLoaded',function(){
+		getProduct(page);
+		searchPanel(); //搜索页面事件
+		load();
+	},false);
+
+	//监听页面加载状态
+	$(document).on('ajaxComplete',function(e,xhr,op){
+		layerState();
+		Myscroll.refresh();
+		checkShow($(".production-list"));
+	});
+
+	function load() {
+		//轮播图动画
+		mySwiper = new Swiper('.index-banner .swiper-container', {
+			autoplay: 4500,
+			autoplayDisableOnInteraction: false,
+			loop: true,
+			pagination: '.swiper-pagination'
+		});
+
+		Myscroll = new IScroll('#scroll-wrapper', {
+			click: true,
+			touchend: true,
+			preventDefaultException: {
+				tagName: /^(INPUT|A|SPAN)$/
+			},
+			bindToWrapper: true,
+			scrollbars: true,
+			fadeScrollbars: true,
+			shrinkScrollbars: 'clip'
+		});
+
+		Myscroll.on('scrollEnd', function() {
+				//页面上拉加载
+				curScrollDirection = Myscroll.directionY,
+				maxScroll = Myscroll.maxScrollY + 120,
+				y = Myscroll.y;
+				if (y <= maxScroll && curScrollDirection == 1) {
+					pullUp = true;
+					//开始请求后台数据
+					if (pullUp) {
+						getProduct(++page);
+					}
+				} else {
+					pullUp = false;
+				}
+			Myscroll.refresh();
+			checkShow($(".production-list")); //懒加载
+		});
+	}
+
+	$(function(){
+		//显示、关闭我的地址页
+		$(document).on('click','.location-container',function(){  //重新定位
+			$('#iframe-box').show();
+			if ( $('#iframe-box').find('#mapPage').length == 0 ) {
+				var html = '<iframe id="mapPage" width="100%" height="100%" frameborder=0 name="myFrame"';
+				html += 'src="https://apis.map.qq.com/tools/locpicker?search=1&type=1&coordtype=5&key=IFLBZ-ZVHRI-XDSGG-5NY25-IITSH-4HFXD&referer=O2O">'
+				html += '</iframe>';
+				$('#iframe-box').html(html);
+				Position.openPositionMap();
+			}
+			Position.page=1;
+		})
+	});
+
+</script>

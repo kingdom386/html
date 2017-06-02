@@ -1,0 +1,313 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+    <meta content="width=device-width,initial-scale=1.0, user-scalable=0" name="viewport"/>
+    <meta name="x5-orientation" content="portrait">
+    <meta content="yes" name="apple-mobile-web-app-capable"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta content="black" name="apple-mobile-web-app-status-bar-style"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <link rel="stylesheet" type="text/css" href="css/reset.css" media="screen"/>
+    <link rel="stylesheet" type="text/css" href="css/common.css" media="screen"/>
+    <link rel="stylesheet" type="text/css" href="css/person.css" media="screen"/>
+    <title>用户注册登录</title>
+</head>
+<body>
+<!--头部开始-->
+<header class="head-container common-head">
+	<!--<a href="javascript:history.back();" class="back-button"></a>-->
+	<h4>注册</h4>
+</header>
+<!--头部结束-->
+<!--注册开始-->
+<section class="positionRelative registerPanel">
+	<ul class="form-container">
+		<li class="form-icon-phone form-verify">
+			<input type="tel" placeholder="请输入手机号码" id="mobile" onblur='checkMC(this)' onkeyup="IsMb(this,1)" maxlength="11" />
+			<!--无法点击加disabled-->
+			<a href="javascript:;" class="verify-button registerCode">获取验证码</a>
+		</li>
+		<li class="form-icon-code">
+			<input type="tel" placeholder="请输入验证码" maxlength="4" onblur='checkMCode(this)'  onkeyup='IsCode(this)'/>
+		</li>
+	</ul>
+	<a href="javascript:void(0);" data-logtype = '1' class="submit-button registerBtn">立即注册</a>
+	<div class="other-way">
+		<span>已有帐号？</span>
+		<a href="javascript:;" class="login-way-button">立即登录</a>
+	</div>
+</section>
+<!--注册结束-->
+
+<!--登录页面开始-->
+<aside class="login-aside" >
+	<!--头部开始-->
+	<header class="head-container common-head">
+		<!--<a href="javascript:history.back();" class="back-button"></a>-->
+		<!--<a href="javascript:;" class="close-button"></a>-->
+		<h4>登录</h4>
+		<a href="index.html" class="home-button"></a>
+	</header>
+	<!--头部结束-->
+	<!--切换导航开始-->
+	<div class="login-tab-container">
+		<a href="javascript:void(0);" class="active">手机验证登录</a>
+		<a href="javascript:void(0);">账户登录</a>
+		<b class="login-tab-border"></b>
+	</div>
+	<!--切换导航结束-->
+
+	<!--手机验证登录开始-->
+	<div class="login-container">
+		<ul class="form-container">
+			<li class="form-icon-phone form-verify">
+				<input type="tel" maxlength="11" placeholder="请输入手机号码"  onblur='checkMC(this)' onkeyup="IsMb(this,4)" id="l_mobile" />
+				<!--无法点击加disabled-->
+				<a href="javascript:void(0);" class="verify-button loginCode">获取验证码</a>
+			</li>
+			<li class="form-icon-code">
+				<input type="tel" maxlength="4" placeholder="请输入验证码" onblur='checkMCode(this)' onkeyup="IsCode(this)"  />
+			</li>
+		</ul>
+		<!--无法点击加disabled-->
+		<a href="javascript:void(0);" data-logtype = '2' class="submit-button codeLoginBtn">立即登录</a>
+		<div class="other-way">
+			<span>没有账号？</span>
+			<a href="javascript:void(0);" class="register-way-button freeRegbtn">免费注册</a>
+		</div>  
+        <!-- 微信登录开始 -->
+        <div class="wx-way-login txt-center">
+            <p>第三方账户登录</p>
+            <a href="#"></a>
+        </div>
+        <!-- 微信登录结束 -->     
+	</div>
+	<!--手机验证登录结束-->
+
+	<!--密码登录开始-->
+	<div class="login-container" style="display: none;">
+		<ul class="form-container">
+			<li class="form-icon-phone">
+				<input type="tel" maxlength="11" placeholder="请输入手机号码"  onblur='checkMC(this)' onkeyup="IspMb(this)" />
+			</li>
+			<li class="form-icon-code form-visible">
+				<input type="password" placeholder="请输入密码"  onblur='checkMp(this)' onkeyup="IsPw(this)"  />
+				<a href="javascript:;" class="form-invisible-icon"></a>
+			</li>
+		</ul>
+		<a href="javascript:void(0);" data-logtype = '2' class="submit-button pwdLoginBtn">立即登录</a>
+		<div class="other-way">
+			<a href="">忘记密码</a>
+		</div>
+        <!-- 微信登录开始 -->
+        <div class="wx-way-login txt-center">
+            <p>第三方账户登录</p>
+            <a href="#"></a>
+        </div>
+        <!-- 微信登录结束 -->
+	</div>
+	<!--密码登录结束-->
+
+</aside>
+<!--登录页面结束-->
+
+</body>
+</html>
+<script type="text/javascript" src="js/zepto.min.js"></script>
+<script type="text/javascript" src="js/size.js"></script>
+<script type="text/javascript" src="js/md5.js"></script>
+<script type="text/javascript" src="js/secret.js"></script>
+<script type="text/javascript" src="js/form.js"></script>
+<script type="text/javascript" src="js/common.js"></script>
+<script type="text/javascript" src="js/getRegister.js"></script>
+<script type="text/javascript">
+	var mFlag = cFlag = false,p = c = 0,
+	    userPwd = nodes = '',gtp = ltp = 1;
+		//gtp 验证码类型 ltp 登录类型
+		//gtp 1 注册 2 登录
+		//ltp 1 密码登录 2 验证码登录
+	//类型 1 验证码 登录  2  密码登录
+
+	function loginType(indx){
+		return (ltp=indx);
+	}
+
+	//检测手机号码格式
+	function checkMC(mcbj){
+		p = $(mcbj).val();
+		if(!IsMobile(p)){
+			mFlag = false;
+			//showTip('您输入的手机号码有误！').showError();
+		}else{
+			mFlag = true;
+		}
+	}
+
+	function IsMb(mbj,tp){
+		gtp = tp;
+		p = $(mbj).val();
+		if(IsMobile(p)){
+			mFlag = true;
+			$(mbj).next('a').unbind('touchend');
+			$(mbj).next('a').bind('touchend',function(){
+				console.log(gtp);
+				//发送验证码  注册
+				sendCode(p,gtp,$(mbj).next('a'));
+			});
+		}else {
+			$(mbj).next('a').unbind('touchend');
+			mFlag = false;
+		}
+		btnActive($(mbj));
+	}
+
+	//密码登录 手机验证
+
+	function IspMb(pmbj){
+		gtp = 2;
+		p = $(pmbj).val();
+		if(IsMobile(p)){
+			mFlag = true;
+		}else{
+			mFlag = false;
+		}
+		btnActive($(pmbj));
+	}
+
+
+	//检测 验证码格式
+	function checkMCode(mcode){
+		c = $(mcode).val();
+		var reg = /^[0-9]{4}$/;
+		if(reg.test(c)){
+			cFlag = true;
+		}else{
+			cFlag = false;
+			//showTip('您输入的验证码格式有误').showError();
+		}
+	}
+
+	function IsCode(cbj){
+		c = $(cbj).val();
+		var reg = /^[0-9]{4}$/;
+		if(reg.test(c)){
+			cFlag = true;
+		}else{
+			cFlag = false;
+		}
+		btnActive($(cbj));
+	}
+
+	//密码登录 密码验证
+
+	function checkMp(mpbj){
+		c = $(mpbj).val();
+		if(isPwd(c)){
+			cFlag = true;
+		}else {
+			cFlag = false;
+		}
+	}
+
+	function IsPw(pbj){
+		c = $(pbj).val();
+		if(isPwd(c)){
+			cFlag = true;
+		}else {
+			cFlag = false;
+		}
+		btnActive($(pbj));
+	}
+
+	//执行相应的事件
+	function  btnActive(par){
+		if(mFlag&&cFlag){
+			nodes = par.parents('.form-container').next('a');
+			btnAction();
+			gtp =par.parents('.form-container').next('a').data('logtype');
+			par.parents('.form-container').next('a').addClass('active');
+		}else{
+			$(par).parents('.form-container').next('a').removeClass('active').off('touchend');
+		}
+	}
+
+	function btnAction(){
+        if(mFlag&&cFlag){
+			nodes.unbind('touchend');
+			nodes.bind('touchend',function(){
+				var method = (gtp == 1?'Register':'UserLogin');
+				//gtp 1  注册  2 登录
+				if(gtp == 1){
+					param = {shopid: "3",device: "3",p_type:1,phone:p,code:c}
+				}else{
+					if(ltp == 1 ){
+						param = {
+							shopid: "3",
+							device: "3",
+							l_type: 2,
+							//1 密码登录  2 验证码登录
+							phone: p,
+							p_type:4,
+							//手机号码
+							pwd: '',
+							code: c //用户输入的验证码
+						};
+					}else{
+						param = {
+							shopid: "3",
+							device: "3",
+							l_type: 1,
+							//1 密码登录  2 验证码登录
+							phone: p,
+							//手机号码
+							pwd: md5(c).substr(8, 16),
+							code: '' //用户输入的验证码
+						};
+					}
+				}
+				sign = md5(JSON.stringify(param) + method + reqtime + API_KEY);
+				$.ajax({
+					url: "../API/WebApi.ashx",
+					async: true,
+					type: "post",
+					dataType: 'json',
+					data: {
+						param: JSON.stringify(param),
+						method: method,
+						reqtime: reqtime,
+						sign: sign
+					},
+					success: function(allMsg) {
+						if(allMsg.status == 0){
+							showTip(allMsg.msg).showError();
+						}else if(allMsg.status == 1){
+							if(gtp == 1){
+								$('.login-aside').show();
+								$('.registerPanel').hide();
+							}else{
+								var cookieStr = getStorage('urlReference');
+								setCookie('username', p);
+								setCookie('userid', allMsg.data.id);
+								if(cookieStr != null){
+									window.location.href = cookieStr;
+								}else{
+									window.location.href = 'index.html';
+								}
+
+							}
+						}else{
+
+						}
+					},
+					error: function(XMLHttpRequest, textStatus, errorThrown) {
+						console.log(textStatus);
+					}
+				});
+
+			});
+		}
+	}
+
+</script>
+

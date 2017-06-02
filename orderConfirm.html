@@ -1,0 +1,101 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+    <meta content="width=device-width,initial-scale=1.0, user-scalable=0" name="viewport"/>
+    <meta name="x5-orientation" content="portrait">
+    <meta content="yes" name="apple-mobile-web-app-capable"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta content="black" name="apple-mobile-web-app-status-bar-style"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <link rel="stylesheet" type="text/css" href="css/reset.css" media="screen"/>
+    <link rel="stylesheet" type="text/css" href="css/common.css" media="screen"/>
+    <link rel="stylesheet" type="text/css" href="css/order.css" media="screen"/>
+    <title>购物车</title>
+</head>
+<body>
+<!--头部开始-->
+<header class="head-container common-head">
+	<a href="javascript:void(0);" class="back-button"></a>
+	<h4>购物车</h4>
+	<a href="index.html" class="home-button"></a>
+</header>
+<!--头部结束-->
+
+<!--底部开始-->
+<footer class="footer-container confirm-footer">
+	<p class="confirm-price">
+		<span id='sumPrice'>0.00</span>
+		<em>（含运费<b>0</b>元）</em>
+	</p>
+	<a href="javascript:void(0);" class="item-buy-button" id='subOrder'>提交订单</a>
+</footer>
+<!--底部结束-->
+<section id="scroll-wrapper">
+    <div id="scroll-container">
+
+		<!-- 无订单 -->
+		<div class="default-page-container" style="display: none">
+			<em class="default-order"></em>
+			<p>您还没有订单哦</p>
+			<a href="productionList.html">去选购</a>
+		</div>
+
+		<div id="hasOrder">
+			<input type="hidden" id="adId">
+			<a href="javascript:void(0);" onclick="getAddr(this)" class="address-select-container address-select-empty">请先添加收货地址</a>
+			<!--地址选择结束-->
+
+            <!--20170531add 自提点地址开始-->
+            <!--<div class="address-pick-up">
+                <p>
+                    <em>自提点</em>
+                    <span>台州美莱美店</span>
+                </p>
+                <p>台州市台州市人大浙江省台州市椒江区白云山南路233号</p>
+            </div>-->
+            <!--20170531add 自提点地址结束-->
+			
+			<!--商品列表开始-->
+			<div class="order-confirm-container">
+				<h4>商品列表</h4>
+				<ul class="confirm-list">
+				</ul>
+			</div>
+			<!--商品列表结束-->
+			<ul class="order-handle-container">
+				<li>
+					<p>支付方式：</p>
+					<div class="order-handle">在线支付</div>
+				</li>
+				<li>
+					<p>配送方式：</p>
+					<div href="javascript:;" class="order-handle order-select-handle">
+						<span>送货上门</span>
+						<select id="getPost">
+							<option value="1">送货上门</option>
+							<option value="2">自提</option>
+						</select>
+					</div>
+
+				</li>
+				<li class="textarea-li">
+					<p>订单备注：</p>
+					<div class="order-handle">
+						<textarea id="ordNote" placeholder="限45字"></textarea>
+					</div>
+				</li>
+			</ul>
+		</div>
+    </div>
+</section>
+
+</body>
+</html>
+<script type="text/javascript" src="js/zepto.min.js"></script>
+<script type="text/javascript" src="js/size.js"></script>
+<script type="text/javascript" src="js/common.js"></script>
+<script type="text/javascript" src="js/md5.js"></script>
+<script type="text/javascript" src="js/secret.js"></script>
+<script type="text/javascript" src="js/TouchScroll.js"></script>
+<script type="text/javascript" src="js/getOrderConfirm.js"></script>
