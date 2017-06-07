@@ -131,13 +131,12 @@
 		 API_KEY = "gVzKTvzJyRTCkdDQ4AcQaCgp5iIpskbq",
 		 reqtime = Date.parse(new Date());
 
-
-	document.addEventListener('DOMContentLoaded',function(){
-		//请求获取热卖产品
-		getHotList(page);
-		load();
-		changeCart();
-	},false);
+	window.onload =function(){
+				//请求获取热卖产品
+				getHotList(page);
+				load();
+				changeCart();
+			};
 
 	$(document).on('ajaxComplete',function(xhr,op){
 		layerState();
@@ -146,46 +145,46 @@
 		checkShow($(".search-list"));//懒加载
 	});
 
-function load() {
-	    Myscroll = new IScroll('#scroll-wrapper', {
-        click:true,
-        touchend:true,
-        preventDefaultException: { tagName: /^(INPUT|BUTTON|A|SPAN)$/ },
-        bindToWrapper: true,
-        scrollbars: true,
-        fadeScrollbars: true,
-        shrinkScrollbars: 'clip'
-    });
+	function load() {
+			Myscroll = new IScroll('#scroll-wrapper', {
+			click:true,
+			touchend:true,
+			preventDefaultException: { tagName: /^(INPUT|BUTTON|A|SPAN)$/ },
+			bindToWrapper: true,
+			scrollbars: true,
+			fadeScrollbars: true,
+			shrinkScrollbars: 'clip'
+		});
 
-	popoverWrapper = new IScroll(".cart-popover-wrapper", {
-		preventDefaultException: {
-			tagName: /^(INPUT|A|SPAN)$/
-		},
-		bindToWrapper: true,
-		scrollbars: true,
-		fadeScrollbars: true,
-		click: true,
-		tap: true
-	});
+		popoverWrapper = new IScroll(".cart-popover-wrapper", {
+			preventDefaultException: {
+				tagName: /^(INPUT|A|SPAN)$/
+			},
+			bindToWrapper: true,
+			scrollbars: true,
+			fadeScrollbars: true,
+			click: true,
+			tap: true
+		});
 
-    Myscroll.on('scrollEnd', function () {
-		//页面上拉加载
-		curScrollDirection = Myscroll.directionY,
-				maxScroll = Myscroll.maxScrollY + 120,
-				y = Myscroll.y;
-		if (y <= maxScroll && curScrollDirection == 1) {
-			pullUp = true;
-			//开始请求后台数据
-			if (pullUp) {
-				getProduct(++page);
+		Myscroll.on('scrollEnd', function () {
+			//页面上拉加载
+			curScrollDirection = Myscroll.directionY,
+					maxScroll = Myscroll.maxScrollY + 120,
+					y = Myscroll.y;
+			if (y <= maxScroll && curScrollDirection == 1) {
+				pullUp = true;
+				//开始请求后台数据
+				if (pullUp) {
+					getHotList(++page);
+				}
+			} else {
+				pullUp = false;
 			}
-		} else {
-			pullUp = false;
-		}
-		Myscroll.refresh();
-		checkShow($(".search-list"));//懒加载
-    });
-}
+			Myscroll.refresh();
+			checkShow($(".search-list"));//懒加载
+		});
+	}
 
 	function getHotList(pgindx){
 		var method = "GetIndexHotSale",

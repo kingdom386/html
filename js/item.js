@@ -6,23 +6,23 @@ var navBox=contentBox=popoverWrapper=mySwiper='',
     checkShowItem = $("div.item-box-0"),pullUp= true,
     nav = $(".item-nav ul");
 
-//请求添加后台数据
-document.addEventListener('DOMContentLoaded',function(){
-    getListType();
-    prodList();
-    cartPopover();
-    searchPanel();
-    changeCart();
-    getCartLocalStorage();
-},false);
+    //请求添加后台数据
+    window.onload = function(){
+        getListType();
+        prodList();
+        cartPopover();
+        searchPanel();
+        changeCart();
+        getCartLocalStorage();
+    };
 
-$(document).on('ajaxComplete',function(e,xhr,op){
-    layerState();
-    navBox.refresh();
-    contentBox.refresh();
-    popoverWrapper.refresh();
-    //checkShow(checkShowItem);
-});
+    $(document).on('ajaxComplete',function(e,xhr,op){
+        layerState();
+        navBox.refresh();
+        contentBox.refresh();
+        popoverWrapper.refresh();
+        //checkShow(checkShowItem);
+    });
 
 function prodList() {
     var winHeight = $(window).height(),
