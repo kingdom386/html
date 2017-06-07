@@ -39,6 +39,17 @@
         <div id="scroll-container">
             <!--个人中心头部开始-->
             <div class="person-info-container" style="background-image: url(image/centerBg.jpg);">
+                <!--登录/注册-->
+                <a href="register.html" class="person-info-login" id="RLBtn">请登录/注册</a>
+                <!--登录状态下-->
+                <div class="person-info" id="LState" style="display: none;">
+                    <div class="person-image">
+                      <img src="image/2.jpg" class="img-responsive" alt="" />
+                    </div>
+                    <div class="person-info-text">
+                        <p><span id="userNickName"></span><em id="uLevel"></em> </p><a href="recharge.html">去充值</a>
+                    </div>
+                </div>
 
             </div>
             <!--个人中心头部结束-->
@@ -121,12 +132,12 @@
 
     //页面的整体整天js css 加载完成
     window.onload = function(){
+        layerState();
         load();
     };
 
     //监听页面加载状态
     $(document).on('ajaxComplete',function(e,xhr,op){
-        layerState();
         Myscroll.refresh();
     });
 
@@ -155,30 +166,22 @@
         });
 
         if (getCookies('username')) {
+            $('#LState').hide();
+            $('#RLBtn').show();
             setStorage('urlReference', window.location.href);
-            //用户没有登录的状态
-            $('.person-info-container').html('<a href="register.html" class="person-info-login">请登录/注册</a>');
         } else {
-            $('.person-info-container').html('<div class="person-info">' +
-					'<div class="person-image">' +
-					'<img src="image/2.jpg" class="img-responsive" alt="" />' +
-					'</div><div class="person-info-text">' +
-					'<p><span>' + getCookieVal('username').substring(0, 3) + '****' + getCookieVal('username').substring(7, 11) + '</span><em id="uLevel"></em>' +
-					'</p><a href="recharge.html">去充值</a>' +
-					'</div></div>');
-        }
-
-        //请求获取个人信息
-        if (getCookieVal('username') != null) {
+            $('#LState').show();
+            $('#RLBtn').hide();
             //用户当前的状态是登录就请求当前用户的个人信息
             getPersonInfo();
         }
 
-        $('.moreOrderList').on('touchend', function () {
+        //参看更多的订单
+        $('.moreOrderList').bind('touchend', function () {
             window.location.href = 'orderList.html';
         });
 
-        $('.my-order-container ul li,.my-order-container a').bind('touchend',function(){
+         $('.my-order-container ul li,.my-order-container a').bind('touchend',function(){
             //设置锚标记 hrefMark
             setStorage('hrefMark',$(this).data('type'));
             window.location.href = 'orderList.html';
@@ -207,8 +210,11 @@
                 sign: getSecret(param, method, reqtime)
             },
             success: function (infoData) {
+                console.log(infoData.data.u_sj);
                 setCookie('pwd_pay', infoData.data.pwd_pay);
                 setCookie('pwd_user', infoData.data.u_pwd);
+                $('.person-image img').attr('src',infoData.data.u_headimgurl);
+                $('#userNickName').html(infoData.data.u_zh);
                 $('#uLevel').html(infoData.data.u_level);
                 $('#myWallet').html(infoData.data.u_balance);
                 $('#myIntegral').html(infoData.data.u_integral);

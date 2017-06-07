@@ -20,28 +20,7 @@
     <favorites_list name="html" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="person.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/person.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-10.620689">
-              <caret line="171" column="34" selection-start-line="171" selection-start-column="26" selection-end-line="171" selection-end-column="34" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="config.html" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/config.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.38276836">
-              <caret line="50" column="47" selection-start-line="50" selection-start-column="47" selection-end-line="50" selection-end-column="47" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -81,7 +60,6 @@
         <option value="$PROJECT_DIR$/js/getIndexData.js" />
         <option value="$PROJECT_DIR$/payResult.html" />
         <option value="$PROJECT_DIR$/js/getList.js" />
-        <option value="$PROJECT_DIR$/config.html" />
         <option value="$PROJECT_DIR$/Settlement.html" />
         <option value="$PROJECT_DIR$/productionList.html" />
         <option value="$PROJECT_DIR$/js/lazyLoad.js" />
@@ -103,6 +81,8 @@
         <option value="$PROJECT_DIR$/register.html" />
         <option value="$PROJECT_DIR$/js/common.js" />
         <option value="$PROJECT_DIR$/weiChat.html" />
+        <option value="$PROJECT_DIR$/css/person.css" />
+        <option value="$PROJECT_DIR$/config.html" />
         <option value="$PROJECT_DIR$/person.html" />
       </list>
     </option>
@@ -261,9 +241,9 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1604" height="876" extended-state="0" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.09949622" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.10894207" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32905295" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
@@ -317,13 +297,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/payPwd.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.7175141">
-          <caret line="103" column="59" selection-start-line="103" selection-start-column="59" selection-end-line="103" selection-end-column="59" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/js/location.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.2944369">
@@ -689,39 +662,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js/common.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.1356852">
-          <caret line="37" column="0" selection-start-line="37" selection-start-column="0" selection-end-line="37" selection-end-column="0" />
-          <folding>
-            <element signature="n#!!block;n#RemoveBodyTouch#0" expanded="false" />
-            <element signature="n#!!block;n#RecoveryBodyTouch#0" expanded="false" />
-            <element signature="n#!!block;n#searchPanel#0" expanded="false" />
-            <element signature="n#!!block;n#addItem#0" expanded="false" />
-            <element signature="e#4709#4754#0" expanded="false" />
-            <element signature="n#!!block;n#searchByKeyword#0" expanded="false" />
-            <element signature="n#!!block;n#cartPopover#0" expanded="false" />
-            <element signature="n#!!block;n#confirmPanel#0" expanded="false" />
-            <element signature="n#!!block;n#recharge#0" expanded="false" />
-            <element signature="n#!!block;n#startSearchHistory#0" expanded="false" />
-            <element signature="n#!!block;n#startSearchHot#0" expanded="false" />
-            <element signature="n#!!block;n#searchLikeKey#0" expanded="false" />
-            <element signature="n#!!block;n#searResult#0" expanded="false" />
-            <element signature="n#!!block;n#getCookies#0" expanded="false" />
-            <element signature="n#!!block;n#getCookieVal#0" expanded="false" />
-            <element signature="n#!!block;n#setCookie#0" expanded="false" />
-            <element signature="n#!!block;n#removeCookie#0" expanded="false" />
-            <element signature="n#!!block;n#setStorage#0" expanded="false" />
-            <element signature="n#!!block;n#getStorage#0" expanded="false" />
-            <element signature="n#!!block;n#removeLocalStorage#0" expanded="false" />
-            <element signature="n#!!block;n#layerState#0" expanded="false" />
-            <element signature="n#!!block;n#isOnline#0" expanded="false" />
-            <element signature="n#!!block;n#isAds#0" expanded="false" />
-            <element signature="e#15504#15520#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/register.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.20903955">
@@ -745,17 +685,62 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/person.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-10.620689">
-          <caret line="171" column="34" selection-start-line="171" selection-start-column="26" selection-end-line="171" selection-end-column="34" />
+        <state vertical-scroll-proportion="0.3601695">
+          <caret line="204" column="29" selection-start-line="204" selection-start-column="29" selection-end-line="204" selection-end-column="29" />
+          <folding>
+            <element signature="n#style#0;n#div#0;n#div#0;n#section#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#section#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#div#1;n#div#0;n#section#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+            <element signature="n#div#2;n#div#0;n#section#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+            <element signature="n#div#3;n#div#0;n#section#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/css/person.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.3460452">
+          <caret line="16" column="276" selection-start-line="16" selection-start-column="276" selection-end-line="16" selection-end-column="276" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/config.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.38276836">
-          <caret line="50" column="47" selection-start-line="50" selection-start-column="47" selection-end-line="50" selection-end-column="47" />
+        <state vertical-scroll-proportion="0.4957627">
+          <caret line="51" column="30" selection-start-line="51" selection-start-column="22" selection-end-line="51" selection-end-column="30" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/common.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33242875">
+          <caret line="426" column="24" selection-start-line="426" selection-start-column="20" selection-end-line="426" selection-end-column="24" />
+          <folding>
+            <element signature="n#!!block;n#RemoveBodyTouch#0" expanded="false" />
+            <element signature="n#!!block;n#RecoveryBodyTouch#0" expanded="false" />
+            <element signature="n#!!block;n#searchPanel#0" expanded="false" />
+            <element signature="n#!!block;n#addItem#0" expanded="false" />
+            <element signature="e#4709#4754#0" expanded="false" />
+            <element signature="n#!!block;n#searchByKeyword#0" expanded="false" />
+            <element signature="n#!!block;n#cartPopover#0" expanded="false" />
+            <element signature="n#!!block;n#confirmPanel#0" expanded="false" />
+            <element signature="n#!!block;n#recharge#0" expanded="false" />
+            <element signature="n#!!block;n#startSearchHistory#0" expanded="false" />
+            <element signature="n#!!block;n#startSearchHot#0" expanded="false" />
+            <element signature="n#!!block;n#searchLikeKey#0" expanded="false" />
+            <element signature="n#!!block;n#searResult#0" expanded="false" />
+            <element signature="n#!!block;n#getCookieVal#0" expanded="false" />
+            <element signature="n#!!block;n#setCookie#0" expanded="false" />
+            <element signature="n#!!block;n#setStorage#0" expanded="false" />
+            <element signature="n#!!block;n#getStorage#0" expanded="false" />
+            <element signature="n#!!block;n#removeLocalStorage#0" expanded="false" />
+            <element signature="n#!!block;n#layerState#0" expanded="false" />
+            <element signature="n#!!block;n#isOnline#0" expanded="false" />
+            <element signature="n#!!block;n#isAds#0" expanded="false" />
+            <element signature="e#15504#15520#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>

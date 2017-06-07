@@ -14,7 +14,7 @@ header.person-head~ section#scroll-wrapper{ top: 0;}
 /*个人信息开始*/
 .person-info-container{ height: 3.64rem; background-size: cover; background-position: center center; background-repeat: no-repeat; position: relative;}
 .person-info-container .person-info{ position: absolute; bottom: 0.74rem; left: 0.66rem; display: -webkit-box; display: -webkit-flex; display: flex; align-items: center; -webkit-align-items: center;}
-.person-info-container .person-image{ width: 1.3rem; height: 1.3rem; border: 0.01rem solid #ddd; background-color: #fff; overflow: hidden; border-radius: 50%; font-size: 0; line-height: 1.3rem; text-align: center;}
+.person-info-container .person-image{ width: 1.3rem; height: 1.3rem; border: 0.01rem solid #ddd; overflow: hidden; border-radius: 50%; font-size: 0; line-height: 1.3rem; text-align: center;background:#fff url('../image/2.jpg') center center no-repeat;background-size: contain; }
 .person-info-container .person-image img{ vertical-align: middle; display: inline-block;}
 .person-info-container .person-info-text{ padding-left: 0.2rem; font-size: 0.28rem; -webkit-box-flex: 1; -webkit-flex: 1; flex: 1;}
 .person-info-container .person-info-text p em{ color: #d1a907; font-size: 0.2rem; font-weight: bold;}
