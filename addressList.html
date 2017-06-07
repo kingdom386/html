@@ -16,7 +16,7 @@
 <body>
 <!--头部开始-->
 <header class="head-container common-head">
-	<a href="javascript:void(0)"  class="back-button"></a>
+	<a href="javascript:history.back();"  class="back-button"></a>
 	<h4>收货地址管理</h4>
 </header>
 <!--头部结束-->
@@ -134,8 +134,8 @@
 					if($(obj).attr('class') != 'slide-delete-button'){
 						var str = (ev.srcElement.nodeName|| ev.target).trim();
 						if (str.toLowerCase() == 'em') {
-							console.log(str);
 							var tempAry = {
+								'ad_id':$(str).parents('.slide-list-wrapper').data('aid'),
 								'u_id': $(str).parents('.slide-list-wrapper').data('uid'),
 								'u_name':$(str).parents('.slide-list-wrapper').data('uname'),
 								'u_sj': $(str).parents('.slide-list-wrapper').data('usj'),
@@ -153,6 +153,7 @@
 							window.location.href = './addressInfo.html?editId=' + $(this).data('aid');
 						} else {
 							var tempAry = {
+								'ad_id':$(this).data('aid'),
 								'u_id': $(this).data('uid'),
 								'u_name': $(this).data('uname'),
 								'u_sj': $(this).data('usj'),

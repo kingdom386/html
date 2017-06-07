@@ -12,11 +12,19 @@
     <link rel="stylesheet" type="text/css" href="css/common.css" media="screen"/>
     <link rel="stylesheet" type="text/css" href="css/order.css" media="screen"/>
     <title>购物车</title>
+	<style type="text/css">
+		textarea{
+			user-select: auto !important;
+			-ms-user-select: auto !important;
+			-moz-user-select: auto !important;
+			-webkit-user-select: auto !important;
+		}
+	</style>
 </head>
 <body>
 <!--头部开始-->
 <header class="head-container common-head">
-	<a href="javascript:void(0);" onclick=""  class="back-button"></a>
+	<a href="javascript:history.back();"  class="back-button"></a>
 	<h4>购物车</h4>
 	<a href="index.html" class="home-button"></a>
 </header>
@@ -106,7 +114,7 @@
 				<li class="textarea-li">
 					<p>订单备注：</p>
 					<div class="order-handle">
-						<textarea id="ordNote" placeholder="限45字"></textarea>
+						<textarea id="ordNote" placeholder="限45字" ></textarea>
 					</div>
 				</li>
 			</ul>

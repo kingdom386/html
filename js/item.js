@@ -143,7 +143,6 @@ function prodList() {
         } else {
             pullUp = false;
         }
-
         checkShow(checkShowItem);
     });
 }

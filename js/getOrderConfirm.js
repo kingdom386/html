@@ -5,16 +5,15 @@ var reqtime = Date.parse(new Date()),addrFlag = cartFlag = false;
 	urlStr = window.location.href;
 
 //页面的整体整天js css 加载完成
-document.addEventListener('DOMContentLoaded',function(){
+window.onload = function(){
 	//请求默认的收货地址
 	addAddr();
 	load();
-},false);
+}
 
 //监听页面加载状态
 $(document).on('ajaxComplete',function(e,xhr,op){
 	Myscroll.refresh();
-	checkShow($(".production-list"));
 });
 
 //修改或是添加收货地址
@@ -35,7 +34,7 @@ function load() {
 		click: true,
 		touchend: true,
 		preventDefaultException: {
-			tagName: /^(INPUT|A|SPAN|SELECT)$/
+			tagName: /^(INPUT|A|SPAN|SELECT|TEXTAREA)$/
 		},
 		bindToWrapper: true,
 		scrollbars: true,
@@ -92,8 +91,9 @@ function addAddr() {
 			addrFlag = true;
 			btnChange();
 			$(changeLs).each(function(i,t){
+				console.log(t);
 				$('.address-select-container').html('').removeClass('address-select-empty');
-				var str = '<h5 id="uAddr">'+t.nation+t.province+t.city+t.district+t.addr+'</h5>'+
+				var str = '<h5 id="uAddr" data-aid = '+t.ad_id+'>'+t.nation+t.province+t.city+t.district+t.addr+'</h5>'+
 					'<p><span id="uName">'+t.u_name+'</span><span id="uSj">'+t.u_sj+'</span></p>';
 				$('.address-select-container').html(str);
 			});
@@ -170,6 +170,7 @@ $('#subOrder').bind('touchend', function() {
 			showTip('您的收货地址有误！').showError();
 			return false;
 		}
+
 		sign = md5(JSON.stringify(param) + method + reqtime + API_KEY);
 		$.ajax({
 			url: "../API/WebApi.ashx",

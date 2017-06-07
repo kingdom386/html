@@ -120,10 +120,9 @@
     var reqtime = Date.parse(new Date()), Myscroll = '';
 
     //页面的整体整天js css 加载完成
-    document.addEventListener('DOMContentLoaded',function(){
+    window.onload = function(){
         load();
-        layerState();
-    },false);
+    };
 
     //监听页面加载状态
     $(document).on('ajaxComplete',function(e,xhr,op){
@@ -157,6 +156,7 @@
 
         if (getCookies('username')) {
             setStorage('urlReference', window.location.href);
+            //用户没有登录的状态
             $('.person-info-container').html('<a href="register.html" class="person-info-login">请登录/注册</a>');
         } else {
             $('.person-info-container').html('<div class="person-info">' +
@@ -219,6 +219,5 @@
 
             }
         });
-
     }
 </script>

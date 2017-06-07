@@ -185,7 +185,6 @@ function getDeInfo(pid) {
 			sign: getSecret(param, method, reqtime)
 		},
 		success: function(deData) {
-			console.log(deData);
 			var str = '',
 				idFlag = true;
 			$(deData.data).each(function(i, t) {

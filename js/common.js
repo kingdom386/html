@@ -1,7 +1,6 @@
 //发送验证码公共函数方法
 function sendCode(phone, pType, obj) {
     //ajax 发送验证码
-    settime(obj);
     var method = 'SendCode',
         param = {
             shopid: "3",
@@ -12,6 +11,7 @@ function sendCode(phone, pType, obj) {
             u_id:getCookieVal('userid')
         };
     sign = md5(JSON.stringify(param) + method + reqtime + API_KEY);
+    console.log(pType);
     $.ajax({
         url: "../API/WebApi.ashx",
         async: true,
@@ -24,6 +24,14 @@ function sendCode(phone, pType, obj) {
             sign: sign
         },
         success: function(iMessage) {
+           if(iMessage.status == 0 && pType == 1){
+              showTip('该手机号码已注册 !').showError();
+           }
+
+            if(iMessage.status == 1 && pType == 1){
+                showTip('验证码已发送，请注意查收!').showSuccess();
+                settime(obj);
+            }
 
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -509,11 +517,11 @@ function isOnline(){
     }
 }
 
-//判断广告过滤
+//判断广告过滤 过滤规则可手动添加
 function  isAds(){
     var timer = setInterval(function(){
         //匹配广告id
-        $('span[id*="ads"],div[id*="ads"]').hide();
+        $('span[id*="ads"],div[id*="ads"],div[id*="Cm7"]').hide();
     },120);
     setTimeout(function(){
         clearInterval(timer);
