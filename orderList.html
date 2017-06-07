@@ -11,9 +11,10 @@
     <link rel="stylesheet" type="text/css" href="css/reset.css" media="screen"/>
     <link rel="stylesheet" type="text/css" href="css/common.css" media="screen"/>
     <link rel="stylesheet" type="text/css" href="css/order.css" media="screen"/>
-    <title>我的订单</title>
+	<script type="text/javascript" src="js/size.js"></script>
+	<title>我的订单</title>
 </head>
-<body onload="load()">
+<body>
 <!--头部开始-->
 <header class="head-container common-head">
 	<a href="index.html" class="back-button"></a>
@@ -21,33 +22,41 @@
 </header>
 <!--头部结束-->
 
-<!--搜索框-->
-<form action="" role="form" method="post" class="order-list-form">
-	<div class="search-padding-container">
-		<div class="search-container search-text-container">
-			<input type="text" placeholder="搜索订单号或者商品名称" class="searchOrder" />
-		</div>
-	</div>
-</form>
-
-<input type="hidden" id="uid" value="0" >
-<!--切换导航开始-->
-<div class="order-tab-container">
-	<a href="#0" class="active">所有订单</a>
-	<a href="#1">待付款</a>
-	<a href="#2">已付款</a>
-	<a href="#3">配送中</a>
-	<b class="order-tab-border"></b>
+<div class="default-page-container" style="display: none;">
+	<em class="default-order"></em>
+	<p>您还没有订单哦</p>
+	<a href="productionList.html">去选购</a>
 </div>
-<!--切换导航结束-->
-<section id="scroll-wrapper">
-    <div id="scroll-container">
-    	<!--所有订单开始-->
-    	<div id="allOrder" class="order-list-wrapper">
 
-	    </div>
-    	<!--所有订单结束-->
-    </div>
+<section class="allOrderInfo">
+	<!--搜索框-->
+	<form action="" role="form" method="post" class="order-list-form">
+		<div class="search-padding-container">
+			<div class="search-container search-text-container">
+				<input type="text" placeholder="搜索订单号或者商品名称" class="searchOrder" />
+			</div>
+		</div>
+	</form>
+
+	<input type="hidden" id="uid" value="0" >
+	<!--切换导航开始-->
+	<div class="order-tab-container">
+		<a href="javascript:void(0);" class="active">所有订单</a>
+		<a href="javascript:void(0);" >待付款</a>
+		<a href="javascript:void(0);" >已付款</a>
+		<a href="javascript:void(0);" >配送中</a>
+		<b class="order-tab-border"></b>
+	</div>
+	<!--切换导航结束-->
+	<section id="scroll-wrapper">
+		<div id="scroll-container">
+			<!--所有订单开始-->
+			<div id="allOrder" class="order-list-wrapper">
+
+			</div>
+			<!--所有订单结束-->
+		</div>
+	</section>
 </section>
 
 <div class="DOM-loadLayer">
@@ -63,7 +72,6 @@
 </body>
 </html>
 <script type="text/javascript" src="js/zepto.min.js"></script>
-<script type="text/javascript" src="js/size.js"></script>
 <script type="text/javascript" src="js/common.js"></script>
 <script type="text/javascript" src="js/md5.js"></script>
 <script type="text/javascript" src="js/secret.js"></script>

@@ -3,28 +3,26 @@
 * */
 
 var navBox=contentBox=popoverWrapper=mySwiper='',
-    checkShowItem = $(".item-box-0"),pullUp= true,
+    checkShowItem = $("div.item-box-0"),pullUp= true,
     nav = $(".item-nav ul");
 
 //请求添加后台数据
 document.addEventListener('DOMContentLoaded',function(){
     getListType();
+    prodList();
     cartPopover();
     searchPanel();
-    prodList();
     changeCart();
     getCartLocalStorage();
 },false);
 
 $(document).on('ajaxComplete',function(e,xhr,op){
-    console.log(checkShowItem);
     layerState();
     navBox.refresh();
     contentBox.refresh();
     popoverWrapper.refresh();
-    checkShow(checkShowItem);
+    //checkShow(checkShowItem);
 });
-
 
 function prodList() {
     var winHeight = $(window).height(),
@@ -37,6 +35,7 @@ function prodList() {
     }else{
     	headerHeight = $(".common-head").height();
     }
+
     if($(".footer-container").length <= 0){
     	footerContainer = 0;
     }else{
@@ -58,7 +57,6 @@ function prodList() {
     contentBox = new IScroll(".item-content", {
         click: true,
         touchend: true,
-        //tap: true,
         preventDefaultException: { tagName: /^(INPUT|A|SPAN)$/ },
         bindToWrapper: true,
         scrollbars: true,
@@ -77,7 +75,7 @@ function prodList() {
     });
 
     //轮播图动画
-        mySwiper = new Swiper('.swiper-container', {
+    mySwiper = new Swiper('.swiper-container', {
         loop: true,
         pagination: '.swiper-pagination',
         paginationType: 'fraction'
@@ -93,8 +91,6 @@ function prodList() {
         }
     });
 
-    checkShow(checkShowItem);//图片懒加载
-
     //左侧导航栏添加事件
     //需要传递参数 关键词 分类编号 页码 默认1
     var ci = k = tc = '',p = 1;
@@ -104,30 +100,28 @@ function prodList() {
         $(this).addClass("clickFlag");
         $(this).addClass("active").siblings("li").removeClass("active");
 
-        var a = $(this).children("a").attr("rel");
-        p = 1;
-        checkShowItem = $(".item-box-" + a);
+        var a = $(this).children("a").attr("rel"),
+            p = 1;
 
         var itemBoxCuurrent = $(".item-box-" + a);
+            checkShowItem = itemBoxCuurrent;
 
-        itemBoxCuurrent.show().siblings().hide();
-
-        contentBox.refresh();
-        contentBox.scrollTo(0, 0);
-        //contentBox.on("scrollEnd",function(){checkShow(checkShowItem)});
-        navBox.scrollToElement(this, 100);
+            itemBoxCuurrent.show().siblings().hide();
+            contentBox.refresh();
+            contentBox.scrollTo(0, 0);
+            navBox.scrollToElement(this, 100);
 
        //请求后台数据
        //需要传递参数 关键词 分类编号 页码 默认1
             ci = $(this).data("ci");
             k = $(this).data("name");
-            p = 1;
             tc = itemBoxCuurrent.selector;
         //决定是否要请求后台数据
         $("ul li", tc).length == 0 ? getListPage(ci, k, p, tc) : '';
     });
 
     contentBox.on("scrollEnd", function () {
+
         $('#typeList li').each(function(i,t){
             if($(t).hasClass('active')){
                 k = +$('a',t).html();
@@ -149,5 +143,7 @@ function prodList() {
         } else {
             pullUp = false;
         }
+
+        checkShow(checkShowItem);
     });
 }

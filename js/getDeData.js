@@ -8,14 +8,21 @@ var reqtime = Date.parse(new Date()),
 //获取url中的产品ID
 var p_id = ((window.location.href).split('?')[1]).split('=')[1];
 
-//请求对应产品的详情
-getDeInfo(p_id);
-document.onreadystatechange = function(){
-	if(document.readyState == 'complete'){
-		deLoad();
-		changeCart();
-	}
-}
+//页面的整体整天js css 加载完成
+document.addEventListener('DOMContentLoaded',function(){
+	getDeInfo(p_id);
+	getCartLocalStorage();
+	cartPopover();//购物车弹出层
+	deLoad();
+	changeCart();
+},false);
+
+//监听页面加载状态
+$(document).on('ajaxComplete',function(e,xhr,op){
+	layerState();
+	myDeScroll.refresh();
+	popoverWrapper.refresh();
+});
 
 function deLoad() {
 	 	popoverWrapper = new IScroll(".cart-popover-wrapper", {
@@ -39,12 +46,6 @@ function deLoad() {
 		shrinkScrollbars: 'scale'
 	});
 
-	setTimeout(function() {
-		getCartLocalStorage();
-		layerState();
-		myDeScroll.refresh();
-	}, 600);
-
 	myDeScroll.on('scrollEnd', function () {
 	    myDeScroll.refresh();
 	});
@@ -54,9 +55,6 @@ function deLoad() {
 	    $(".head-mask").css("opacity", 2.6 * (Math.abs(this.y) / 1000));
 	    2.6 * (Math.abs(this.y) / 1000) > 0.3 ? $(".head-container").find("h6").css("color", "#fff") : $(".head-container").find("h6").css("color", "#181818");
 	});
-
-	//请求对应产品的详情
-	//getDeInfo(p_id);
 }
 
 
@@ -152,7 +150,6 @@ $('.fix-drag').on('touchmove', function(e) {
 
 $('.fix-drag').on('touchend', function(ff) {
 	var tempX = ff.changedTouches[0].pageX-locX;
-	//alert(tempX);
 	if(tempX>20){
 		if (tempX <= (winWidth / 2)) {
 			$('.fix-drag').css({
@@ -188,6 +185,7 @@ function getDeInfo(pid) {
 			sign: getSecret(param, method, reqtime)
 		},
 		success: function(deData) {
+			console.log(deData);
 			var str = '',
 				idFlag = true;
 			$(deData.data).each(function(i, t) {
@@ -220,7 +218,10 @@ function getDeInfo(pid) {
 				var cs_node = '<div class="table-row-group">';
 
 				for (var i = 0; i < t.l_attr_value.length; i++) {
-					cs_node += '<div class="table-row">' + '<div class="table-cell">' + t.l_attr_value[i].attr_name + '</div><div class="table-cell">' + t.l_attr_value[i].value + '</div></div>';
+					cs_node += '<div class="table-row">' ;
+					cs_node += '<div class="table-cell">' + (t.l_attr_value[i].attr_name ==null)?'暂无参数':t.l_attr_value[i].attr_name ;
+					cs_node += '</div><div class="table-cell">' + (t.l_attr_value[i].value == null)?'暂无参数':t.l_attr_value[i].value ;
+					cs_node += '</div></div>';
 				}
 				cs_node += '</div>';
 				//商品参数详情

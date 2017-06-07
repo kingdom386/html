@@ -157,45 +157,6 @@ function searchByKeyword(){
     window.location.href = './searchResult.html?keyword=' + encodeURI(keyword) + '&pageIndex=1';
 }
 
-//数量加减事件
-/*
-
-function numberHandle() {
-    //产品列表页加载完后判断按钮显示消失
-    if ($(".item-box").length > 0) {
-        $(".number-handle-container").each(function() {
-            if ($(this).find("input").val().trim() <= 0) {
-                $(this).find("input,.reduce-button").addClass("hide");
-            }
-        })
-    }
-
-    $(".number-handle-container em").live("touchend", function(e) {
-        var inputVal = parseInt($(this).siblings("input[type='tel']").val()),
-            maxVal = $(this).parents('.cartItems').data('contain');
-
-        if ($(this).hasClass("reduce-button")) {
-            if (inputVal < 1) {
-                $('.cartItems').eq($(this).index()).remove();
-                $('body').find('.ct-panel input[type="tel"]').val(inputVal);
-                ary.shift(ary.indexOf($(this).parents('.cartItems').data('pid')));
-            } else {
-                inputVal -= 1;
-                $('body').find('.ct-panel input[type="tel"]').val(inputVal);
-                $(this).siblings("input[type='tel']").val(inputVal);
-            }
-        } else if ($(this).hasClass("plus-button") && inputVal < maxVal) {
-            var counts = ++inputVal;
-            $('body').find('.ct-panel input[type="tel"]').val(counts);
-            $(this).siblings("input[type='tel']").val(counts);
-        }
-
-        cartBadge();
-        return false;
-    })
-}
-*/
-
 //购物车弹出层事件
 function cartPopover() {
     $(".item-footer.active").live("click", function(e) {
@@ -232,13 +193,13 @@ function showTip(con) {
     }
     setTimeout(function() {
         $(".popover-alert").addClass("active");
-    }, 40)
+    }, 40);
     setTimeout(function() {
         $(".popover-alert").removeClass("active");
     }, 2000);
     setTimeout(function() {
         $(".popover-alert").remove();
-    }, 1900)
+    }, 1900);
     return obj;
 }
 
@@ -274,12 +235,10 @@ function recharge() {
     });
 }
 
-
 var API_KEY = "gVzKTvzJyRTCkdDQ4AcQaCgp5iIpskbq";
 var reqtime = Date.parse(new Date());
 
 //历史搜索  公共搜索方法
-
 function startSearchHistory() {
     var u_id = getCookieVal('userid');
     u_id = (u_id == undefined ? 0 : u_id);
@@ -456,7 +415,7 @@ function searResult(keyWord, pageIndex) {
 
 }
 
-//根据cookie判断用户状态
+//cookie判断用户状态 true 用户没有登录
 function getCookies(name) {
     var cookieStr = document.cookie;
     if (cookieStr.indexOf(name) == -1) {
@@ -541,4 +500,26 @@ function isWeiXin(){
     }
 }
 
+//判断网络问题
+function isOnline(){
+    if(navigator.onLine){
+        return true;
+    }else{
+        return false;
+    }
+}
 
+//判断广告过滤
+function  isAds(){
+    var timer = setInterval(function(){
+        //匹配广告id
+        $('span[id*="ads"],div[id*="ads"]').hide();
+    },120);
+    setTimeout(function(){
+        clearInterval(timer);
+    },60000);
+}
+
+document.ready = function(){
+    isAds();
+}

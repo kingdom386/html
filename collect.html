@@ -13,7 +13,7 @@
     <link rel="stylesheet" type="text/css" href="css/person.css" media="screen"/>
     <title>我的收藏</title>
 </head>
-<body onload="load()">
+<body>
 <!--头部开始-->
 <header class="head-container common-head">
 	<a href="javascript:history.back();" class="back-button"></a>
@@ -23,7 +23,7 @@
 <!--头部结束-->
 
 <!--底部开始,可以操作加active-->
-<footer class="footer-container item-footer active">
+<footer class="footer-container item-footer">
 	<a href="javascript:;" class="item-footer-cart"><em><i class="badge">5</i></em></a>
 	<div class="item-footer-price">
 		<em>0.00</em>
@@ -43,7 +43,7 @@
 		<ul class="scroll-container">
 			<li>
 				<h5 class="text-ellipsis-2">鸡蛋卷</h5>
-				<p class="item-price">5.00</p>
+				<p class="item-price">0.00</p>
 				<div class="number-handle-container">
 					<em class="reduce-button"></em>
 					<input type="tel" readonly="readonly" value="4" />
@@ -56,32 +56,10 @@
 <div class="over-bg"></div>
 <!--购物车弹出层结束-->
 
-
 <section id="scroll-wrapper">
 	<div id="scroll-container">
 		<div class="slide-list-container collect-list-container">			
-			<!--<div class="slide-list-wrapper">
-				&lt;!&ndash;多选框开始&ndash;&gt;
-				<label>
-					<input type="checkbox" name="collect" />
-				</label>
-				&lt;!&ndash;多选框结束&ndash;&gt;
-				<a class="slide-info-container" href="">
-					<div class="production-image">
-						<img data-src="image/indexBanner.jpg" class="img-responsive wait-load" alt="" />
-					</div>
-					<div class="production-info">
-						<h4 class="text-ellipsis-2">香奇异果猕猴桃香奇异果猕猴桃香奇异果猕猴桃香奇异果猕猴桃香奇异果猕猴桃香奇异果猕猴桃香奇异果猕猴桃香奇异果猕猴桃香奇异果猕猴桃</h4>
-						<p class="production-price">25.8</p>
-						&lt;!&ndash;加入购物车按钮&ndash;&gt;
-						<em class="search-buy-icon"></em>
-					</div>
-				</a>
-				&lt;!&ndash;删除按钮&ndash;&gt;
-				<button class="slide-delete-button">删除</button>
-			</div>-->
-			
-			
+
 		</div>
 	</div>
 </section>
@@ -96,11 +74,26 @@
 <script type="text/javascript" src="js/TouchScroll.js"></script>
 <script type="text/javascript" src="js/lazyLoad.js"></script>
 <script type="text/javascript" src="js/slideDelete.js"></script>
+<script type="text/javascript" src="js/cartPublic.js"></script>
 <script type="text/javascript">
 
- var page = 1,pullUp = true;
+	 var page = 1,pullUp = true,
+	 Myscroll = '';
+
+	 //页面的整体整天js css 加载完成
+	 document.addEventListener('DOMContentLoaded',function(){
+		 load();
+		 cartPopover();//购物车弹出层
+	 },false);
+
+	 //监听页面加载状态
+	 $(document).on('ajaxComplete',function(e,xhr,op){
+		 Myscroll.refresh();
+		 checkShow($(".collect-list-container"));
+	 });
+
 	function load() {
-		var Myscroll = new IScroll('#scroll-wrapper', {
+		  Myscroll = new IScroll('#scroll-wrapper', {
             touchend:true,
             preventDefault: false,
             preventDefaultException: { tagName: /^(INPUT|BUTTON|A|SPAN)$/ },
@@ -119,8 +112,6 @@
 			return false;
 		}
 
-		checkShow($(".collect-list-container"));//懒加载
-
 	    Myscroll.on('scrollEnd', function () {	
 		   //上拉加载更多收藏数据
 			if (pullUp) {
@@ -129,13 +120,12 @@
 				if (y <= maxScroll && curScrollDirection == 1) {
 					pullUp = true;
 					//开始请求后台数据
-					getAcountInfo(++page,getCookieVal('userid'),ptype);
+					getCollInfo(++page);
 				} else {
 					pullUp = false;
 				}
 			}
 			checkShow($(".collect-list-container"));//懒加载
-			Myscroll.refresh();
 	    });
 
    	}
@@ -165,19 +155,21 @@
 			success: function (collData) {
 				var str = '';
 				$(collData.data).each(function(i,t){
-					str+='<div data-id = '+ t.f_id+' class="slide-list-wrapper">'+
-							'<label>'+
-							'<input type="checkbox" value="'+ t.f_id+'" name="collect" />'+
-							'</label>'+
-							'<a class="slide-info-container" href="">'+
-							'<div class="production-image">'+
-							'<img data-src="'+ t.l_pic+'" class="img-responsive wait-load" alt="" /></div>'+
-							'<div class="production-info">'+
-							'<h4 class="text-ellipsis-2">'+ t.l_name+'</h4><p class="production-price">'+ t.l_danjia+'</p><em class="search-buy-icon"></em>'+
-							'</div></a><button data-id='+ t.f_id+' class="slide-delete-button">删除</button></div>';
+					str+='<div class="slide-list-wrapper  publicCart generalCart" data-mxcontain = '+ t.l_storage+' data-fid = '+ t.f_id+' data-id ='+t.p_id+' data-name="'+ t.l_name+'" data-price='+ t.l_danjia+' data-cateId='+ t.cateID+'>';
+					str+='<label>';
+					str+='<input type="checkbox" value="'+ t.f_id+'" name="collect" />';
+					str+='</label>';
+					str+='<a class="slide-info-container" href="detail.html?p_Id='+t.p_id+'">';
+					str+='<div class="production-image">';
+					str+='<img data-src="'+ t.l_pic+'" class="img-responsive wait-load" alt="" /></div>';
+					str+='<div class="production-info">';
+					str+='<h4 class="text-ellipsis-2">'+ t.l_name;
+					str+='</h4><p class="production-price">'+ t.l_danjia;
+					str+='</p><em class="search-buy-icon plus-button"></em><input type="hidden" value="0" />';
+					str+='</div></a><button data-id='+ t.f_id+' class="slide-delete-button">删除</button></div>';
 
 				});
-				//$('.collect-list-container').append(str);
+				$('.collect-list-container').append(str);
 
 				slideDelete();
 			},
@@ -192,9 +184,49 @@
 		checkShow($(".collect-list-container"));//懒加载
    	}
 
-	//window.addEventListener("load",cartPopover,false);//购物车弹出层
-	cartPopover();//购物车弹出层
-	numberHandle();//数量加减
+	 $('button').live('touchend',function(){
+		 var ary=[],id = $(this).parents('.slide-list-wrapper').data('fid');
+		 var ls = {'f_id':id}
+		 ary.push(ls);
+		 del(ary,id);
+	 });
+
+	function del(bry){
+		var method = 'DelCollectList',
+				param = {
+					shopid: "3",
+					device: "3",
+					u_id: getCookieVal('userid'),
+					coll_type:1,
+					l_collect:bry
+				};
+
+		sign = md5(JSON.stringify(param) + method + reqtime + API_KEY);
+
+		$.ajax({
+			url: "../API/WebApi.ashx",
+			async: true,
+			type: "post",
+			dataType: 'json',
+			data: {
+				param: JSON.stringify(param),
+				method: method,
+				reqtime: reqtime,
+				sign: getSecret(param, method, reqtime)
+			},
+			success: function (delData) {
+				if(delData.status == 1){
+					$(bry).each(function(i,t){
+						console.log(t.f_id);
+						$('.slide-list-wrapper[data-fid="'+t.f_id+'"]').remove();
+					});
+				}
+			},
+			error: function (XMLHttpRequest, textStatus, errorThrown) {
+
+			}
+		});
+	}
 	
 	$(function(){
 		$(".complete-button").on("touchend",function(){
@@ -220,6 +252,18 @@
 				$(".slide-info-container").css({"width":slideInfoWidth,"margin-left": 0});
 				$("label").removeClass("active");
 				$(".item-footer a").removeAttr("style");
+				//选中的checkbox
+				var ary=[];
+				$('label').each(function(i,t){
+					 //判断 获取 选中的checkbox
+					if($('input[type="checkbox"]',t).is(':checked')){
+						var id = $('input[type="checkbox"]:checked',t).parents('.slide-list-wrapper').data('fid');
+						$('input[type="checkbox"]:checked',t).parents('.slide-list-wrapper[data-id="'+id+'"]').remove();
+						var ls = {'f_id':id};
+						ary.push(ls);
+					}
+				});
+				del(ary);
 				return false;
 			}
 		})

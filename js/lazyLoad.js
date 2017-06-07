@@ -9,8 +9,8 @@ function isShow($el){
     }
   }
 function checkShow(a){//检查元素是否在可视范围内
-    a.find("img.wait-load").each(function(){//遍历每一个元素
-        var $cur = $(this);
+    a.find("img.wait-load").each(function(i,t){//遍历每一个元素
+        var $cur = $(t);
         if (isShow($cur)) {
         	$cur.attr('src', $cur.attr('data-src')).attr("data-src","").removeClass("wait-load").css("opacity","1");
         };

@@ -50,14 +50,18 @@
 			API_KEY = "gVzKTvzJyRTCkdDQ4AcQaCgp5iIpskbq",
 			reqtime = Date.parse(new Date()),
 			u_id = getCookieVal('userid');
-	//请求后台
-	getAddrMgmt(u_id);
 
-	document.onreadystatechange = function(){
-		if(document.readyState == 'complete'){
-			load()
-		}
-	}
+	//页面的整体整天js css 加载完成
+	document.addEventListener('DOMContentLoaded',function(){
+		//请求后台
+		getAddrMgmt(u_id);
+		load();
+	},false);
+
+	//监听页面加载状态
+	$(document).on('ajaxComplete',function(e,xhr,op){
+		Myscroll.refresh();
+	});
 
 	function load() {
 		Myscroll = new IScroll('#scroll-wrapper', {
@@ -184,7 +188,7 @@
 	//用户删除收货地址
 	$('.slide-delete-button').live('touchend', function() {
 		var nodes = $(this);
-		confirmPanel("亲，真的要清空购物车么！", function () {
+		confirmPanel("确认要删除地址么？", function () {
 			removeLocalStorage('changeInfo');
 			//删除当前的地址
 			var nodeIndx = nodes.parents('.slide-list-wrapper').index(),

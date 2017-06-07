@@ -27,7 +27,7 @@
 </head>
 <body>
     <header class="head-container">
-        <a href="javascript:void(0);" onclick="self.location=document.referrer;" class="btn-angle-left btn-left icon-angle-left"></a>
+        <a href="javascript:history.back();" onclick="self.location=document.referrer;" class="btn-angle-left btn-left icon-angle-left"></a>
         <a href="index.html" class="btn-angle-left btn-right iconfont icon-my-home"></a>
         <h6>商品详情</h6>
         <div class="head-mask"></div>
@@ -68,7 +68,7 @@
                 </div>
             </div>
             <!--swiper-container-->
-			<form action='' method='post' role='form'>
+
             <!--input hidden -->
             <input type='hidden' id='p_id'/>
             <input type="hidden" class="maxStorage">
@@ -92,7 +92,7 @@
                 <!--de-price-->
             </div>
             <!--de-main-box-->
-			</form>
+
             <div class="de-tabs">
                 <div class="de-tabs-switch bgWhite">
                     <a href="javascript:void(0);" class="tabs-btn txt-center active">
@@ -115,14 +115,7 @@
                             </div>
                             <div class="table-body" id="p_cs">
                                 <div class="table-row-group">
-                                    <!--<div class="table-row">
-                                        <div class="table-cell">
-                                            商品编号
-                                        </div>
-                                        <div class="table-cell">
-                                            1542448545
-                                        </div>
-                                    </div>-->
+
                                     <!--table-row-->
                                 </div>
                                 <!-- table-row-group -->
@@ -138,15 +131,15 @@
     <div class="DOM-loadLayer">
         <div class="rotate-load">
             <div class="load-box">
+
             </div>
-            <!--<p class="txt-center">加载中...</p>-->
         </div>
         <!--rotate-load-->
     </div>
     <!--DOM-loadLayer-->
     
     <!--互动可拖拽的客户面板-->
-    <a class="fix-drag" href="javascript:void(0);">
+    <a class="fix-drag" href="tel:10086">
     </a>
     <script type="text/javascript" src="js/zepto.min.js"></script>
     <script type="text/javascript" src="js/swiper.min.js"></script>
@@ -156,11 +149,5 @@
     <script type="text/javascript" src="js/common.js"></script>
     <script type="text/javascript" src="js/cartPublic.js"></script>
     <script type="text/javascript" src="js/getDeData.js"></script>
-    <script type="text/javascript">
-        $('.fix-drag').bind('click',function(){
-            window.location.href = 'tel:17681625168';
-        });
-        cartPopover();//购物车弹出层
-    </script>
 </body>
 </html>

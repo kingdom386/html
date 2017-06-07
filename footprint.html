@@ -11,9 +11,10 @@
     <link rel="stylesheet" type="text/css" href="css/reset.css" media="screen"/>
     <link rel="stylesheet" type="text/css" href="css/common.css" media="screen"/>
     <link rel="stylesheet" type="text/css" href="css/person.css" media="screen"/>
+	<script type="text/javascript" src="js/size.js"></script>
     <title>我的足迹</title>
 </head>
-<body onload="load()">
+<body>
 <!--头部开始-->
 <header class="head-container common-head">
 	<a href="javascript:history.back();" class="back-button"></a>
@@ -22,13 +23,13 @@
 <!--头部结束-->
 
 <!--底部开始,可以操作加active-->
-<footer class="footer-container item-footer active">
-	<a href="javascript:;" class="item-footer-cart"><em><i class="badge">5</i></em></a>
+<footer class="footer-container item-footer">
+	<a href="javascript:void(0);" class="item-footer-cart"><em><i class="badge">0</i></em></a>
 	<div class="item-footer-price">
-		<em>0.00</em>
+		<em id="allPrice">0.00</em>
 		<p>配送费<span>0</span>元</p>
 	</div>
-	<a href="javascript:void(0);" class="item-buy-button">去结算</a>
+	<a href="javascript:void(0);" class="item-buy-button get-btn">去结算</a>
 </footer>
 <!--底部结束-->
 
@@ -36,19 +37,11 @@
 <div class="cart-popover-content">
 	<div class="cart-popover-title">
 		<h4>购物车</h4>
-		<a href="javascript:;">清空</a>
+		<a href="javascript:;" class="clearBtn">清空购物车</a>
 	</div>
 	<div class="scroll-wrapper cart-popover-wrapper">
-		<ul class="scroll-container">
-			<!--<li>
-				<h5 class="text-ellipsis-2">鸡蛋卷</h5>
-				<p class="item-price">5.00</p>
-				<div class="number-handle-container">
-					<em class="reduce-button"></em>
-					<input type="tel" readonly="readonly" value="4" />
-					<em class="plus-button"></em>
-				</div>
-			</li>-->
+		<ul class="scroll-container" id="cart">
+
 		</ul>
 	</div>
 </div>
@@ -57,7 +50,7 @@
 
 <section id="scroll-wrapper">
 	<div id="scroll-container">
-		<div class="slide-list-container collect-list-container">			
+		<div class="slide-list-container collect-list-container">
 			<!--<div class="slide-list-wrapper">
 				<a class="slide-info-container" href="">
 					<div class="production-image">
@@ -81,59 +74,82 @@
 </body>
 </html>
 <script type="text/javascript" src="js/zepto.min.js"></script>
-<script type="text/javascript" src="js/size.js"></script>
 <script type="text/javascript" src="js/common.js"></script>
 <script type="text/javascript" src="js/md5.js"></script>
 <script type="text/javascript" src="js/secret.js"></script>
 <script type="text/javascript" src="js/TouchScroll.js"></script>
 <script type="text/javascript" src="js/lazyLoad.js"></script>
 <script type="text/javascript" src="js/common.js"></script>
+<script type="text/javascript" src="js/cartPublic.js"></script>
 <script type="text/javascript" src="js/slideDelete.js"></script>
 <script type="text/javascript">
-	var page = 1,pullUp = true;
+	var page = 1,pullUp = true,Myscroll = popoverWrapper = '';
+
+	//页面的整体整天js css 加载完成
+	document.addEventListener('DOMContentLoaded',function(){
+		cartPopover();//购物车弹出层
+		load();
+		changeCart();
+	},false);
+
+	//监听页面加载状态
+	$(document).on('ajaxComplete',function(e,xhr,op){
+		Myscroll.refresh();
+		popoverWrapper.refresh();
+		checkShow($(".collect-list-container"));//懒加载
+	});
+
+
 	function load() {
-		var Myscroll = new IScroll('#scroll-wrapper', {
-            touchend:true,
-            preventDefault: false,
-            preventDefaultException: { tagName: /^(INPUT|BUTTON|A|SPAN)$/ },
-            bindToWrapper: true,
-            scrollbars: true,
-            fadeScrollbars: true,
-            shrinkScrollbars: 'scale'
-	    });
+		Myscroll = new IScroll('#scroll-wrapper', {
+			touchend: true,
+			preventDefault: false,
+			preventDefaultException: {tagName: /^(INPUT|BUTTON|A|SPAN)$/},
+			bindToWrapper: true,
+			scrollbars: true,
+			fadeScrollbars: true,
+			shrinkScrollbars: 'scale'
+		});
+
+		popoverWrapper = new IScroll(".cart-popover-wrapper", {
+			preventDefaultException: {
+				tagName: /^(INPUT|A|SPAN)$/
+			},
+			bindToWrapper: true,
+			scrollbars: true,
+			fadeScrollbars: true,
+			click: true,
+			tap: true
+		});
 
 		//请求获取当前用户的收藏数据
-		if(getCookieVal('username') != null){
+		if (getCookieVal('username') != null) {
 			getCollInfo(page);
-		}else{
-			setStorage('urlReference',window.location.href);
+		} else {
+			setStorage('urlReference', window.location.href);
 			window.location.href = 'register.html';
 			return false;
 		}
 
-		if(document.readyState == 'complete'){
-		  setTimeout(function(){checkShow($(".collect-list-container"));Myscroll.refresh();},400);
-		}
-
-
-	    Myscroll.on('scrollEnd', function () {	
+		Myscroll.on('scrollEnd', function () {
 			//上拉加载更多收藏数据
-			if (pullUp) {
 				//页面上拉加载
-				var curScrollDirection = Myscroll.directionY, maxScroll = Myscroll.maxScrollY + 80, y = Myscroll.y;
+				var curScrollDirection = Myscroll.directionY, maxScroll = Myscroll.maxScrollY + 120, y = Myscroll.y;
 				if (y <= maxScroll && curScrollDirection == 1) {
 					pullUp = true;
 					//开始请求后台数据
-					getCollInfo(page++);
+					getCollInfo(++page);
 				} else {
 					pullUp = false;
 				}
-			}
-			checkShow($(".collect-list-container"));//懒加载
 			Myscroll.refresh();
-	    });
-   	}
+		});
 
+		popoverWrapper.on('scrollEnd', function () {
+			popoverWrapper.refresh();
+		});
+
+	}
 
 	function getCollInfo(pg){
 		var method = 'GetMyCollection',
@@ -158,31 +174,67 @@
 				sign: getSecret(param, method, reqtime)
 			},
 			success: function (collData) {
-				console.log(collData);
 				var str = '';
 				$(collData.data).each(function(i,t){
-					str+='<div data-id = '+ t.f_id+' class="slide-list-wrapper">'+
-							'<label>'+
-							'<input type="checkbox" value="'+ t.f_id+'" name="collect" />'+
-							'</label>'+
-							'<a class="slide-info-container" href="detail.html?p_id='+ t.p_id +'>'+
-							'<div class="production-image">'+
-							'<img data-src="'+ t.l_pic+'" class="img-responsive wait-load" alt="" /></div>'+
-							'<div class="production-info">'+
-							'<h4 class="text-ellipsis-2">'+ t.l_name+'</h4><p class="production-price">'+ t.l_danjia+'</p><em class="search-buy-icon"></em>'+
-							'</div></a><button data-id='+ t.f_id+' class="slide-delete-button">删除</button></div>';
-
+					str+='<div class="slide-list-wrapper publicCart generalCart"  data-mxcontain = '+ t.l_storage+' data-fid = '+ t.f_id+' data-id ='+t.p_id+' data-name="'+ t.l_name+'" data-price='+ t.l_danjia+' data-cateId='+ t.cateID+'>';
+					str+='<a class="slide-info-container" href="detail.html?p_Id='+t.p_id+'">';
+					str+='<div class="production-image">';
+					str+='<img data-src="'+ t.l_pic+'" class="img-responsive wait-load" alt="" />';
+					str+='</div>';
+					str+='<div class="production-info">';
+					str+='<h4 class="text-ellipsis-2">'+ t.l_name+'</h4>';
+					str+='<p class="production-price">'+ t.l_danjia+'</p>';
+					str+='<em class="search-buy-icon plus-button"></em><input type="hidden" value="0" >';
+					str+='</div>';
+					str+='</a>';
+					str+='<button class="slide-delete-button">删除</button>';
+					str+='</div>';
 				});
-				//$('.collect-list-container').append(str);
+				$('.collect-list-container').append(str);
 				slideDelete();
 			},
 			error: function (XMLHttpRequest, textStatus, errorThrown) {
 
 			}
 		});
-
 	}
 
-	cartPopover()//购物车弹出层
-	numberHandle();//数量加减
+	$('button').live('touchend',function(){
+		var ary=[],
+			fid = $(this).parents('.slide-list-wrapper').data('fid'),
+			pid =  $(this).parents('.slide-list-wrapper').data('id');
+		var ls = {'f_id':fid};
+		ary.push(ls);
+		var method = 'DelCollectList',
+				param = {
+					shopid: "3",
+					device: "3",
+					u_id: getCookieVal('userid'),
+					coll_type:2,
+					l_collect:ary
+				};
+
+		sign = md5(JSON.stringify(param) + method + reqtime + API_KEY);
+		$.ajax({
+			url: "../API/WebApi.ashx",
+			async: true,
+			type: "post",
+			dataType: 'json',
+			data: {
+				param: JSON.stringify(param),
+				method: method,
+				reqtime: reqtime,
+				sign: getSecret(param, method, reqtime)
+			},
+			success: function (delData) {
+				if(delData.status == 1){
+					$('.slide-list-wrapper[data-fid="'+fid+'"]').remove();
+				}
+			},
+			error: function (XMLHttpRequest, textStatus, errorThrown) {
+
+			}
+		});
+	});
+
 </script>

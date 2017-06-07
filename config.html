@@ -29,10 +29,10 @@
 <!--底部结束-->
 
 <section class="positionRelative config-container">
-	<a href="updatePhoneStep1.html" class="altMobile">修改手机号码</a>
+	<a href="javascript:void(0);" class="altMobile">修改手机号码</a>
 	<a href="javascript:void(0);" class="userPwd">登录密码管理</a>
 	<a href="javascript:void(0);" class="payPwdMgmt">支付密码管理</a>
-	<a href="addressList.html" class="addrMgmt">收货地址管理</a>
+	<a href="javascript:void(0);" class="addrMgmt">收货地址管理</a>
 </section>
 
 </body>
@@ -46,6 +46,8 @@
     $('.log-off-button').on('touchend', function() {
         removeCookie('username');
         removeCookie('userid');
+        removeCookie('pwd_pay');
+        removeCookie('pwd_user');
         window.location.href = './person.html';
     });
 
@@ -56,28 +58,50 @@
         }
     });
 
-    $('.userPwd').bind('touchend',function(){
-        if(getCookieVal('pwd_user') != 1){
-            //当前用户没有设置支付密码
-            window.location.href = 'updatePasswordStep1.html';
+    $('.userPwd').bind('touchend',function() {
+        if(!getCookies('username')){
+            if (getCookieVal('pwd_user') != 1) {
+                //当前用户没有设置支付密码
+                window.location.href = 'updatePasswordStep1.html';
+            } else {
+                window.location.href = 'updatePasswordStep2.html';
+            }
         }else{
-            window.location.href = 'updatePasswordStep2.html';
+            setStorage('urlReference',window.location.href);
+            window.location.href = 'register.html';
         }
+
+
     });
 
     $('.payPwdMgmt').bind('touchend', function() {
-        if(getCookieVal('pwd_pay') == 1){
-            //当前用户没有设置支付密码
-            window.location.href = 'updatePayPassword.html';
-        }else{
-            window.location.href = 'payPwd.html';
+        if(!getCookies('username')){
+            if(getCookieVal('pwd_pay') == 1){
+                //当前用户没有设置支付密码
+                window.location.href = 'updatePayPassword.html';
+            }else{
+                window.location.href = 'payPwd.html';
+            }
+        } else{
+            setStorage('urlReference',window.location.href);
+            window.location.href = 'register.html';
         }
+
+
     });
 
     $('.addrMgmt').bind('touchend',function(){
-        setStorage('urlReference',window.location.href);
-        window.location.href = 'addressList.html';
+        if(!getCookies('username')){
+            setStorage('urlReference',window.location.href);
+            window.location.href = 'addressList.html';
+        }else{
+            setStorage('urlReference',window.location.href);
+            window.location.href = 'register.html';
+        }
+
     });
+
+
 
 </script>
 

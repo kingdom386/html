@@ -8,6 +8,7 @@
     <meta name="format-detection" content="telephone=no"/>
     <meta content="black" name="apple-mobile-web-app-status-bar-style"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+	<script type="text/javascript" src="js/size.js"></script>
     <link rel="stylesheet" type="text/css" href="css/reset.css" media="screen"/>
     <link rel="stylesheet" type="text/css" href="css/common.css" media="screen"/>
     <title>热卖</title>
@@ -22,7 +23,7 @@
 
 <!--底部开始,可以操作加active-->
 <footer class="footer-container item-footer">
-	<a href="javascript:void(0);" class="item-footer-cart"><em><i class="badge">0</i></em></a>
+	<a href="index.html" class="item-footer-cart"><em><i class="badge">0</i></em></a>
 	<div class="item-footer-price">
 		<em id = "allPrice">0.00</em>
 		<p>配送费<span>0</span>元</p>
@@ -117,7 +118,6 @@
 </body>
 </html>
 <script type="text/javascript" src="js/zepto.min.js"></script>
-<script type="text/javascript" src="js/size.js"></script>
 <script type="text/javascript" src="js/md5.js"></script>
 <script type="text/javascript" src="js/secret.js"></script>
 <script type="text/javascript" src="js/common.js"></script>
@@ -177,7 +177,7 @@ function load() {
 			pullUp = true;
 			//开始请求后台数据
 			if (pullUp) {
-				getHotList(++page);
+				getProduct(++page);
 			}
 		} else {
 			pullUp = false;

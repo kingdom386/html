@@ -4,11 +4,20 @@ var API_KEY = "gVzKTvzJyRTCkdDQ4AcQaCgp5iIpskbq";
 var reqtime = Date.parse(new Date()),addrFlag = cartFlag = false;
 	urlStr = window.location.href;
 
-//请求默认的收货地址
-addAddr();
+//页面的整体整天js css 加载完成
+document.addEventListener('DOMContentLoaded',function(){
+	//请求默认的收货地址
+	addAddr();
+	load();
+},false);
+
+//监听页面加载状态
+$(document).on('ajaxComplete',function(e,xhr,op){
+	Myscroll.refresh();
+	checkShow($(".production-list"));
+});
 
 //修改或是添加收货地址
-
 function getAddr(obj){
 //跳转到添加收货地址页面
 	if (getCookies('username')) {
@@ -18,12 +27,6 @@ function getAddr(obj){
 	} else {
 		setStorage('urlReference',window.location.href);
 		window.location.href = './addressList.html';
-	}
-}
-
-document.onreadystatechange = function (){
-	if(document.readyState == 'complete'){
-	load();
 	}
 }
 
@@ -195,8 +198,4 @@ $('#subOrder').bind('touchend', function() {
 			}
 		});
 	}
-});
-
-$('.back-button').bind('touchend',function(){
-	window.location.href = getStorage('aimAtcart');
 });

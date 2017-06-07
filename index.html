@@ -138,21 +138,21 @@
 <script type="text/javascript">
 	var Myscroll = mySwiper = '',
 			curScrollDirection = y = maxScroll = 0,
-			pullUp = true,
-			page = 1; //开关 启用上拉加载
+			pullUp = true,//开关 启用上拉加载
+			page = 1;
 
 	//页面的整体整天js css 加载完成
-	document.addEventListener('DOMContentLoaded',function(){
+	window.onload = function(){
 		getProduct(page);
 		searchPanel(); //搜索页面事件
 		load();
-	},false);
+	};
 
 	//监听页面加载状态
 	$(document).on('ajaxComplete',function(e,xhr,op){
 		layerState();
 		Myscroll.refresh();
-		checkShow($(".production-list"));
+		checkShow($(".production-list")); //懒加载
 	});
 
 	function load() {

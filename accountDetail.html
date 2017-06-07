@@ -8,6 +8,7 @@
     <meta name="format-detection" content="telephone=no"/>
     <meta content="black" name="apple-mobile-web-app-status-bar-style"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+	<script type="text/javascript" src="js/size.js"></script>
     <link rel="stylesheet" type="text/css" href="css/reset.css" media="screen"/>
     <link rel="stylesheet" type="text/css" href="css/common.css" media="screen"/>
     <link rel="stylesheet" type="text/css" href="css/person.css" media="screen"/>
@@ -22,7 +23,7 @@
         }
     </style>
 </head>
-<body onload="load()">
+<body>
 <!--头部开始-->
 <header class="head-container common-head">
 	<a href="javascript:history.back();" class="back-button"></a>
@@ -32,7 +33,7 @@
 <div class="account-head">
 	<div class="account-head-content">
 		<em>余额</em>
-		<p class="restMoney">3620.00</p>
+		<p class="restMoney">0.00</p>
 	</div>
 	<a href="recharge.html">充值</a>
 </div>
@@ -49,21 +50,7 @@
 		<div class="account-list-container">
 			<!--全部开始-->
 			<ul class="account-list">
-				<!--<li>
-					<p>
-						<span>消费积分</span>
-						<em>2017-02-12</em>
-					</p>
-					<em class="income">200</em>
-				</li>
-				<li>
-					<p>
-						<span>消费积分</span>
-						<em>2017-02-12</em>
-					</p>
-					<em>200</em>
-				</li>-->
-               
+
 			</ul>
 			<!--全部结束-->
 		</div>
@@ -73,79 +60,86 @@
 </body>
 </html>
 <script type="text/javascript" src="js/zepto.min.js"></script>
-<script type="text/javascript" src="js/size.js"></script>
 <script type="text/javascript" src="js/common.js"></script>
 <script type="text/javascript" src="js/md5.js"></script>
 <script type="text/javascript" src="js/secret.js"></script>
 <script type="text/javascript" src="js/TouchScroll.js"></script>
 <script type="text/javascript">
-	var pullUp = true,page = 1,ptype = '';//上拉加载开启标记
-function load() {
-	var Myscroll = new IScroll('#scroll-wrapper', {
-        click:true,
-        touchend:true,
-        preventDefaultException: { tagName: /^(INPUT|BUTTON|A|SPAN)$/ },
-        bindToWrapper: true,
-        scrollbars: true,
-        fadeScrollbars: true,
-        shrinkScrollbars: 'clip'
-    });
+	var page = 1,Myscroll=ptype = '',pullUp = true;//上拉加载开启标记
 
-	//tab 事件
+	//请求添加后台数据
+	document.addEventListener('DOMContentLoaded',function(){
+		load();
+	},false);
 
-    $(".account-filter").on("touchend","a",function(){
-		$(this).addClass("active").siblings("a").removeClass("active");
-		$(".account-list").eq($(this).index()).show().siblings().hide();
-		$(this).siblings(".account-border").css("left",$(this).width()*$(this).index());
-		var indx = $(this).index();
-		if(indx == 0){
-			ptype = '';$(".account-list li").show();
-		   }else if(indx == 1){
-			ptype = 1;
-			showList();
-		}else{
-			ptype = 2;
-			showList();
-		}
-		Myscroll.refresh();
-		Myscroll.scrollTo(0,0);
-	});
-
-	getUserinfo();
-	getAcountInfo(page,getCookieVal('userid'),ptype);
-
-	Myscroll.on('scrollEnd', function(){
-		//是否启用上拉加载
-		if (pullUp) {
-			//页面上拉加载
-			var curScrollDirection = Myscroll.directionY, maxScroll = Myscroll.maxScrollY + 80, y = Myscroll.y;
-			if (y <= maxScroll && curScrollDirection == 1) {
-				pullUp = true;
-				//开始请求后台数据
-				getAcountInfo(++page,getCookieVal('userid'),ptype);
-			} else {
-				pullUp = false;
-			}
-		}
-		//checkShow($(".production-list")); //懒加载
+	$(document).on('ajaxComplete',function(e,xhr,op){
+		layerState();
 		Myscroll.refresh();
 	});
 
-}
-
-	//列表显示/隐藏
-	function showList(){
-		$(".account-list li").each(function(i,t){
-			 if($(t).data('type') == ptype ){
-				 $(t).show();
-			 }else{
-				 $(t).hide();
-			 }
+	function load() {
+		  Myscroll = new IScroll('#scroll-wrapper', {
+			click:true,
+			touchend:true,
+			preventDefaultException: { tagName: /^(INPUT|BUTTON|A|SPAN)$/ },
+			bindToWrapper: true,
+			scrollbars: true,
+			fadeScrollbars: true,
+			shrinkScrollbars: 'clip'
 		});
+
+		//用户是否登录
+		if(!getCookies('username')){
+			//获取用户的钱包信息
+			getUserinfo();
+
+			//获取所有的账户明细
+			getAcountInfo(page,getCookieVal('userid'),ptype);
+
+		}else{
+			setStorage('urlReference',window.location.href);
+			window.location.href = 'register.html';
+		}
+
+		//tab 事件 账户明细
+		$(".account-filter").on("touchend","a",function(){
+			$('.account-list').empty();
+			$(this).addClass("active").siblings("a").removeClass("active");
+			$(".account-list").eq($(this).index()).show().siblings().hide();
+			$(this).siblings(".account-border").css("left",$(this).width()*$(this).index());
+			var indx = $(this).index();
+			if(indx == 0){
+				ptype = '';$(".account-list li").show();
+			   }else if(indx == 1){
+				ptype = 1;
+				}else{
+					ptype = -1;
+				}
+			getAcountInfo(page,getCookieVal('userid'),ptype);
+			Myscroll.scrollTo(0,0);
+		});
+
+		Myscroll.on('scrollEnd', function(){
+			//是否启用上拉加载
+			if (pullUp) {
+				//页面上拉加载
+				var curScrollDirection = Myscroll.directionY, maxScroll = Myscroll.maxScrollY + 80, y = Myscroll.y;
+				if (y <= maxScroll && curScrollDirection == 1) {
+					pullUp = true;
+					//开始请求后台数据
+					getAcountInfo(++page,getCookieVal('userid'),ptype);
+				} else {
+					pullUp = false;
+				}
+			}
+			Myscroll.refresh();
+		});
+
 	}
 
+	//用户信息
 	function getUserinfo(){
-		var method = 'GetUserInfo',
+		var method = 'GetWalletList',
 				param = {
 					shopid: "3",
 					device: "3",
@@ -153,6 +147,7 @@ function load() {
 				};
 
 		sign = md5(JSON.stringify(param) + method + reqtime + API_KEY);
+
 		$.ajax({
 			url: "../API/WebApi.ashx",
 			async: true,
@@ -165,7 +160,11 @@ function load() {
 				sign: getSecret(param, method, reqtime)
 			},
 			success: function (userData) {
-				$('.restMoney').html(userData.data.moneyLeft);
+				if(userData.data.moneyLeft == null){
+					$('.restMoney').html(0.00);
+				}else{
+					$('.restMoney').html(userData.data.moneyLeft);
+				}
 			},
 			error: function (XMLHttpRequest, textStatus, errorThrown) {
 
@@ -184,7 +183,6 @@ function load() {
 					pageIndex:pg,
 					p_type:p_type
 				};
-
 		sign = md5(JSON.stringify(param) + method + reqtime + API_KEY);
 		$.ajax({
 			url: "../API/WebApi.ashx",
@@ -206,17 +204,13 @@ function load() {
 					}else{
 						str+='<li data-type='+ t.type +' data-id = '+ t.id +'><p><span>兑换物品消耗</span><em>'+ (t.createtime).replace('T',' ')+'</em></p><em>200</em></li>';
 					}
-
 					$('.account-list').append(str);
-
 				});
 			},
 			error: function (XMLHttpRequest, textStatus, errorThrown) {
 
 			}
 		});
-
-
 	}
 
 </script>

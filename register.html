@@ -79,7 +79,7 @@
         <!-- 微信登录开始 -->
         <div class="wx-way-login txt-center">
             <p>第三方账户登录</p>
-            <a href="#"></a>
+            <a href="javascript:void(0);" class="weiLogin"></a>
         </div>
         <!-- 微信登录结束 -->     
 	</div>
@@ -103,7 +103,7 @@
         <!-- 微信登录开始 -->
         <div class="wx-way-login txt-center">
             <p>第三方账户登录</p>
-            <a href="#"></a>
+            <a href="javascript:void(0);" class="weiLogin"></a>
         </div>
         <!-- 微信登录结束 -->
 	</div>
@@ -127,8 +127,8 @@
 		//gtp 验证码类型 ltp 登录类型
 		//gtp 1 注册 2 登录
 		//ltp 1 密码登录 2 验证码登录
-	//类型 1 验证码 登录  2  密码登录
 
+	//类型 1 验证码 登录  2  密码登录
 	function loginType(indx){
 		return (ltp=indx);
 	}
@@ -144,6 +144,7 @@
 		}
 	}
 
+	//手机号验证
 	function IsMb(mbj,tp){
 		gtp = tp;
 		p = $(mbj).val();
@@ -163,7 +164,6 @@
 	}
 
 	//密码登录 手机验证
-
 	function IspMb(pmbj){
 		gtp = 2;
 		p = $(pmbj).val();
@@ -174,7 +174,6 @@
 		}
 		btnActive($(pmbj));
 	}
-
 
 	//检测 验证码格式
 	function checkMCode(mcode){
@@ -188,6 +187,7 @@
 		}
 	}
 
+	//验证码验证
 	function IsCode(cbj){
 		c = $(cbj).val();
 		var reg = /^[0-9]{4}$/;
@@ -200,7 +200,6 @@
 	}
 
 	//密码登录 密码验证
-
 	function checkMp(mpbj){
 		c = $(mpbj).val();
 		if(isPwd(c)){
@@ -210,6 +209,7 @@
 		}
 	}
 
+	//密码验证
 	function IsPw(pbj){
 		c = $(pbj).val();
 		if(isPwd(c)){
@@ -232,6 +232,7 @@
 		}
 	}
 
+	//登录按钮操作
 	function btnAction(){
         if(mFlag&&cFlag){
 			nodes.unbind('touchend');
@@ -301,12 +302,99 @@
 						}
 					},
 					error: function(XMLHttpRequest, textStatus, errorThrown) {
-						console.log(textStatus);
+
 					}
 				});
 
 			});
 		}
+	}
+
+	//微信登录
+    $('.weiLogin').live('touchend',function(){
+		weiLog();
+	});
+
+	//微信登录
+	function weiLog(){
+		var method = 'WeChatRightApply',
+				param = {
+					shopid: "3",
+					device: "3",
+					pageName:'register.html',
+					keyword:''
+				};
+		sign = md5(JSON.stringify(param) + method + reqtime + API_KEY);
+
+		$.ajax({
+			url: "../API/WebApi.ashx",
+			async: true,
+			type: "post",
+			dataType: 'json',
+			data: {
+				param: JSON.stringify(param),
+				method: method,
+				reqtime: reqtime,
+				sign: getSecret(param, method, reqtime)
+			},
+			success: function(logState) {
+				window.location.href = logState.data;
+			},
+			error: function(XMLHttpRequest, textStatus, errorThrown) {
+
+			}
+		});
+	}
+
+	//获取去微信code
+	var url = window.location.href;
+	if(url.indexOf('?&code=') != -1){
+		var codeUrl = window.location.href.split('&')[1].split('=')[1];
+		//授权登录
+		var method = 'LoginByWeChat',
+				param = {
+					shopid: "3",
+					device: "3",
+					wxcode:codeUrl
+				};
+		sign = md5(JSON.stringify(param) + method + reqtime + API_KEY);
+
+		$.ajax({
+			url: "../API/WebApi.ashx",
+			async: true,
+			type: "post",
+			dataType: 'json',
+			data: {
+				param: JSON.stringify(param),
+				method: method,
+				reqtime: reqtime,
+				sign: getSecret(param, method, reqtime)
+			},
+			success: function(logData) {
+				if(logData.status == 0 || logData.msg == '用户未注册'){
+					showTip('当前用户未注册！').showError();
+					setTimeout(function(){$('.login-aside').hide();},2000);
+					weiReg(codeUrl);
+				}else{
+
+				}
+			},
+			error: function(XMLHttpRequest, textStatus, errorThrown) {
+
+			}
+		});
+
+	}
+
+	//微信用户注册
+	function weiReg(codeUrl){
+		var method = 'LoginByWeChat',
+				param = {
+					shopid: "3",
+					device: "3",
+					wxcode:codeUrl
+				};
+		sign = md5(JSON.stringify(param) + method + reqtime + API_KEY);
 	}
 
 </script>

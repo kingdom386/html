@@ -109,7 +109,6 @@ function getListPage(ci, k, p,tc) {
             sign: getSecret(param, method, reqtime)
         },
         success: function (data) {
-
             //添加节点数据
 			var str ='';
             $(data.data).each(function (i, t) {
@@ -128,6 +127,7 @@ function getListPage(ci, k, p,tc) {
                                   ' </div> </div> </div></a> </li>';
             });
             $('ul',$(tc)).append(str);
+            checkShow($(tc));
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
 

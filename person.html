@@ -13,14 +13,14 @@
     <link rel="stylesheet" type="text/css" href="css/person.css" media="screen" />
     <title>我的生活馆</title>
 </head>
-<body onload="load()">
+<body>
     <!--头部开始-->
     <header class="head-container person-head">
         <a href="" class="service-button"></a>
         <h4>我的生活馆</h4>
         <a href="config.html" class="config-button"></a>
         <!--有未读信息加active-->
-        <a href="" class="message-button active"></a>
+        <a href="#" class="message-button active"></a>
         <div class="head-mask"></div>
     </header>
     <!--头部结束-->
@@ -39,40 +39,24 @@
         <div id="scroll-container">
             <!--个人中心头部开始-->
             <div class="person-info-container" style="background-image: url(image/centerBg.jpg);">
-                <!--已登录显示开始-->
-                <!--<div class="person-info">
-                    <div class="person-image">
-                        <img src="image/2.jpg" class="img-responsive" alt="" />
-                    </div>
-                    <div class="person-info-text">
-                        <p>
-                            <span>156****5555</span>
-                            <em>3</em>
-                        </p>
-                        <a href="">去充值</a>
-                    </div>
-                </div>-->
-                <!--已登录显示结束-->
-                <!--未登录显示开始-->
-                <!--<a href="register.html" class="person-info-login">请登录/注册</a>-->
-                <!--未登录显示结束-->
+
             </div>
             <!--个人中心头部结束-->
             <!--我的订单开始-->
             <div class="my-order-container bgWhite">
-                <a href="javascript:void(0);" class="moreOrderList">我的订单<span>查看更多订单</span></a>
+                <a data-type="0" href="javascript:void(0);" class="moreOrderList">我的订单<span>查看更多订单</span></a>
                 <ul>
-                    <li>
-                        <a href="orderList.html?#1"><em></em>待付款</a>
+                    <li data-type="1">
+                        <a href="javascript:void(0);"><em></em>待付款</a>
                     </li>
-                    <li>
-                        <a href="orderList.html?#2"><em></em>已付款</a>
+                    <li data-type="2">
+                        <a href="javascript:void(0);"><em></em>已付款</a>
                     </li>
-                    <li>
-                        <a href="orderList.html?#3"><em></em>配送中</a>
+                    <li data-type="3">
+                        <a href="javascript:void(0);"><em></em>配送中</a>
                     </li>
-                    <li>
-                        <a href="orderList.html?#4"><em></em>已完成</a>
+                    <li data-type="4">
+                        <a href="javascript:void(0);"><em></em>已完成</a>
                     </li>
                 </ul>
             </div>
@@ -93,7 +77,7 @@
                 </a>
                 <a href="footprint.html">
                     <span>我的足迹</span>
-                    <em id="myFootprint">0</em>
+                    <em id="myFootprint"></em>
                 </a>
             </div>
 
@@ -115,17 +99,9 @@
     <div class="DOM-loadLayer">
         <div class="rotate-load">
             <div class="load-box">
-                <!--<div class="load-pane">
-                    <div class="load-pane-left">
-                    </div>
-                    &lt;!&ndash;load-pane-left&ndash;&gt;
-                    <div class="load-pane-right">
-                    </div>
-                    &lt;!&ndash;load-pane-right&ndash;&gt;
-                </div>
-                &lt;!&ndash;load-pane&ndash;&gt;-->
+
             </div>
-            <!--<p class="txt-center">加载中...</p>-->
+            <!--load-box-->
         </div>
         <!--rotate-load-->
     </div>
@@ -143,6 +119,18 @@
     var API_KEY = "gVzKTvzJyRTCkdDQ4AcQaCgp5iIpskbq";
     var reqtime = Date.parse(new Date()), Myscroll = '';
 
+    //页面的整体整天js css 加载完成
+    document.addEventListener('DOMContentLoaded',function(){
+        load();
+        layerState();
+    },false);
+
+    //监听页面加载状态
+    $(document).on('ajaxComplete',function(e,xhr,op){
+        layerState();
+        Myscroll.refresh();
+    });
+
     function load() {
         Myscroll = new IScroll('#scroll-wrapper', {
             click: true,
@@ -154,6 +142,7 @@
             fadeScrollbars: true,
             shrinkScrollbars: 'clip'
         });
+
         //头部背景颜色随滚动距离变化
         Myscroll.on('scroll', function () {
             $(".head-mask").css("opacity", 3 * (Math.abs(this.y) / 1000));
@@ -179,25 +168,25 @@
 					'</div></div>');
         }
 
-
         //请求获取个人信息
         if (getCookieVal('username') != null) {
             //用户当前的状态是登录就请求当前用户的个人信息
             getPersonInfo();
         }
 
-        layerState();
-        setTimeout(function () {
-            $(".DOM-loadLayer").hide();
-            Myscroll.refresh();
-        }, 600);
-
         $('.moreOrderList').on('touchend', function () {
+            window.location.href = 'orderList.html';
+        });
+
+        $('.my-order-container ul li,.my-order-container a').bind('touchend',function(){
+            //设置锚标记 hrefMark
+            setStorage('hrefMark',$(this).data('type'));
             window.location.href = 'orderList.html';
         });
 
     }
 
+    //获取个人信息
     function getPersonInfo() {
         var method = 'GetUserCenter',
 				param = {
@@ -206,7 +195,6 @@
 				    u_id: getCookieVal('userid')
 				};
         sign = md5(JSON.stringify(param) + method + reqtime + API_KEY);
-
         $.ajax({
             url: "../API/WebApi.ashx",
             async: true,
@@ -219,7 +207,6 @@
                 sign: getSecret(param, method, reqtime)
             },
             success: function (infoData) {
-                infoData
                 setCookie('pwd_pay', infoData.data.pwd_pay);
                 setCookie('pwd_user', infoData.data.u_pwd);
                 $('#uLevel').html(infoData.data.u_level);
@@ -234,5 +221,4 @@
         });
 
     }
-
 </script>
