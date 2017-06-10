@@ -2,7 +2,16 @@
 //加密方式
 var API_KEY = "gVzKTvzJyRTCkdDQ4AcQaCgp5iIpskbq";
 var reqtime = Date.parse(new Date()),addrFlag = cartFlag = false;
-	urlStr = window.location.href;
+urlStr = window.location.href;
+
+window.addEventListener('pageshow',function(){
+	if(isWeiXin()&&getStorage('cart_info') == null){
+		$('#hasOrder').hide();
+		$('.default-page-container').show();
+		$('#sumPrice').html('0.00');
+		$('footer').removeClass('active');
+	}
+});
 
 //页面的整体整天js css 加载完成
 window.onload = function(){
@@ -91,7 +100,6 @@ function addAddr() {
 			addrFlag = true;
 			btnChange();
 			$(changeLs).each(function(i,t){
-				console.log(t);
 				$('.address-select-container').html('').removeClass('address-select-empty');
 				var str = '<h5 id="uAddr" data-aid = '+t.ad_id+'>'+t.nation+t.province+t.city+t.district+t.addr+'</h5>'+
 					'<p><span id="uName">'+t.u_name+'</span><span id="uSj">'+t.u_sj+'</span></p>';
@@ -138,7 +146,7 @@ function addAddr() {
 }
 
 //提交订单
-$('#subOrder').bind('touchend', function() {
+$('.active #subOrder').live('touchend', function() {
 	//检测用户 登录状态
 	if (getCookies('username')) {
 		    //跳转到登录界面
@@ -146,11 +154,53 @@ $('#subOrder').bind('touchend', function() {
 			window.location.href = './register.html';
 	} else {
 		//用户登录的状态下
-		var getPost = $('#getPost').val(),
-			sh_name=$('#uName').html(),
+		var getPost = $('#getPost').val();
+		var method = 'PutOrder';
+		//1.送货上门 2.自提
+		if(getPost == 1){
+			var sh_name=$('#uName').html(),
+				sh_addr = $('#uAddr').html(),
+				sh_sj = $('#uSj').html(),
+				ordNote = $('#ordNote').val(),
+				ad_id = $('h5').data('aid'),
+				param = {
+					shopid: "3",
+					device: "3",
+					l_cart: JSON.parse(localStorage.getItem('cart_info')),
+					u_id: getCookieVal('userid'),
+					ad_id:ad_id,
+					dist_type: getPost,
+
+					sh_name: sh_name,
+					sh_addr: sh_addr,
+					sh_sj: sh_sj,
+					ordNote:ordNote
+				};
+		}else{
+			var sh_name=$('#ztName').val(),
+				sh_addr = $('#ztAddr').html(),
+				sh_sj = $('#ztSj').val(),
+				ordNote = $('#ordNote').val(),
+				ad_id = '',
+				param = {
+					shopid: "3",
+					device: "3",
+					l_cart: JSON.parse(localStorage.getItem('cart_info')),
+					u_id: getCookieVal('userid'),
+					ad_id:'',
+					dist_type: getPost,
+
+					sh_name: sh_name,
+					sh_addr: sh_addr,
+					sh_sj: sh_sj,
+					ordNote:ordNote
+				};
+		}
+
+
+			/*sh_name=$('#uName').html(),
 			sh_addr = $('#uAddr').html(),
 			sh_sj = $('#uSj').html(),
-			method = 'PutOrder',
 			ordNote = $('#ordNote').val(),
 			ad_id = $('h5').data('aid'),
 			param = {
@@ -160,12 +210,12 @@ $('#subOrder').bind('touchend', function() {
 				u_id: getCookieVal('userid'),
 				ad_id:ad_id,
 				dist_type: getPost,
-				//1.送货上门 2.自提
+
 				sh_name: sh_name,
 				sh_addr: sh_addr,
 				sh_sj: sh_sj,
 				ordNote:ordNote
-			};
+			};*/
 		if(sh_name == null||sh_addr == null||sh_sj == null){
 			showTip('您的收货地址有误！').showError();
 			return false;
@@ -183,7 +233,7 @@ $('#subOrder').bind('touchend', function() {
 				reqtime: reqtime,
 				sign: getSecret(param, method, reqtime)
 			},
-			success: function(subMsg) {
+			success: function (subMsg) {
 				 localStorage.removeItem('cart_info');
 				 localStorage.removeItem('cartId');
 				 if(subMsg.status){

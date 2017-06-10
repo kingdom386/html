@@ -71,9 +71,7 @@
 <div class="DOM-loadLayer">
 	<div class="rotate-load">
 		<div class="load-box">
-
 		</div>
-
 	</div>
 	<!--rotate-load-->
 </div>
@@ -89,28 +87,34 @@
 <script type="text/javascript" src="js/cartPublic.js"></script>
 <script type="text/javascript">
 	var Myscroll = popoverWrapper = cartInfo = '',
-			pullUp = false,
+			pullUp = true,page= 1,
 			ary = jry = [];
-
 	//产品搜索
 	var key = decodeURI(window.location.search.split('?')[1].split('&')[0].split('=')[1]),
-
 			pageIndex = window.location.search.split('?')[1].split('&')[1].split('=')[1];
-	searResult(key, pageIndex);
+	//页面的整体整天js css 加载完成
+	window.onload = function(){
+		searResult(key, page);
+		load();
+		changeCart();
+		cartPopover();//购物车弹出层
+	};
 
-	document.onreadystatechange = function() {
-		if (document.readyState == 'complete') {
-			load();
-			changeCart();
-		}
-	}
+	//监听页面加载状态
+	$(document).on('ajaxComplete',function(e,xhr,op){
+		getCartLocalStorage();
+		layerState();
+		Myscroll.refresh();
+		popoverWrapper.refresh();
+		checkShow($(".search-list"));
+	});
 
 	function load() {
 		Myscroll = new IScroll('#scroll-wrapper', {
 			click: true,
 			touchend: true,
 			preventDefaultException: {
-				tagName: /^(INPUT|BUTTON|A|SPAN|EM)$/
+				tagName: /^(BUTTON|A|SPAN|EM)$/
 			},
 			bindToWrapper: true,
 			scrollbars: true,
@@ -120,7 +124,7 @@
 
 		popoverWrapper = new IScroll(".cart-popover-wrapper", {
 			preventDefaultException: {
-				tagName: /^(INPUT|A|SPAN)$/
+				tagName: /^(A|SPAN)$/
 			},
 			bindToWrapper: true,
 			scrollbars: true,
@@ -129,30 +133,24 @@
 			tap: true
 		});
 
-		setTimeout(function() {
-			layerState();
-			Myscroll.refresh();
-			checkShow($(".search-list"));
-		}, 600);
-
 		Myscroll.on('scrollEnd', function() {
-			//是否启用上拉加载
-			if (pullUp) {
-				//页面上拉加载
+			   //页面上拉加载
 				curScrollDirection = Myscroll.directionY, maxScroll = Myscroll.maxScrollY + 80, y = Myscroll.y;
 				if (y <= maxScroll && curScrollDirection == 1) {
-					pullUp = true;
-					//开始请求后台数据
-					searResult(key,++page);
+					 if(pullUp){
+						 //开始请求后台数据
+						 searResult(key, ++page);
+					 }
+
 				} else {
 					pullUp = false;
 				}
-			}
+			Myscroll.refresh();
 			checkShow($(".search-list")); //懒加载
 
 		});
 	}
-	cartPopover();//购物车弹出层
+
 </script>
 </body>
 </html>

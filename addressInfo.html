@@ -15,6 +15,12 @@
     <title>添加收货地址</title>
     <style type="text/css">
         #mapPage{position: fixed;top:0;left:0;width: 100%;height: 100%;}
+        input[class='address-choose']{
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
     </style>
 </head>
 <body>
@@ -39,7 +45,7 @@
 		</li>
 		<li>
 			<span>联系方式<em></em></span>
-			<input type="tel" maxlength="11" name="r_sj" onblur="checkRsj()" />
+			<input type="tel" maxlength="11" name="r_sj"  onblur="checkRsj()" />
 		</li>
 
 		<li class="address-section-container">

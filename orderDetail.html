@@ -174,6 +174,14 @@
 		oid = window.location.search.replace('?',"").split('&')[0].split('=')[1],
 		tp =  window.location.search.replace('?',"").split('&')[1].split('=')[1];
 
+	window.onload = function(){
+		load();
+	}
+
+	$(document).on('ajaxComplete',function(){
+		checkShow($(".order-list-container"));//懒加载
+	});
+
     function load() {
             Myscroll = new IScroll('#scroll-wrapper', {
             click: true,
@@ -238,6 +246,13 @@
 					$('.orderNo').html(t.o_dh);
 					$('.orderNote').html(t.ordNote);
 
+					if(tp == 1){
+						restTime = t.start_date
+						countTime(); //剩余时间倒计时事件
+					}else{
+						$('.remaining-time').hide();
+					}
+
 					for(var i=0;i< t.l_orderinfo.length;i++){
 						subPrice+=t.l_orderinfo[i].prod_mxmony;
 						str+='<a href="detail.html?p_id="'+t.l_orderinfo[i].id+' class="order-list">'+
@@ -260,37 +275,34 @@
 			}
 		});
 
-        checkShow($(".order-list-container"));//懒加载
+
 
 	    Myscroll.on('scrollEnd', function () {
 			Myscroll.refresh();
 			checkShow($(".order-list-container"));//懒加载
 	    });
 
-	    countTime(); //剩余时间倒计时事件
     }
     //剩余时间倒计时事件
-    function countTime() {
+    function countTime(){
         //获取当前时间  
-        var date = new Date(),
-            now = date.getTime(),d = h = m = s = 0,
+        var date =(new Date(restTime)).getTime(),
+            now = (new Date()).getTime(),d = h = m = s = 0;
         	//设置截止时间
-            startDate = new Date(restTime);
-		var end = startDate.getTime()+0.5*60*60*1000,
-        	//时间差
-       		leftTime = end - now;
-        if (leftTime >= 0) {
+		var  leftTime = now - date,validate = 4*60*60*1000;
+        if (leftTime >= validate) {
             d = Math.floor(leftTime / 1000 / 60 / 60 / 24);
             h = Math.floor(leftTime / 1000 / 60 / 60 % 24);
             m = Math.floor(leftTime / 1000 / 60 % 60);
             s = Math.floor(leftTime / 1000 % 60);
-
+			$(".days").html(d);
+			$(".hours").html(h);
+			$(".minutes").html(m);
+			$(".seconds").html(s);
 			//递归每秒调用countTime方法，显示动态时间效果
-        }
-		$(".days").html(d);
-		$(".hours").html(h);
-		$(".minutes").html(m);
-		$(".seconds").html(s);
+        }else{
+			clearTimeout(timers);
+		}
 		var timers = setTimeout(countTime, 1000);
     }
 

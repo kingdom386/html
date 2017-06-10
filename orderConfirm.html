@@ -21,10 +21,10 @@
 		}
 	</style>
 </head>
-<body>
+<body >
 <!--头部开始-->
 <header class="head-container common-head">
-	<a href="javascript:history.back();"  class="back-button"></a>
+	<a href="javascript:void(0);" onclick="self.location = document.referrer;"  class="back-button"></a>
 	<h4>购物车</h4>
 	<a href="index.html" class="home-button"></a>
 </header>
@@ -41,7 +41,6 @@
 <!--底部结束-->
 <section id="scroll-wrapper">
     <div id="scroll-container">
-
 		<!-- 无订单 -->
 		<div class="default-page-container" style="display: none">
 			<em class="default-order"></em>
@@ -55,27 +54,27 @@
 			<!--地址选择结束-->
 
             <!--20170531add 自提点地址开始-->
-            <!--<div class="address-pick-up-container" style="display:none;">
+            <div class="address-pick-up-container" style="display:none;">
                 <div class="address-pick-up">
-                    <p>
+                   <!-- <p>
                         <em>自提点</em>
                         <span>台州美莱美店</span>
                     </p>
-                    <p>台州市台州市人大浙江省台州市椒江区白云山南路233号</p>
+                    <p>台州市台州市人大浙江省台州市椒江区白云山南路233号</p>-->
                 </div>
 
-                &lt;!&ndash; 提货人信息 &ndash;&gt;
+                <!-- 提货人信息 -->
                 <div class="consignee-info">
                     <div class="consignee-container positionRelative">
                         <span>提货人姓名：</span>
                         <div class="consignee-content">
-                            <input type="text" placeholder="姓名" />
+                            <input type="text" id="ztName" placeholder="姓名" />
                         </div>
                     </div>
                     <div class="consignee-container positionRelative">
                         <span>提货人手机：</span>
                         <div class="consignee-content">
-                            <input type="tel" placeholder="请输入手机号码" />
+                            <input type="tel" maxlength="11" id="ztSj" placeholder="请输入手机号码" />
                         </div>
                     </div>
                     <div class="consignee-container positionRelative">
@@ -85,7 +84,7 @@
                         </div>
                     </div>
                 </div>
-            </div>-->
+            </div>
             <!--20170531add 自提点地址结束-->
 			
 			<!--商品列表开始-->
@@ -132,22 +131,61 @@
 <script type="text/javascript" src="js/TouchScroll.js"></script>
 <script type="text/javascript" src="js/getOrderConfirm.js"></script>
 <script>
-    /*$(function () {
+    $(function () {
         $(".order-select-handle select").on("change", function () {
             var optionValue = $(this).children("option:checked").val();
-            //alert(optionValue)
             switch (optionValue) {
                 case "1":
                     //送货上门
                     $(".address-select-container").show().siblings(".address-pick-up-container").hide();
                     break;
                 case "2":
-                    //自提
+                    //用户登录的状态下
+                    var method = 'GetShopAddr',
+                        param = {
+                            shopid: "3",
+                            device: "3"
+                        };
+                    sign = md5(JSON.stringify(param) + method + reqtime + API_KEY);
+                    $.ajax({
+                        url: "../API/WebApi.ashx",
+                        async: true,
+                        type: "post",
+                        dataType: 'json',
+                        data: {
+                            param: JSON.stringify(param),
+                            method: method,
+                            reqtime: reqtime,
+                            sign: getSecret(param, method, reqtime)
+                        },
+                        success: function (locMsg) {
+                            console.log(locMsg);
+                            if (locMsg.data != null) {
+                                addrFlag = true;
+                                btnChange();
+                                $('.address-pick-up').html('');
+                                var str ='';
+                                str+='<p><em>自提点</em>';
+                                str+='<span id="zt">'+locMsg.data.cityName+locMsg.data.districtName+'</span></p>';
+                                str+='<p id="ztAddr">'+locMsg.data.addr+'</p>';
+                                $('.address-pick-up').html(str);
+                            } else {
+                                addrFlag = false;
+                                btnChange();
+                                $('.address-pick-up').html('获取当前地点数据失败！');
+                            }
+                        },
+                        error: function(XMLHttpRequest, textStatus, errorThrown) {
+                            alert(textStatus);
+
+                        }
+                    });
+
                     $(".address-select-container").hide().siblings(".address-pick-up-container").show();
                     break;
                 default:
                     break;
             }
         })
-    })*/
+    })
 </script>

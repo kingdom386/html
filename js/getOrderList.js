@@ -12,7 +12,7 @@ var API_KEY = "gVzKTvzJyRTCkdDQ4AcQaCgp5iIpskbq",
 
 
 //页面的整体整天js css 加载完成
-document.addEventListener('DOMContentLoaded',function(){
+window.onload = function(){
     //判断链接是从那个页面传递过来的
     var pageUrl = getStorage('hrefMark');
     if(pageUrl != null){
@@ -21,13 +21,12 @@ document.addEventListener('DOMContentLoaded',function(){
         $(".order-tab-border").css("left",$(".order-tab-container a").eq(lazyIndx).width()*lazyIndx+'px');
     }
     load();
-},false);
+};
 
-//监听页面加载状态
-$(document).on('ajaxComplete',function(e,xhr,op){
+$(document).on('ajaxComplete',function(){
     layerState();
+    checkShow($(".order-list-wrapper"));
     Myscroll.refresh();
-    checkShow($(".order-list-wrapper").eq(lazyIndx));
 });
 
 function load() {
@@ -68,6 +67,7 @@ function load() {
                 pullUp = false;
             }
             Myscroll.refresh();
+            checkShow($(".order-list-wrapper"));
         });
 
         $(".order-tab-container a").on("touchend", function() {
@@ -148,7 +148,7 @@ function getOrderData(orderState, pageIdx, orderKeyWord) {
             sign: getSecret(param, method, reqtime)
         },
         success: function(orderMsg) {
-            if(orderMsg.status == 1 &&orderState == 0 && orderMsg.data == null){
+            if(orderMsg.status == 1&&orderMsg.data == null){
                 //没有订单
                 $('.allOrderInfo').hide();
                 $('.default-page-container').show();
@@ -165,13 +165,16 @@ function getOrderData(orderState, pageIdx, orderKeyWord) {
                         nowTime = (new Date()).getTime(),
                     //如果未付款订单时间超过4小时 该订单将失效
                         restTime = nowTime - date,
-                        validate = 1;
+                        validate = 4;
                         stateNote = "待付款";
                     if (restTime > (validate * 60 * 60 * 1000)) {
                         stateBtn = '<a href="javascript:void(0);" class="delOrder order-grey-button">删除订单</a><a href="javascript:void(0);" class="order-grey-button" >订单失效</a>';
                     } else {
                         stateBtn = '<a href="javascript:void(0);" class="cancleOrder order-grey-button">取消订单</a><a href="javascript:void(0);" class="goPay order-red-button">去付款</a><a href="javascript:void(0);" class="checkOrder order-grey-button">查看订单</a>';
                     }
+
+
+
                     //已付款
                 } else if (t.o_zt == 2) {
                     stateNote = '已付款';
@@ -195,44 +198,6 @@ function getOrderData(orderState, pageIdx, orderKeyWord) {
 
             $('#allOrder').append(str);
 
-            //curUrl = parseInt(window.location.href.split('#')[1]);
-            //1未付款 2已付款  3 配送中 4已配送
-           /* if (!isNaN(curUrl)) {
-                showType(curUrl);
-                var navIndex = 0;
-                switch (curUrl) {
-                    case 0:
-                    {
-                        navIndex = 0;
-                        break;
-                    }
-                    case 1:
-                    {
-                        navIndex = 1;
-                        break;
-                    }
-                    case 2:
-                    {
-                        navIndex = 2;
-                        break;
-                    }
-                    case 3:
-                    {
-                        navIndex = 3;
-                        break;
-                    }
-                    default:
-                    {
-                        navIndex = 0;
-                        break;
-                    }
-                }
-                $(".order-tab-container a").eq(navIndex).addClass('active').siblings('a').removeClass('active');
-                $('.order-tab-border').css('left', $(".order-tab-container a").width() * curUrl + 'px');
-            } else {
-                showType(0);
-            }
-*/
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {
 
@@ -311,7 +276,6 @@ $('.delOrder').live('touchend', function() {
                 page = 1;
                 getOrderData(loadType, page, '');
             }
-
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {
 

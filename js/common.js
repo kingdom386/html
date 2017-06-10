@@ -1,5 +1,6 @@
 //发送验证码公共函数方法
 function sendCode(phone, pType, obj) {
+    settime(obj);
     //ajax 发送验证码
     var method = 'SendCode',
         param = {
@@ -11,7 +12,6 @@ function sendCode(phone, pType, obj) {
             u_id:getCookieVal('userid')
         };
     sign = md5(JSON.stringify(param) + method + reqtime + API_KEY);
-    console.log(pType);
     $.ajax({
         url: "../API/WebApi.ashx",
         async: true,
@@ -24,11 +24,13 @@ function sendCode(phone, pType, obj) {
             sign: sign
         },
         success: function(iMessage) {
-           if(iMessage.status == 0 && pType == 1){
-              showTip('该手机号码已注册 !').showError();
+           if(iMessage.status == 0){
+               if(pType == 1){
+                   showTip('该手机号码已注册 !').showError();
+               }
            }
 
-            if(iMessage.status == 1 && pType == 1){
+            if(iMessage.status == 1){
                 showTip('验证码已发送，请注意查收!').showSuccess();
                 settime(obj);
             }
@@ -167,7 +169,7 @@ function searchByKeyword(){
 
 //购物车弹出层事件
 function cartPopover() {
-    $(".item-footer.active").live("click", function(e) {
+    $(".item-footer.active .item-footer-cart").live("click", function (e) {
         if ($(".over-bg").hasClass("active")) {
             $(".over-bg, .cart-popover-content").removeClass("active");
             RecoveryBodyTouch();
@@ -176,8 +178,8 @@ function cartPopover() {
             popoverWrapper.refresh();
             RemoveBodyTouch();
         }
-        e.stopPropagation();
-        //return false;
+        e.stopPropagation() || (window.event.cancleBubble = true);
+        return false;
     });
 
     $(".over-bg").on("touchend", function(e) {
@@ -393,7 +395,7 @@ function searResult(keyWord, pageIndex) {
         },
         success: function(searchResult) {
             var str = '';
-            if(searchResult.data == ""||searchResult.data.length == 0){
+            if(searchResult.data == "" && pageIndex == 1){
                  $('.search-list-container').hide();
                  $('.default-page-container').show();
                  //没有搜索结果
@@ -472,10 +474,8 @@ function setStorage(name, value) {
     try{
         var ls = window.localStorage;
         ls.setItem(name, JSON.stringify(value));
-        return true;
     }catch (error){
         alert(error);
-        return false;
     }
 }
 
@@ -528,6 +528,11 @@ function  isAds(){
     },60000);
 }
 
-document.ready = function(){
-    isAds();
-}
+isAds();
+
+//订单中心跳转
+
+
+
+
+

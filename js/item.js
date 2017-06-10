@@ -6,6 +6,16 @@ var navBox=contentBox=popoverWrapper=mySwiper='',
     checkShowItem = $("div.item-box-0"),pullUp= true,
     nav = $(".item-nav ul");
 
+    window.addEventListener('pageshow',function(){
+        if(isWeiXin()&&getStorage('cart_info') == null){
+            $('#allPrice').html(0.00);
+            $('.badge').html(0);
+            $('#cart').empty();
+            $('footer').removeClass('active');
+            $('.publicCart input').val(0);
+        }
+    });
+
     //请求添加后台数据
     window.onload = function(){
         getListType();
@@ -13,7 +23,7 @@ var navBox=contentBox=popoverWrapper=mySwiper='',
         cartPopover();
         searchPanel();
         changeCart();
-        getCartLocalStorage();
+
     };
 
     $(document).on('ajaxComplete',function(e,xhr,op){
@@ -21,6 +31,7 @@ var navBox=contentBox=popoverWrapper=mySwiper='',
         navBox.refresh();
         contentBox.refresh();
         popoverWrapper.refresh();
+        getCartLocalStorage();
         //checkShow(checkShowItem);
     });
 

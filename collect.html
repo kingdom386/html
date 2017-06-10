@@ -22,6 +22,13 @@
 </header>
 <!--头部结束-->
 
+    <!-- 无收藏 -->
+    <div class="default-page-container">
+        <em class="default-collect"></em>
+        <p>您还没有收藏商品哦</p>
+        <a href="productionList.html">去逛一逛</a>
+    </div>  
+
 <!--底部开始,可以操作加active-->
 <footer class="footer-container item-footer">
 	<a href="javascript:;" class="item-footer-cart"><em><i class="badge">5</i></em></a>
@@ -81,10 +88,10 @@
 	 Myscroll = '';
 
 	 //页面的整体整天js css 加载完成
-	 document.addEventListener('DOMContentLoaded',function(){
-		 load();
-		 cartPopover();//购物车弹出层
-	 },false);
+	 window.onload = function () {
+	     load();
+	     cartPopover();//购物车弹出层
+	 };
 
 	 //监听页面加载状态
 	 $(document).on('ajaxComplete',function(e,xhr,op){
@@ -153,6 +160,7 @@
 				sign: getSecret(param, method, reqtime)
 			},
 			success: function (collData) {
+
 				var str = '';
 				$(collData.data).each(function(i,t){
 					str+='<div class="slide-list-wrapper  publicCart generalCart" data-mxcontain = '+ t.l_storage+' data-fid = '+ t.f_id+' data-id ='+t.p_id+' data-name="'+ t.l_name+'" data-price='+ t.l_danjia+' data-cateId='+ t.cateID+'>';

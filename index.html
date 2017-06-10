@@ -34,7 +34,7 @@
 	<a href="index.html" class="active"><em></em>首页</a>
 	<a href="hot.html"><em></em>热卖</a>
 	<a href="productionList.html"><em></em>点我下单</a>
-	<a href="orderList.html"><em></em>订单</a>
+	<a href="javascript:void(0);"  data-type="0" class="orderCenter"><em></em>订单</a>
 	<a href="person.html"><em></em>我的生活馆</a>
 </footer>
 <!--底部结束-->
@@ -192,6 +192,12 @@
 				}
 			Myscroll.refresh();
 			checkShow($(".production-list")); //懒加载
+		});
+
+		$('.orderCenter').bind('touchend',function(){
+			//设置锚标记 hrefMark
+			setStorage('hrefMark',$(this).data('type'));
+			window.location.href = 'orderList.html';
 		});
 	}
 

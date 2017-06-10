@@ -52,11 +52,11 @@
 			u_id = getCookieVal('userid');
 
 	//页面的整体整天js css 加载完成
-	document.addEventListener('DOMContentLoaded',function(){
+	 window.onload = function(){
 		//请求后台
 		getAddrMgmt(u_id);
 		load();
-	},false);
+	};
 
 	//监听页面加载状态
 	$(document).on('ajaxComplete',function(e,xhr,op){
@@ -180,7 +180,6 @@
 					}
 
 				});
-
 			},
 			error: function(XMLHttpRequest, textStatus, errorThrown) {}
 		});
@@ -225,10 +224,7 @@
 
 				}
 			});
-
 		});
-
-
 	});
 
 </script>

@@ -27,7 +27,7 @@
 </head>
 <body>
     <header class="head-container">
-        <a href="javascript:history.back();" onclick="self.location=document.referrer;" class="btn-angle-left btn-left icon-angle-left"></a>
+        <a href="javascript:history.back();" class="btn-angle-left btn-left icon-angle-left"></a>
         <a href="index.html" class="btn-angle-left btn-right iconfont icon-my-home"></a>
         <h6>商品详情</h6>
         <div class="head-mask"></div>
@@ -85,7 +85,7 @@
                     <span class="price p-left"><em>¥</em><i id="p_danjia"></i></span>
                     <span class="p-right ct-panel">
                         <a href="javascript:void(0);" class="ct-btn reduce-button txt-center p-left">-</a>
-                        <input type="tel" value="0" disabled readonly="readonly" class="ct-input txt-center p-left" autocomplete="off" maxlength="4">
+                        <input type="tel" value="0" readonly="readonly" class="ct-input txt-center p-left" autocomplete="off" maxlength="4">
                         <a href="javascript:void(0);" class="ct-btn plus-button txt-center p-left" style="background-position: -22px 0">+</a>
                     </span>
                 </div>
@@ -138,7 +138,7 @@
     </div>
     <!--DOM-loadLayer-->
     <!--互动可拖拽的客户面板-->
-    <a class="fix-drag" href="tel:10086"></a>
+    <a class="fix-drag" href="javascript:void(0);"></a>
     <script type="text/javascript" src="js/zepto.min.js"></script>
     <script type="text/javascript" src="js/swiper.min.js"></script>
     <script type="text/javascript" src="js/iscroll-probe.js"></script>
@@ -147,5 +147,6 @@
     <script type="text/javascript" src="js/common.js"></script>
     <script type="text/javascript" src="js/cartPublic.js"></script>
     <script type="text/javascript" src="js/getDeData.js"></script>
+    
 </body>
 </html>

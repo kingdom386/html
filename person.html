@@ -30,7 +30,7 @@
         <a href="index.html"><em></em>首页</a>
         <a href="hot.html"><em></em>热卖</a>
         <a href="productionList.html"><em></em>点我下单</a>
-        <a href="orderList.html"><em></em>订单</a>
+        <a href="javascript:void(0);"  data-type="0" class="orderCenter"><em></em>订单</a>
         <a href="person.html" class="active"><em></em>我的生活馆</a>
     </footer>
     <!--底部结束-->
@@ -181,7 +181,7 @@
             window.location.href = 'orderList.html';
         });
 
-         $('.my-order-container ul li,.my-order-container a').bind('touchend',function(){
+         $('.my-order-container ul li,.my-order-container a,.orderCenter').bind('touchend',function(){
             //设置锚标记 hrefMark
             setStorage('hrefMark',$(this).data('type'));
             window.location.href = 'orderList.html';
@@ -210,7 +210,6 @@
                 sign: getSecret(param, method, reqtime)
             },
             success: function (infoData) {
-                console.log(infoData.data.u_sj);
                 setCookie('pwd_pay', infoData.data.pwd_pay);
                 setCookie('pwd_user', infoData.data.u_pwd);
                 $('.person-image img').attr('src',infoData.data.u_headimgurl);

@@ -131,8 +131,20 @@
 		 API_KEY = "gVzKTvzJyRTCkdDQ4AcQaCgp5iIpskbq",
 		 reqtime = Date.parse(new Date());
 
+	window.addEventListener('pageshow',function(){
+		if(isWeiXin()&&getStorage('cart_info') == null){
+			$('#allPrice').html(0.00);
+			$('.badge').html(0);
+			$('#cart').empty();
+			$('footer').removeClass('active');
+			$('.publicCart input').val(0);
+		}
+	});
+
 	window.onload =function(){
 				//请求获取热卖产品
+				cartPopover();//购物车弹出层
+				searchPanel();//搜索页面事件
 				getHotList(page);
 				load();
 				changeCart();
@@ -226,6 +238,5 @@
 		});
 
 	}
-cartPopover();//购物车弹出层
-searchPanel();//搜索页面事件
+
 </script>

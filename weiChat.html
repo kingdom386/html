@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -79,6 +79,16 @@
     <!--手机验证登录结束-->
 </aside>
 <!--绑定页面结束-->
+    
+    <div class="DOM-loadLayer">
+        <div class="rotate-load">
+            <div class="load-box">
+            </div>
+        </div>
+        <!--rotate-load-->
+    </div>
+    <!--DOM-loadLayer-->
+
 </body>
 </html>
 <script type="text/javascript" src="js/zepto.min.js"></script>
@@ -92,6 +102,12 @@
     var mFlag = cFlag = false,p = c = 0,openid = '',
         userPwd = nodes = '',gtp = ltp = 2;
     //gtp 验证码类型 ltp 登录类型
+
+
+    //监听页面加载状态
+    $(document).on('ajaxComplete', function (e, xhr, op) {
+        layerState(); 
+    });
 
     //检测手机号码格式
     function checkMC(mcbj){

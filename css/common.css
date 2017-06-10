@@ -1326,6 +1326,8 @@ header ~ .login-container {
 .default-page-container em.default-account{ background-position:-616px 0;}
 .default-page-container em.default-network{ background-position:-770px 0;}
 .default-page-container em.default-result{ background-position:-924px 0;}
+.default-page-container em.default-parameter{ background-position:-1078px 0;}
+.default-page-container em.default-detail{ background-position:-1232px 0;}
 
 /*confirm确认框*/
 .confirm-popover-container{ pointer-events:all;}
