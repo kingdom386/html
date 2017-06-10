@@ -22,6 +22,13 @@
 </header>
 <!--头部结束-->
 
+<!-- 无足迹 -->
+<div class="default-page-container">
+	<em class="default-footprint"></em>
+	<p>您还没有逛过哦</p>
+	<a href="productionList.html">去选购</a>
+</div>
+
 <!--底部开始,可以操作加active-->
 <footer class="footer-container item-footer">
 	<a href="javascript:void(0);" class="item-footer-cart"><em><i class="badge">0</i></em></a>
@@ -51,21 +58,6 @@
 <section id="scroll-wrapper">
 	<div id="scroll-container">
 		<div class="slide-list-container collect-list-container">
-			<!--<div class="slide-list-wrapper">
-				<a class="slide-info-container" href="">
-					<div class="production-image">
-						<img data-src="image/indexBanner.jpg" class="img-responsive wait-load" alt="" />
-					</div>
-					<div class="production-info">
-						<h4 class="text-ellipsis-2"></h4>
-						<p class="production-price">25.8</p>
-						&lt;!&ndash;加入购物车按钮&ndash;&gt;
-						<em class="search-buy-icon"></em>
-					</div>
-				</a>
-				&lt;!&ndash;删除按钮&ndash;&gt;
-				<button class="slide-delete-button">删除</button>
-			</div>-->
 
 		</div>
 	</div>
@@ -174,23 +166,31 @@
 				sign: getSecret(param, method, reqtime)
 			},
 			success: function (collData) {
-				var str = '';
-				$(collData.data).each(function(i,t){
-					str+='<div class="slide-list-wrapper publicCart generalCart"  data-mxcontain = '+ t.l_storage+' data-fid = '+ t.f_id+' data-id ='+t.p_id+' data-name="'+ t.l_name+'" data-price='+ t.l_danjia+' data-cateId='+ t.cateID+'>';
-					str+='<a class="slide-info-container" href="detail.html?p_Id='+t.p_id+'">';
-					str+='<div class="production-image">';
-					str+='<img data-src="'+ t.l_pic+'" class="img-responsive wait-load" alt="" />';
-					str+='</div>';
-					str+='<div class="production-info">';
-					str+='<h4 class="text-ellipsis-2">'+ t.l_name+'</h4>';
-					str+='<p class="production-price">'+ t.l_danjia+'</p>';
-					str+='<em class="search-buy-icon plus-button"></em><input type="hidden" value="0" >';
-					str+='</div>';
-					str+='</a>';
-					str+='<button class="slide-delete-button">删除</button>';
-					str+='</div>';
-				});
-				$('.collect-list-container').append(str);
+				if (collData.data.length != 0) {
+					var str = '';
+					$(collData.data).each(function(i,t){
+						str+='<div class="slide-list-wrapper publicCart generalCart"  data-mxcontain = '+ t.l_storage+' data-fid = '+ t.f_id+' data-id ='+t.p_id+' data-name="'+ t.l_name+'" data-price='+ t.l_danjia+' data-cateId='+ t.cateID+'>';
+						str+='<a class="slide-info-container" href="detail.html?p_Id='+t.p_id+'">';
+						str+='<div class="production-image">';
+						str+='<img data-src="'+ t.l_pic+'" class="img-responsive wait-load" alt="" />';
+						str+='</div>';
+						str+='<div class="production-info">';
+						str+='<h4 class="text-ellipsis-2">'+ t.l_name+'</h4>';
+						str+='<p class="production-price">'+ t.l_danjia+'</p>';
+						str+='<em class="search-buy-icon plus-button"></em><input type="hidden" value="0" >';
+						str+='</div>';
+						str+='</a>';
+						str+='<button class="slide-delete-button">删除</button>';
+						str+='</div>';
+					});
+					$('.collect-list-container').append(str);
+				}
+
+				if(collData.data.length == 0&&pg == 1){
+					$('#scroll-wrapper').hide();
+					$('.default-page-container').show();
+				}
+
 				slideDelete();
 			},
 			error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -229,6 +229,10 @@
 			success: function (delData) {
 				if(delData.status == 1){
 					$('.slide-list-wrapper[data-fid="'+fid+'"]').remove();
+					if ($('.slide-list-wrapper').length == 0) {
+						$('.default-page-container').show();
+						$('#scroll-wrapper').hide();
+					}
 				}
 			},
 			error: function (XMLHttpRequest, textStatus, errorThrown) {

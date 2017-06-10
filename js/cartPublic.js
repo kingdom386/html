@@ -9,7 +9,7 @@ var cartAry = bry = jry = [];
 
 //操作购物车对应的产品数
 function changeCart(){
-    $(".number-handle-container em,.de-price a,.search-buy-icon").live("click", function(e) {
+    $(".number-handle-container em,.de-price a,.slide-list-wrapper a.slide-info-container em").live("click", function(e) {
         var inputVal = parseInt($(this).siblings("input").val()),
             id = $(this).parents('.generalCart').data('id'),
             maxVal = $(this).parents('.generalCart').data('mxcontain');
@@ -39,6 +39,7 @@ function changeCart(){
         }else{
            //DO NOTHING
         }
+        e.stopPropagation();
         return false;
     })
 }

@@ -22,21 +22,21 @@
 </header>
 <!--头部结束-->
 
-    <!-- 无收藏 -->
-    <div class="default-page-container">
-        <em class="default-collect"></em>
-        <p>您还没有收藏商品哦</p>
-        <a href="productionList.html">去逛一逛</a>
-    </div>  
+<!-- 无收藏 -->
+<div class="default-page-container" style="display:none;">
+	<em class="default-collect"></em>
+	<p>您还没有收藏商品哦</p>
+	<a href="javascript:void(0);" class="gyg">去逛一逛</a>
+</div>
 
 <!--底部开始,可以操作加active-->
 <footer class="footer-container item-footer">
 	<a href="javascript:;" class="item-footer-cart"><em><i class="badge">5</i></em></a>
 	<div class="item-footer-price">
-		<em>0.00</em>
+		<em id="allPrice">0.00</em>
 		<p>配送费<span>0</span>元</p>
 	</div>
-	<a href="" class="item-buy-button">去结算</a>
+	<a href="javascript:void(0);" class="item-buy-button get-btn">去结算</a>
 </footer>
 <!--底部结束-->
 
@@ -91,6 +91,10 @@
 	 window.onload = function () {
 	     load();
 	     cartPopover();//购物车弹出层
+
+		 $('.gyg').bind('touchend',function(){
+			 window.location.href = 'productionList.html';
+		 });
 	 };
 
 	 //监听页面加载状态
@@ -160,26 +164,34 @@
 				sign: getSecret(param, method, reqtime)
 			},
 			success: function (collData) {
+			    if (collData.data.length != 0) {
+			        $('.default-page-container').hide();
+					$('#scroll-wrapper').show();
+					var str = '';
+					$(collData.data).each(function(i,t){
+						str+='<div class="slide-list-wrapper  publicCart generalCart" data-mxcontain = '+ t.l_storage+' data-fid = '+ t.f_id+' data-id ='+t.p_id+' data-name="'+ t.l_name+'" data-price='+ t.l_danjia+' data-cateId='+ t.cateID+'>';
+						str+='<label>';
+						str+='<input type="checkbox" value="'+ t.f_id+'" name="collect" />';
+						str+='</label>';
+						str+='<a class="slide-info-container" href="detail.html?p_Id='+t.p_id+'">';
+						str+='<div class="production-image">';
+						str+='<img data-src="'+ t.l_pic+'" class="img-responsive wait-load" alt="" /></div>';
+						str+='<div class="production-info">';
+						str+='<h4 class="text-ellipsis-2">'+ t.l_name;
+						str+='</h4><p class="production-price">'+ t.l_danjia;
+						str+='</p><em class="search-buy-icon plus-button"></em><input type="hidden" value="0" />';
+						str+='</div></a><button data-id='+ t.f_id+' class="slide-delete-button">删除</button></div>';
 
-				var str = '';
-				$(collData.data).each(function(i,t){
-					str+='<div class="slide-list-wrapper  publicCart generalCart" data-mxcontain = '+ t.l_storage+' data-fid = '+ t.f_id+' data-id ='+t.p_id+' data-name="'+ t.l_name+'" data-price='+ t.l_danjia+' data-cateId='+ t.cateID+'>';
-					str+='<label>';
-					str+='<input type="checkbox" value="'+ t.f_id+'" name="collect" />';
-					str+='</label>';
-					str+='<a class="slide-info-container" href="detail.html?p_Id='+t.p_id+'">';
-					str+='<div class="production-image">';
-					str+='<img data-src="'+ t.l_pic+'" class="img-responsive wait-load" alt="" /></div>';
-					str+='<div class="production-info">';
-					str+='<h4 class="text-ellipsis-2">'+ t.l_name;
-					str+='</h4><p class="production-price">'+ t.l_danjia;
-					str+='</p><em class="search-buy-icon plus-button"></em><input type="hidden" value="0" />';
-					str+='</div></a><button data-id='+ t.f_id+' class="slide-delete-button">删除</button></div>';
+					});
+					$('.collect-list-container').append(str);
+					slideDelete();
+			    }
 
-				});
-				$('.collect-list-container').append(str);
+				if(collData.data.length == 0&&pg == 1){
+					$('#scroll-wrapper').hide();
+			        $('.default-page-container').show();
+			    }
 
-				slideDelete();
 			},
 			error: function (XMLHttpRequest, textStatus, errorThrown) {
 
@@ -225,8 +237,11 @@
 			success: function (delData) {
 				if(delData.status == 1){
 					$(bry).each(function(i,t){
-						console.log(t.f_id);
-						$('.slide-list-wrapper[data-fid="'+t.f_id+'"]').remove();
+					    $('.slide-list-wrapper[data-fid="' + t.f_id + '"]').remove();
+					    if ($('.slide-list-wrapper').length == 0) {
+					        $('.default-page-container').show();
+							$('#scroll-wrapper').hide();
+					    }
 					});
 				}
 			},
@@ -276,4 +291,6 @@
 			}
 		})
 	})
+
+
 </script>
