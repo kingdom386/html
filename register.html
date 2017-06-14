@@ -44,8 +44,6 @@
 <aside class="login-aside" >
 	<!--头部开始-->
 	<header class="head-container common-head">
-		<!--<a href="javascript:history.back();" class="back-button"></a>-->
-		<!--<a href="javascript:;" class="close-button"></a>-->
 		<h4>登录</h4>
 		<a href="index.html" class="home-button"></a>
 	</header>
@@ -98,7 +96,7 @@
 		</ul>
 		<a href="javascript:void(0);" data-logtype = '2' class="submit-button pwdLoginBtn">立即登录</a>
 		<div class="other-way">
-			<a href="">忘记密码</a>
+			<a href="findPasswordStep1.html">忘记密码</a>
 		</div>
         <!-- 微信登录开始 -->
         <div class="wx-way-login txt-center">
@@ -294,7 +292,6 @@
 									}else{
 										window.location.href = 'index.html';
 									}
-
 								}
 							}else{
 
@@ -314,7 +311,7 @@
 		if(isWeiXin()){
 			weiLog();
 		}else{
-			showTip('您当前是的不是微信端！').showError();
+			showTip('您当前未在微信中使用，无法进行微信登录操作').showError();
 		}
 	});
 

@@ -10,6 +10,7 @@ var API_KEY = "gVzKTvzJyRTCkdDQ4AcQaCgp5iIpskbq",
     u_id = getCookieVal('userid');
 
 $('.address-choose').on('touchend', function() {
+    $('input').blur();
     //开始执行地图API
     var geolocation = new qq.maps.Geolocation("IFLBZ-ZVHRI-XDSGG-5NY25-IITSH-4HFXD", "O2O"),
         options = {timeout: 8000};
@@ -23,19 +24,19 @@ $('.address-choose').on('touchend', function() {
         $('input[name="lng"]').val(position.lng);
     };
 
-    function showErr() {
+    function showErr() {};
 
-    };
-
-    if (urlStr.indexOf('editId') != -1) {
-        $('#mapPage').attr('src','http://apis.map.qq.com/tools/locpicker?type=1&effect=zoom&coord='+$("input[name='lat']").val()+','+$("input[name='lng']").val()+'&search=1&policy=1&mapdraggable=1&type=1&key=IFLBZ-ZVHRI-XDSGG-5NY25-IITSH-4HFXD&referer=O2O');
-    }
-    $('header').hide();
-    $('#mapPage').show();
+    setTimeout(function(){
+        if (urlStr.indexOf('editId') != -1) {
+            $('#mapPage').attr('src','http://apis.map.qq.com/tools/locpicker?type=1&effect=zoom&coord='+$("input[name='lat']").val()+','+$("input[name='lng']").val()+'&search=1&policy=1&mapdraggable=1&type=1&key=IFLBZ-ZVHRI-XDSGG-5NY25-IITSH-4HFXD&referer=O2O');
+        }
+        $('header').hide();
+        $('#mapPage').show();
+    },500);
 });
 
 
-document.addEventListener('DOMContentLoaded', function() {
+window.onload = function() {
     var nodes = '';
     //判断是否修改页面跳转过来
     if (urlStr.indexOf('editId') != -1) {
@@ -66,12 +67,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }else{
         nodes +='<iframe id="mapPage" style = "display: none" width="100%" height="100%" frameborder="0" ';
         nodes += ' src="http://apis.map.qq.com/tools/locpicker?';
-        nodes += 'type=1&effect=zoom&search=1&policy=1&mapdraggable=1&type=1&key=IFLBZ-ZVHRI-XDSGG-5NY25-IITSH-4HFXD&referer=O2O">';
+        nodes += 'type=1&effect=zoom&policy=1&mapdraggable=1&radius=3000&key=IFLBZ-ZVHRI-XDSGG-5NY25-IITSH-4HFXD&referer=O2O">';
         nodes += '</iframe>';
     }
     $('body').append(nodes);
 
-}, false);
+};
 
 //修改收货地址表单
 $('.editBtn').on('touchend', function() {
@@ -141,18 +142,15 @@ function changeInfoFrm(mtd, aid) {
             });
         }
     } else {
-        showTip('请检查填写的表格中的信息是否有误!').showError();
+        showTip('请核查表单的信息是否有误!').showError();
     }
 
 }
-
-
 
 function checkRname() {
     if ($("input[name='r_name']").val().trim() != "") {
         return true;
     } else {
-        showTip('请添加收货人!').showError();
         return false;
     }
 }
@@ -161,7 +159,6 @@ function checkRsj() {
     if (IsMobile($("input[name='r_sj']").val())) {
         return true
     } else {
-        showTip('请检查联系方式是否有误!').showError();
         return false
     }
 }

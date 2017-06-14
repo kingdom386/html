@@ -4,6 +4,7 @@ var API_KEY = "gVzKTvzJyRTCkdDQ4AcQaCgp5iIpskbq";
 var reqtime = Date.parse(new Date()),addrFlag = cartFlag = false;
 urlStr = window.location.href;
 
+//解决微信端 默认返回读取缓存数据问题
 window.addEventListener('pageshow',function(){
 	if(isWeiXin()&&getStorage('cart_info') == null){
 		$('#hasOrder').hide();
@@ -196,26 +197,7 @@ $('.active #subOrder').live('touchend', function() {
 					ordNote:ordNote
 				};
 		}
-
-
-			/*sh_name=$('#uName').html(),
-			sh_addr = $('#uAddr').html(),
-			sh_sj = $('#uSj').html(),
-			ordNote = $('#ordNote').val(),
-			ad_id = $('h5').data('aid'),
-			param = {
-				shopid: "3",
-				device: "3",
-				l_cart: JSON.parse(localStorage.getItem('cart_info')),
-				u_id: getCookieVal('userid'),
-				ad_id:ad_id,
-				dist_type: getPost,
-
-				sh_name: sh_name,
-				sh_addr: sh_addr,
-				sh_sj: sh_sj,
-				ordNote:ordNote
-			};*/
+         
 		if(sh_name == null||sh_addr == null||sh_sj == null){
 			showTip('您的收货地址有误！').showError();
 			return false;
@@ -245,7 +227,7 @@ $('.active #subOrder').live('touchend', function() {
 				 }
 			},
 			error: function(XMLHttpRequest, textStatus, errorThrown) {
-				alert(textStatus);
+				 
 			}
 		});
 	}

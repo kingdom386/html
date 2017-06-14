@@ -4,12 +4,23 @@
 
 var API_KEY = "gVzKTvzJyRTCkdDQ4AcQaCgp5iIpskbq",
     lazyIndx = loadType=curScrollDirection = y = maxScroll = 0,
-    Myscroll = curUrl = '',
+    Myscroll = curUrl = keys = '',
     pullUp = true,//开关 启用上拉加载
     page = 1,
     reqtime = Date.parse(new Date());
 
-
+//订单搜索
+document.onkeydown = function(evt){
+    var keyCode = evt.keyCode||evt.which,
+        sKey = $('.searchOrder').val();
+        if(keyCode == 13){
+            $(".DOM-loadLayer").removeClass('hide').show();
+            page = 1;
+            getOrderData(loadType,page,sKey);
+            $('input').blur();
+            evt.preventDefault();
+        }
+};
 
 //页面的整体整天js css 加载完成
 window.onload = function(){
@@ -19,6 +30,7 @@ window.onload = function(){
         loadType = parseInt(pageUrl);
         lazyIndx = parseInt(pageUrl);
         $(".order-tab-border").css("left",$(".order-tab-container a").eq(lazyIndx).width()*lazyIndx+'px');
+        $('.order-tab-container a').eq(lazyIndx).addClass('active').siblings('a').removeClass('active')
     }
     load();
 };
@@ -37,7 +49,7 @@ function load() {
         window.location.href = './register.html';
     } else {
         //获取所有的订单
-        getOrderData(loadType,page, '');
+        getOrderData(loadType,page,'');
         Myscroll = new IScroll('#scroll-wrapper', {
             click: true,
             touchend: true,
@@ -98,7 +110,7 @@ function getOrderAll() {
     // type all need post payed posting 所有的订单  need 待付款 post 配送中 pay 已付款
     loadType = 0;
     page = 1;
-    getOrderData(loadType,page, '');
+    getOrderData(loadType,page,'');
 }
 
 //订单待付款
@@ -135,7 +147,6 @@ function getOrderData(orderState, pageIdx, orderKeyWord) {
             keyword: orderKeyWord
         };
     sign = md5(JSON.stringify(param) + method + reqtime + API_KEY);
-
     $.ajax({
         url: "../API/WebApi.ashx",
         async: true,
@@ -154,6 +165,10 @@ function getOrderData(orderState, pageIdx, orderKeyWord) {
                 $('.default-page-container').show();
             }
 
+            if(pageIdx == 1){
+                $('#allOrder').empty();
+            }
+
             var str = '';
             $(orderMsg.data).each(function(i, t) {
                 var stateNote = '',
@@ -168,20 +183,17 @@ function getOrderData(orderState, pageIdx, orderKeyWord) {
                         validate = 4;
                         stateNote = "待付款";
                     if (restTime > (validate * 60 * 60 * 1000)) {
-                        stateBtn = '<a href="javascript:void(0);" class="delOrder order-grey-button">删除订单</a><a href="javascript:void(0);" class="order-grey-button" >订单失效</a>';
+                        stateBtn = '<a href="javascript:void(0);" class="delOrder order-grey-button">删除订单</a><a href="javascript:void(0);" class="order-grey-button" >订单关闭</a>';
                     } else {
-                        stateBtn = '<a href="javascript:void(0);" class="cancleOrder order-grey-button">取消订单</a><a href="javascript:void(0);" class="goPay order-red-button">去付款</a><a href="javascript:void(0);" class="checkOrder order-grey-button">查看订单</a>';
+                        stateBtn = '<a href="javascript:void(0);" class="cancleOrder order-grey-button">取消订单</a><a href="javascript:void(0);" class="checkOrder order-grey-button">查看订单</a><a href="javascript:void(0);" class="goPay order-red-button">去付款</a>';
                     }
-
-
-
                     //已付款
                 } else if (t.o_zt == 2) {
                     stateNote = '已付款';
-                    stateBtn = '<a href="javascript:void(0);" class="delOrder order-grey-button">删除订单</a><a href="javascript:void(0);" class="againOrder order-red-button">再来一单</a><a href="javascript:void(0);" class="checkOrder order-grey-button">查看订单</a>';
+                    stateBtn = '<a href="javascript:void(0);" class="delOrder order-grey-button">删除订单</a><a href="javascript:void(0);" class="checkOrder order-grey-button">查看订单</a>';
                 } else if (t.o_zt == 3) {
                     stateNote = '配送中';
-                    stateBtn = '<a href="javascript:void(0);" class="checkLogistics order-grey-button">查看物流</a><a href="javascript:void(0);" class="receiveConfrm order-red-button">确认收货</a><a href="javascript:void(0);" class="checkOrder order-grey-button">查看订单</a>';
+                    stateBtn = '<a href="javascript:void(0);" class="checkLogistics order-grey-button">查看物流</a><a href="javascript:void(0);" class="receiveConfrm order-red-button">确认收货</a>';
                 } else if (t.o_zt == 4) {
                     //其他类的订单
                     stateBtn = '<a href="javascript:void(0);" class="closeOrder order-grey-button">交易关闭</a><a href="javascript:void(0);" class="checkLogistics order-grey-button">查看物流</a>';
@@ -206,7 +218,6 @@ function getOrderData(orderState, pageIdx, orderKeyWord) {
 }
 
 //订单按钮功能
-
 //去付款
 $('.goPay').live('touchend', function() {
     //获取订单ID 和 需要支付的总额

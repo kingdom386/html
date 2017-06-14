@@ -114,15 +114,6 @@ function searchPanel() {
         $(".fuzzy-search").removeClass("active");
     })
 
-    //点击回车事件
-    document.onkeydown = function(e) {
-        var enterCode = e.which || e.keyCode;
-        if (enterCode == 13) {
-            searchByKeyword();
-            return false;
-        }
-
-    }
 }
 
 /*加入购物车动画*/
@@ -237,7 +228,7 @@ function confirmPanel(message, callback) {
 
 //充值、结算单选事件
 function recharge() {
-    $(".order-payment-method-items").on('touchend', function() {
+    $(".order-payment-method-items").on('touchend', function () {
         $('.order-payment-method-items').removeClass('sel-active');
         $(".payment-sel-radio input[type^='radio']").removeAttr('checked');
         $("input[type^='radio']", this).attr('checked', 'checked');

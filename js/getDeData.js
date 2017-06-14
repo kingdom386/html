@@ -92,9 +92,11 @@ $('.de-collection').on('touchend', function() {
 		if (!$(this).hasClass('active')) {
 			//锟秸诧拷
 			$(this).addClass('active');
+			$('.de-collection p').html('取消');
 		} else {
 			//取锟斤拷锟秸诧拷
 			$(this).removeClass('active');
+			$('.de-collection p').html('收藏');
 		}
 		change(rewardId);
 	}
@@ -132,19 +134,21 @@ function change(pid) {
 }
 
 //锟酵伙拷锟斤拷锟街伙拷锟斤拷隙锟?
-var winWidth = winHeight = locX = locY = 0;
-$('.fix-drag').on('touchstart', function(ev) {
+var winWidth = winHeight = locX = locY = orgX =  0;
+
+$('.fix-drag').bind('touchstart', function(ev) {
 	locX = ev.changedTouches[0].pageX,
 	locY = ev.changedTouches[0].pageY;
+	orgX = locX;
 	ev.preventDefault();
 	$(this).removeClass('drag');
 	winWidth = window.screen.availWidth, winHeight = window.screen.availHeight;
 });
 
-$('.fix-drag').on('touchmove', function(e) {
+$('.fix-drag').bind('touchmove', function(e) {
 	var dragBoxWidth = $(this).width() / 2,
 		dragBoxHeight = $(this).height() / 2;
-	locX = e.changedTouches[0].pageX, locY = e.changedTouches[0].pageY;
+	locX = e.touches[0].pageX, locY = e.touches[0].pageY;
 	//锟斤拷锟斤拷锟较讹拷锟斤拷围
 	if (locX >= dragBoxWidth && locX <= (winWidth - dragBoxWidth)) {
 		locX < 0 ? (locX = 0) : (locX);
@@ -160,9 +164,9 @@ $('.fix-drag').on('touchmove', function(e) {
 	}
 });
 
-$('.fix-drag').on('touchend', function(ff) {
-	var tempX = ff.changedTouches[0].pageX-locX;
-	if(tempX>20){
+$('.fix-drag').bind('touchend', function(g) {
+	var tempX = Math.abs(g.changedTouches[0].pageX-orgX);
+	if(tempX>2){
 		if (tempX <= (winWidth / 2)) {
 			$('.fix-drag').css({
 				'left': '0'
@@ -172,6 +176,8 @@ $('.fix-drag').on('touchend', function(ff) {
 				'left': (winWidth - $(this).width()) + 'px'
 			}).addClass('drag');
 		}
+	}else{
+		window.location.href='tel:10086';
 	}
 });
 
@@ -206,7 +212,7 @@ function getDeInfo(pid) {
 
 				$('.de-price').attr({'data-Id':t.m_prod.id,'data-name':t.m_prod.l_name,'data-mxcontain':t.m_prod.l_storage,'data-price':t.m_prod.l_danjia});
 
-				t.collect == 1 ? $('.de-collection').addClass('active') : $('.de-collection').removeClass('active')
+				t.collect == 1 ? ($('.de-collection').addClass('active'),$('.de-collection p').html('取消')  ): ($('.de-collection').removeClass('active'),$('.de-collection p').html('收藏')  );
 
 				//锟斤拷锟斤拷锟斤拷锟斤拷banner图片
 				if (!t.m_prod.l_pic2 == "") {

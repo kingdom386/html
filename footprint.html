@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
 	<meta charset="UTF-8">
@@ -17,13 +17,13 @@
 <body>
 <!--头部开始-->
 <header class="head-container common-head">
-	<a href="javascript:history.back();" class="back-button"></a>
+	<a href="javascript:void(0)" onclick="self.location = document.referrer;" class="back-button"></a>
 	<h4>我的足迹</h4>
 </header>
 <!--头部结束-->
 
 <!-- 无足迹 -->
-<div class="default-page-container">
+<div class="default-page-container" style="display:none;">
 	<em class="default-footprint"></em>
 	<p>您还没有逛过哦</p>
 	<a href="productionList.html">去选购</a>
@@ -78,11 +78,11 @@
 	var page = 1,pullUp = true,Myscroll = popoverWrapper = '';
 
 	//页面的整体整天js css 加载完成
-	document.addEventListener('DOMContentLoaded',function(){
-		cartPopover();//购物车弹出层
-		load();
-		changeCart();
-	},false);
+	window.onload = function () {
+	    cartPopover();//购物车弹出层
+	    load();
+	    changeCart();
+	};
 
 	//监听页面加载状态
 	$(document).on('ajaxComplete',function(e,xhr,op){
@@ -95,8 +95,8 @@
 	function load() {
 		Myscroll = new IScroll('#scroll-wrapper', {
 			touchend: true,
-			preventDefault: false,
-			preventDefaultException: {tagName: /^(INPUT|BUTTON|A|SPAN)$/},
+			preventDefault: true,
+			preventDefaultException: {tagName: /^(BUTTON|A|SPAN)$/},
 			bindToWrapper: true,
 			scrollbars: true,
 			fadeScrollbars: true,
