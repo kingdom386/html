@@ -2,7 +2,7 @@
 //锟斤拷取页锟芥传锟捷癸拷锟斤拷锟斤拷url锟斤拷锟皆达拷锟捷癸拷锟斤拷锟斤拷URl锟斤拷锟叫斤拷锟斤拷
 //锟斤拷锟杰凤拷式
 var API_KEY = "gVzKTvzJyRTCkdDQ4AcQaCgp5iIpskbq";
-var reqtime = Date.parse(new Date()),
+var reqtime = Date.parse(new Date()),service= 0,
 	myDeScroll = mySwiper = popoverWrapper=  cartInfo = '', ary = jry = [];
 
 //锟斤拷取url锟叫的诧拷品ID
@@ -24,8 +24,10 @@ window.addEventListener('pageshow',function(){
 window.onload = function () {
     getDeInfo(p_id);
     cartPopover();//锟斤拷锟斤车锟斤拷锟斤拷锟斤拷
+    addStack();
     deLoad();
     changeCart();
+	getShopInfo();
 };
 
 //锟斤拷锟斤拷页锟斤拷锟斤拷锟阶刺?
@@ -103,6 +105,34 @@ $('.de-collection').on('touchend', function() {
 
 });
 
+function getShopInfo(){
+	var method = 'GetShopInfo',
+		param = {
+			shopid: "3",
+			device: "3"
+		};
+	sign = md5(JSON.stringify(param) + method + reqtime + API_KEY);
+	$.ajax({
+		url: "../API/WebApi.ashx",
+		async: true,
+		type: "post",
+		dataType: 'json',
+		data: {
+			param: JSON.stringify(param),
+			method: method,
+			reqtime: reqtime,
+			sign: getSecret(param, method, reqtime)
+		},
+		success: function(infoData) {
+			service = infoData.data.telephone;
+		},
+		error: function(XMLHttpRequest, textStatus, errorThrown) {
+
+		}
+	});
+
+}
+
 //锟斤拷锟斤拷锟秸诧拷
 function change(pid) {
 	var method = 'PutCollection',
@@ -177,7 +207,7 @@ $('.fix-drag').bind('touchend', function(g) {
 			}).addClass('drag');
 		}
 	}else{
-		window.location.href='tel:10086';
+		window.location.href='tel:'+service;
 	}
 });
 

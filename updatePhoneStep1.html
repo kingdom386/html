@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
 	<meta charset="UTF-8">
@@ -16,7 +16,7 @@
 <body>
 <!--头部开始-->
 <header class="head-container common-head">
-	<a href="javascript:history.back();" class="back-button"></a>
+	<a  href="javascript:void(0);" onclick="removeStack()" class="back-button"></a>
 	<h4>修改手机号码</h4>
 </header>
 <!--头部结束-->
@@ -46,7 +46,7 @@
 <script type="text/javascript" src="js/getRegister.js"></script>
 <script type="text/javascript">
 	var mFlag = cFlag = false,p = c = gtp= 0,nodes = '';
-
+	addStack();
 	//检测手机号码格式
 	function checkMb(mmbj){
 		p = $(mmbj).val();
@@ -133,12 +133,13 @@
 							sign: sign
 						},
 						success: function(allMsg) {
-							console.log(allMsg);
 							if(allMsg.status == 1){
 								setCookie('oldPhone',p);
 								window.location.href = 'updatePhoneStep2.html';
-							}else{
-								showTip(allMsg.msg).showError();
+							}
+
+							if (allMsg.status == 0) {
+							    showTip(allMsg.msg).showError();
 							}
 						},
 						error: function(XMLHttpRequest, textStatus, errorThrown) {

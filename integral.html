@@ -56,7 +56,7 @@
 <!-- 积分规则弹出层开始 -->
 <div class="integral-popover">
     <h4>积分规则</h4>
-    <a href="javascript:;" class="close-integral-rule"></a>
+    <a href="javascript:void(0);" onclick="removeStack()" class="close-integral-rule"></a>
     <div class="integral-rule">
         <h5>Q1: 怎么获得积分？</h5>
         <p>积分将在用户完成评价后获得,会根据订  单实际支付金额和评价的质量发放。</p>
@@ -97,7 +97,7 @@
 <script type="text/javascript">
 	var page = 1,
 		pullUp = true;
-
+	addStack();
 	function load(){
 		var Myscroll = new IScroll('#scroll-wrapper', {
 			click: true,
@@ -138,11 +138,6 @@
 			//checkShow($(".production-list")); //懒加载
 			Myscroll.refresh();
 		});
-
-        //头部随滚动距离背景色变化
-		//Myscroll.on('scroll', function () {
-		//    $(".head-mask").css("opacity", 3 * (Math.abs(this.y) / 1000));
-		//});
 
 	}
 

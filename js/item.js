@@ -23,7 +23,7 @@ var navBox=contentBox=popoverWrapper=mySwiper='',
         cartPopover();
         searchPanel();
         changeCart();
-
+        addStack();
     };
 
     $(document).on('ajaxComplete',function(e,xhr,op){

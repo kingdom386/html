@@ -12,11 +12,21 @@
     <link rel="stylesheet" type="text/css" href="css/reset.css" media="screen"/>
     <link rel="stylesheet" type="text/css" href="css/common.css" media="screen"/>
     <title>热卖</title>
+    <!--<style type="text/css">
+        input {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+    </style>-->
 </head>
 <body > <!--onload="load()"-->
 <!--头部开始-->
 <header class="head-container common-head">
-	<a href="index.html"  class="back-button"></a>
+	<a  href="javascript:void(0);" onclick="removeStack()"  class="back-button"></a>
 	<h4>热卖</h4>
 </header>
 <!--头部结束-->
@@ -131,6 +141,16 @@
 		 API_KEY = "gVzKTvzJyRTCkdDQ4AcQaCgp5iIpskbq",
 		 reqtime = Date.parse(new Date());
 
+	//点击回车事件
+	document.onkeydown = function(e) {
+		var enterCode = e.which || e.keyCode;
+		if (enterCode == 13) {
+			searchByKeyword();
+			return false;
+		}
+
+	}
+
 	window.addEventListener('pageshow',function(){
 		if(isWeiXin()&&getStorage('cart_info') == null){
 			$('#allPrice').html(0.00);
@@ -148,6 +168,7 @@
 				getHotList(page);
 				load();
 				changeCart();
+			addStack();
 			};
 
 	$(document).on('ajaxComplete',function(xhr,op){
@@ -161,7 +182,7 @@
 			Myscroll = new IScroll('#scroll-wrapper', {
 			click:true,
 			touchend:true,
-			preventDefaultException: { tagName: /^(INPUT|BUTTON|A|SPAN)$/ },
+			preventDefaultException: { tagName: /^(BUTTON|A|SPAN)$/ },
 			bindToWrapper: true,
 			scrollbars: true,
 			fadeScrollbars: true,

@@ -16,8 +16,8 @@
 <body>
     <!--头部开始-->
     <header class="head-container person-head">
-        <a href="" class="service-button"></a>
         <h4>我的生活馆</h4>
+        <a href="javascript:void(0);" class="service-button"></a>
         <a href="config.html" class="config-button"></a>
         <!--有未读信息加active-->
         <a href="#" class="message-button active"></a>
@@ -100,8 +100,8 @@
             </div>
 
             <!--电话-->
-            <a class="tel-container" href="tel:0576-88888888">
-                <span>0576-88888888</span>
+            <a class="tel-container" href="javascript:void(0);">
+                <span id="kf"></span>
                 （客服工作时间8:00至18:00）
             </a>
         </div>
@@ -127,12 +127,14 @@
 <script type="text/javascript" src="js/secret.js"></script>
 <script type="text/javascript" src="js/iscroll-probe.js"></script>
 <script type="text/javascript">
-    var API_KEY = "gVzKTvzJyRTCkdDQ4AcQaCgp5iIpskbq";
+    var API_KEY = "gVzKTvzJyRTCkdDQ4AcQaCgp5iIpskbq",service=0;
     var reqtime = Date.parse(new Date()), Myscroll = '';
 
     //页面的整体整天js css 加载完成
     window.onload = function(){
         layerState();
+        addStack();
+        getShopInfo();
         load();
     };
 
@@ -142,6 +144,10 @@
     });
 
     function load() {
+        $('.service-button,.tel-container').bind('touchend',function(){
+            window.location.href='tel:'+service;
+        });
+
         Myscroll = new IScroll('#scroll-wrapper', {
             click: true,
             touchend: true,
@@ -185,6 +191,36 @@
             //设置锚标记 hrefMark
             setStorage('hrefMark',$(this).data('type'));
             window.location.href = 'orderList.html';
+        });
+
+    }
+
+
+    function getShopInfo(){
+        var method = 'GetShopInfo',
+                param = {
+                    shopid: "3",
+                    device: "3"
+                };
+        sign = md5(JSON.stringify(param) + method + reqtime + API_KEY);
+        $.ajax({
+            url: "../API/WebApi.ashx",
+            async: true,
+            type: "post",
+            dataType: 'json',
+            data: {
+                param: JSON.stringify(param),
+                method: method,
+                reqtime: reqtime,
+                sign: getSecret(param, method, reqtime)
+            },
+            success: function(infoData) {
+                service = infoData.data.telephone;
+                $('#kf').html(service);
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+
+            }
         });
 
     }

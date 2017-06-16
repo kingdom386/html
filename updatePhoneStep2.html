@@ -16,7 +16,7 @@
 <body>
 <!--头部开始-->
 <header class="head-container common-head">
-	<a href="javascript:history.back();" class="back-button"></a>
+	<a href="javascript:void(0);" onclick="removeStack()"  class="back-button"></a>
 	<h4>修改手机号码</h4>
 </header>
 <!--头部结束-->
@@ -46,7 +46,7 @@
 <script type="text/javascript" src="js/getRegister.js"></script>
 <script type="text/javascript">
 	var mFlag = cFlag = false,p = c = 0,nodes = '';
-
+	addStack();
 	//检测手机号码格式
 	function checkMb(mmbj){
 		p = $(mmbj).val();

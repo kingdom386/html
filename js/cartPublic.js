@@ -37,7 +37,10 @@ function changeCart(){
             inputVal += 1;
             publicAddCart($(this),inputVal);
         }else{
-           //DO NOTHING
+            if (maxVal == 0 || inputVal >= maxVal) {
+                showTip('库存不足或超出库存上限！').showError();
+                return false;
+            }
         }
         e.stopPropagation();
         return false;
@@ -67,7 +70,7 @@ function publicAddCart(obj,inputVals){
                 '<input type="tel" readonly="readonly" disabled="disabled" value="'+inputVals+'" />'+
                 '<em class="plus-button"></em>'+
                 '</div></li>';
-        $('#cart').append(str);
+            $('#cart').append(str);
     }
 
     $('.cartItems[data-id="'+pid+'"] input').val(inputVals);

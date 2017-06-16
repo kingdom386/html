@@ -16,7 +16,7 @@
 <body>
 <!--头部开始-->
 <header class="head-container common-head">
-	<a href="person.html" class="back-button"></a>
+	<a href="javascript:void(0);" onclick="removeStack()"  class="back-button"></a>
 	<h4>账号设置</h4>
 </header>
 <!--头部结束-->
@@ -42,7 +42,7 @@
 <script type="text/javascript" src="js/md5.js"></script>
 <script type="text/javascript" src="js/secret.js"></script>
 <script type="text/javascript">
-
+    addStack();
     //退出当前帐号
     $('.log-off-button').on('touchend', function() {
         removeCookie('username');
@@ -55,7 +55,8 @@
     $('.altMobile').on('touchend', function() {
         if (getCookies('username')) {
             window.location.href = 'register.html';
-            return false;
+        } else {
+            window.location.href = 'updatePhoneStep1.html';
         }
     });
 

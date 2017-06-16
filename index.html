@@ -3,6 +3,9 @@
 <head>
 	<meta charset="UTF-8">
     <meta content="width=device-width,initial-scale=1.0, user-scalable=0" name="viewport"/>
+    <meta http-equiv=”Expires” content=”0″>
+    <meta http-equiv=”Cache-Control” content=”no-cache”>
+    <meta http-equiv=”Pragma” content=”no-cache”>
     <meta name="x5-orientation" content="portrait">
     <meta content="yes" name="apple-mobile-web-app-capable"/>
     <meta name="format-detection" content="telephone=no"/>
@@ -44,7 +47,7 @@
 		<!--轮播图开始-->
 		<div class="index-banner">
 			<!--定位开始-->
-			<a class="location-container" id="address-box" href="javascript:;"><em>定位中...</em><i></i></a>
+            <a class="location-container" href="chooseStores.html"><em>正在获取店铺地址中...</em><i></i></a>
 			<!--定位结束-->
 			<div class="swiper-container">
 				<div class="swiper-wrapper">
@@ -133,8 +136,8 @@
 <script type="text/javascript" src="/html/js/swiper.min.js"></script>
 <script type="text/javascript" src="/html/js/lazyLoad.js"></script>
 <script type="text/javascript" src="/html/js/getIndexData.js"></script>
-<script src="https://3gimg.qq.com/lightmap/components/geolocation/geolocation.min.js" type="text/javascript"></script>
-<script type="text/javascript" src="js/location.js"></script>
+<!--<script src="https://3gimg.qq.com/lightmap/components/geolocation/geolocation.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="js/location.js"></script>-->
 <script type="text/javascript">
 	var Myscroll = mySwiper = '',
 			curScrollDirection = y = maxScroll = 0,
@@ -154,6 +157,7 @@
 	window.onload = function(){
 		getProduct(page);
 		searchPanel(); //搜索页面事件
+		addStack();
 		load();
 	};
 
@@ -209,20 +213,5 @@
 			window.location.href = 'orderList.html';
 		});
 	}
-
-	$(function(){
-		//显示、关闭我的地址页
-		$(document).on('click','.location-container',function(){  //重新定位
-			$('#iframe-box').show();
-			if ( $('#iframe-box').find('#mapPage').length == 0 ) {
-				var html = '<iframe id="mapPage" width="100%" height="100%" frameborder=0 name="myFrame"';
-				html += 'src="https://apis.map.qq.com/tools/locpicker?search=1&type=1&coordtype=5&key=IFLBZ-ZVHRI-XDSGG-5NY25-IITSH-4HFXD&referer=O2O">'
-				html += '</iframe>';
-				$('#iframe-box').html(html);
-				Position.openPositionMap();
-			}
-			Position.page=1;
-		})
-	});
 
 </script>

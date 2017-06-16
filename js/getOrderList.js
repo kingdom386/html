@@ -26,6 +26,7 @@ document.onkeydown = function(evt){
 window.onload = function(){
     //判断链接是从那个页面传递过来的
     var pageUrl = getStorage('hrefMark');
+    addStack();
     if(pageUrl != null){
         loadType = parseInt(pageUrl);
         lazyIndx = parseInt(pageUrl);
@@ -54,7 +55,7 @@ function load() {
             click: true,
             touchend: true,
             preventDefaultException: {
-                tagName: /^(INPUT|BUTTON|SELECT|A|SPAN)$/
+                tagName: /^(BUTTON|SELECT|A|SPAN)$/
             },
             bindToWrapper: true,
             scrollbars: true,
@@ -82,7 +83,25 @@ function load() {
             checkShow($(".order-list-wrapper"));
         });
 
-        $(".order-tab-container a").on("touchend", function() {
+
+        $('.order-list,.order-number').live('tap',function(){
+            var checkType = $(this).data('checktype'),
+                checkUrl = $(this).data('href');
+
+            //0待审核 1已审核 2已下架  3 审核不通过
+            if(checkType == 0){
+                showTip('该产品正在审核中').showError();
+            }else if(checkType == 1){
+                window.location.href = checkUrl;
+            }else if(checkType == 2){
+                showTip('您购买的产品已下架 ').showError();
+            }else if(checkType == 3){
+                showTip('该产品审核未通过').showError();
+            }else{}
+
+        });
+
+        $(".order-tab-container a").on("tap", function() {
             $('#allOrder').empty();
             //遍历节点 根据类型显示
             //showType($(this).index());
@@ -182,29 +201,30 @@ function getOrderData(orderState, pageIdx, orderKeyWord) {
                         restTime = nowTime - date,
                         validate = 4;
                         stateNote = "待付款";
-                    if (restTime > (validate * 60 * 60 * 1000)) {
-                        stateBtn = '<a href="javascript:void(0);" class="delOrder order-grey-button">删除订单</a><a href="javascript:void(0);" class="order-grey-button" >订单关闭</a>';
+                        if (restTime > (validate * 60 * 60 * 1000)) {
+                            stateNote = "已关闭";
+                        stateBtn = '<a href="javascript:void(0);" class="delOrder order-grey-button">删除订单</a>';
                     } else {
-                        stateBtn = '<a href="javascript:void(0);" class="cancleOrder order-grey-button">取消订单</a><a href="javascript:void(0);" class="checkOrder order-grey-button">查看订单</a><a href="javascript:void(0);" class="goPay order-red-button">去付款</a>';
+                        stateBtn = '<a href="javascript:void(0);" class="cancleOrder order-grey-button">取消订单</a><a href="javascript:void(0);" class="goPay order-red-button">去付款</a>';
                     }
                     //已付款
                 } else if (t.o_zt == 2) {
                     stateNote = '已付款';
-                    stateBtn = '<a href="javascript:void(0);" class="delOrder order-grey-button">删除订单</a><a href="javascript:void(0);" class="checkOrder order-grey-button">查看订单</a>';
+                    //stateBtn = '<a href="javascript:void(0);" class="checkOrder order-grey-button">查看订单</a>';
                 } else if (t.o_zt == 3) {
                     stateNote = '配送中';
-                    stateBtn = '<a href="javascript:void(0);" class="checkLogistics order-grey-button">查看物流</a><a href="javascript:void(0);" class="receiveConfrm order-red-button">确认收货</a>';
+                    stateBtn = '<a href="javascript:void(0);" class="receiveConfrm order-red-button">确认收货</a>';
                 } else if (t.o_zt == 4) {
                     //其他类的订单
-                    stateBtn = '<a href="javascript:void(0);" class="closeOrder order-grey-button">交易关闭</a><a href="javascript:void(0);" class="checkLogistics order-grey-button">查看物流</a>';
+                    stateBtn = '<a href="javascript:void(0);" class="closeOrder order-grey-button">交易关闭</a> ';
                 }
 
-                str += '<div data-oid = ' + t.o_id + ' data-state = ' + t.o_zt + ' class="order-list-container bgWhite">' + '<div class="order-number">' + '<span>订单编号：<em>' + t.o_dh + '</em></span>' + '<em>' + stateNote + '</em>' + '</div>';
+                str += '<div data-oid = ' + t.o_id + ' data-state = ' + t.o_zt + ' class="order-list-container bgWhite">' + '<div class="order-number checkOrder" >' + '<span>订单编号：<em>' + t.o_dh + '</em></span>' + '<em>' + stateNote + '</em>' + '</div>';
                 for (var i = 0; i < t.l_orderinfo.length; i++) {
                     sumPrice += t.l_orderinfo[i].prod_mxmony;
-                    str += '<a href="./detail.html?p_id=' + t.l_orderinfo[i].p_id + '" class="order-list">' + '<div class="production-image">' + '<img data-src="' + t.l_orderinfo[i].prod_pic + '" class="img-responsive wait-load" alt="" />' + '</div>' + ' <div class="production-info">' + ' <h4 class="text-ellipsis-2">' + t.l_orderinfo[i].prod_name + '</h4>' + ' <div class="production-price">' + ' <span>' + t.l_orderinfo[i].prod_numb + '</span>' + ' <em>' + t.l_orderinfo[i].prod_mony + '</em>' + '</div></div></a>'
+                    str += '<a data-checktype='+ t.l_orderinfo[i].check_flag +' data-href="./detail.html?p_id=' + t.l_orderinfo[i].p_id + '" class="order-list">' + '<div class="production-image">' + '<img data-src="' + t.l_orderinfo[i].prod_pic + '" class="img-responsive wait-load" alt="" />' + '</div>' + ' <div class="production-info">' + ' <h4 class="text-ellipsis-2">' + t.l_orderinfo[i].prod_name + '</h4>' + ' <div class="production-price">' + ' <span>' + t.l_orderinfo[i].prod_numb + '</span>' + ' <em>' + t.l_orderinfo[i].prod_mony + '</em>' + '</div></div></a>'
                 }
-                str += '<div class="order-time">' + '<span>订单时间：<em>' + t.start_date + '</em></span>' + '<span>应付款：<em class="totalPay">' + sumPrice + '</em></span>' + '</div>' + '<div class="order-button-container txt-right">' + stateBtn + '</div></div>';
+                str += '<div class="order-time">' + '<span>订单时间：<em>' + t.start_date + '</em></span>' + '<span>应付款：<em class="totalPay">' + sumPrice.toFixed(2) + '</em></span>' + '</div>' + '<div class="order-button-container txt-right">' + stateBtn + '</div></div>';
 
             });
 
@@ -217,9 +237,10 @@ function getOrderData(orderState, pageIdx, orderKeyWord) {
     });
 }
 
+
 //订单按钮功能
 //去付款
-$('.goPay').live('touchend', function() {
+$('.goPay').live('tap', function() {
     //获取订单ID 和 需要支付的总额
     var oid = $(this).parents('.order-list-container').data('oid'),
         totalPay = $('.totalPay', $(this).parents('.order-list-container')).html();
@@ -229,7 +250,7 @@ $('.goPay').live('touchend', function() {
 });
 
 //取消订单
-$('.cancleOrder').live('touchend', function() {
+$('.cancleOrder').live('tap', function() {
     var method = 'CancelOrder',
         param = {
             shopid: "3",
@@ -237,66 +258,71 @@ $('.cancleOrder').live('touchend', function() {
             o_id: $(this).parents('.order-list-container').data('oid')
         };
     sign = md5(JSON.stringify(param) + method + reqtime + API_KEY);
-    $.ajax({
-        url: "../API/WebApi.ashx",
-        async: true,
-        type: "post",
-        dataType: 'json',
-        data: {
-            param: JSON.stringify(param),
-            method: method,
-            reqtime: reqtime,
-            sign: getSecret(param, method, reqtime)
-        },
-        success: function(delMsg) {
-            if (delMsg.status == 1) {
-                $('#allOrder').empty();
-                page = 1;
-                getOrderData(loadType, page, '');
-            }
-        },
-        error: function(XMLHttpRequest, textStatus, errorThrown) {
+    confirmPanel("确认删除订单么？", function () {
+        $.ajax({
+            url: "../API/WebApi.ashx",
+            async: true,
+            type: "post",
+            dataType: 'json',
+            data: {
+                param: JSON.stringify(param),
+                method: method,
+                reqtime: reqtime,
+                sign: getSecret(param, method, reqtime)
+            },
+            success: function (delMsg) {
+                if (delMsg.status == 1) {
+                    $('#allOrder').empty();
+                    page = 1;
+                    getOrderData(loadType, page, '');
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
 
-        }
+            }
+        });
     });
 });
 
 //删除订单
-$('.delOrder').live('touchend', function() {
+$('.delOrder').live('tap', function () {
     var method = 'DeleteOrder',
-        param = {
-            shopid: "3",
-            device: "3",
-            o_id: $(this).parents('.order-list-container').data('oid')
-        };
+      param = {
+          shopid: "3",
+          device: "3",
+          o_id: $(this).parents('.order-list-container').data('oid')
+      };
     sign = md5(JSON.stringify(param) + method + reqtime + API_KEY);
-    $.ajax({
-        url: "../API/WebApi.ashx",
-        async: true,
-        type: "post",
-        dataType: 'json',
-        data: {
-            param: JSON.stringify(param),
-            method: method,
-            reqtime: reqtime,
-            sign: getSecret(param, method, reqtime)
-        },
-        success: function(delMsg) {
-            if (delMsg.status == 1) {
-                $('#allOrder').empty();
-                page = 1;
-                getOrderData(loadType, page, '');
-            }
-        },
-        error: function(XMLHttpRequest, textStatus, errorThrown) {
 
-        }
+    confirmPanel("确认删除订单么？", function () {
+        $.ajax({
+            url: "../API/WebApi.ashx",
+            async: true,
+            type: "post",
+            dataType: 'json',
+            data: {
+                param: JSON.stringify(param),
+                method: method,
+                reqtime: reqtime,
+                sign: getSecret(param, method, reqtime)
+            },
+            success: function (delMsg) {
+                if (delMsg.status == 1) {
+                    $('#allOrder').empty();
+                    page = 1;
+                    getOrderData(loadType, page, '');
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+
+            }
+        });
     });
 
 });
 
 //查看订单
-$('.checkOrder').live('touchend', function() {
+$('.checkOrder').live('tap', function() {
     setStorage('urlReference', window.location.href);
     window.location.href = './orderDetail.html?oid=' + $(this).parents('.order-list-container').data('oid') + '&tp=' + $(this).parents('.order-list-container').data('state');
 });

@@ -16,7 +16,7 @@
 <body>
 <!--头部开始-->
 <header class="head-container common-head">
-	<a href="javascript:void(0)" onclick="self.location = document.referrer;" class="back-button"></a>
+	<a  href="javascript:void(0);" onclick="removeStack()"  class="back-button"></a>
 	<h4>我的收藏</h4>
 	<a href="javascript:;" class="complete-button">编辑</a>
 </header>
@@ -90,6 +90,7 @@
 	 //页面的整体整天js css 加载完成
 	 window.onload = function () {
 	     load();
+		 addStack();
 	     cartPopover();//购物车弹出层
 
 		 $('.gyg').bind('touchend',function(){

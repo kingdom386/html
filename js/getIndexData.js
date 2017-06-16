@@ -23,7 +23,7 @@ $('.index-banner').ready(function () {
         success: function (data) {
             var str = '';
             $(data.data).each(function (i, t) {
-                str += "<a href='' class='swiper-slide'><img src='" + t.ad_pic + "' alt='" + t.ad_name + "' /></a>"
+                str += "<a href='" + t.ad_url + "' class='swiper-slide'><img src='" + t.ad_pic + "' alt='" + t.ad_name + "' /></a>"
             });
             $('.swiper-wrapper').append(str);
         },

@@ -24,7 +24,7 @@
 <body onload="load()">
 <!--头部开始-->
 <header class="head-container common-head">
-	<a href="javascript:history.back();" class="back-button"></a>
+	<a  href="javascript:void(0);" onclick="removeStack()" class="back-button"></a>
 	<h4>订单详情</h4>
 </header>
 <!--头部结束-->
@@ -109,11 +109,11 @@
 	    <!--商品列表结束-->
 	    
 	    <!--应付款-->
-	    <p class="payables">应付款：<em id="sumAll">56.2</em></p>
+	    <p class="payables">应付款：<em id="sumAll">0.00</em></p>
 	    
 	    <!--联系客服-->
 	    <div class="chat-service">
-	    	<a href="">联系客服</a>
+	    	<a href="javascript:void(0);" id="kf">联系客服</a>
 	    </div>
 	    
 	    <ul class="order-tip-container bgWhite">
@@ -147,6 +147,7 @@
 </body>
 </html>
 <script type="text/javascript" src="js/zepto.min.js"></script>
+<script type="text/javascript" src="js/touch.js"></script>
 <script type="text/javascript" src="js/size.js"></script>
 <script type="text/javascript" src="js/common.js"></script>
 <script type="text/javascript" src="js/md5.js"></script>
@@ -156,12 +157,18 @@
 <script type="text/javascript" src="js/common.js"></script>
 <script type="text/javascript">
 	var API_KEY = "gVzKTvzJyRTCkdDQ4AcQaCgp5iIpskbq",
-		reqtime = Date.parse(new Date()),
+		reqtime = Date.parse(new Date()),service= 0,
 		Myscroll = restTime = '',
 		oid = window.location.search.replace('?',"").split('&')[0].split('=')[1],
 		tp =  window.location.search.replace('?',"").split('&')[1].split('=')[1];
 
-	window.onload = function(){
+	window.onload = function () {
+	    if (getCookies('username')) {
+	        setStorage('urlReference', window.location.href);
+	        window.location.href = 'register.html';
+	    }
+		addStack();
+		getShopInfo();
 		load();
 	}
 
@@ -174,16 +181,17 @@
             Myscroll = new IScroll('#scroll-wrapper', {
             click: true,
             touchend: true,
-            preventDefaultException: { tagName: /^(INPUT|BUTTON|A|SPAN|EM)$/ },
+            preventDefaultException: { tagName: /^(BUTTON|A|SPAN|EM)$/ },
             bindToWrapper: true,
             scrollbars: true,
             fadeScrollbars: true,
             shrinkScrollbars: 'clip'
         });
 
-		//初始化节点
-		//$('footer').empty();
-
+		$('#kf').bind('tap',function(){
+			window.location.href='tel:'+service;
+		});
+ 
 		if(tp == 1){
 			$('.process').addClass('process-1');
 			$('footer').append('<a href="javascript:void(0);" class="cancleOrder grey-footer-button">取消订单</a><a href="javascript:void(0);" class="payBtn yellow-footer-button">立即支付</a>');
@@ -225,7 +233,12 @@
 			},
 			success: function (oDeMsg) {
 				restTime = oDeMsg.data.start_date;
-				var str='',subPrice = 0;
+				var str = '', subPrice = 0;
+			    //dis_type 1 收货地址  2 自提地址
+				if (oDeMsg.data.dis_type == 2) {
+				    $('#receiver-addr').addClass('bring-myself');
+				}
+
 				$(oDeMsg.data).each(function(i,t){
 					$('#receiver').html(t.sh_name);
 					$('#receiver-mobile').html(t.sh_sj);
@@ -255,7 +268,7 @@
 								'</div></div></a>';
 					}
 					$('.order-list-container').append(str);
-					$('#sumAll').html(subPrice);
+					$('#sumAll').html(subPrice.toFixed(2));
 
 				});
 			},
@@ -271,18 +284,46 @@
 
     }
 
+
+	function getShopInfo(){
+		var method = 'GetShopInfo',
+				param = {
+					shopid: "3",
+					device: "3"
+				};
+		sign = md5(JSON.stringify(param) + method + reqtime + API_KEY);
+		$.ajax({
+			url: "../API/WebApi.ashx",
+			async: true,
+			type: "post",
+			dataType: 'json',
+			data: {
+				param: JSON.stringify(param),
+				method: method,
+				reqtime: reqtime,
+				sign: getSecret(param, method, reqtime)
+			},
+			success: function(infoData) {
+				service = infoData.data.telephone;
+			},
+			error: function(XMLHttpRequest, textStatus, errorThrown) {
+
+			}
+		});
+
+	}
+
     function countTime(){
         //剩余时间倒计时事件
-        var startTime = new Date(restTime),
+        var startTime = new Date(restTime), validTime = 4,//设置订单有效时间
         //获取当前时间  
-            endTime = startTime.setMinutes(startTime.getMinutes() + 1),
+        endTime = startTime.setHours(startTime.getHours() + validTime),
             d = h = m = s = 0;
-        //设置截止时间 4小时
         timers = setInterval(function () {
             var leftTime = endTime - new Date().getTime();
 				if (leftTime < 0) {
 					$('.order-process').hide();
-					$('.payBtn').die('touchend').css({'background':'#5c5c5e','color':'#aaa'});
+					$('.payBtn').die('tap').css({'background':'#5c5c5e','color':'#aaa'});
 					clearInterval(timers);
 				} else {
 					$('.order-process').show();
@@ -301,7 +342,8 @@
 
 	//订单操作
 	//取消订单
-	$('.cancleOrder').live('touchend',function(){
+    $('.cancleOrder').live('tap', function () {
+       
 		var method = 'CancelOrder',
 				param = {
 					shopid: "3",
@@ -309,30 +351,34 @@
 					o_id: oid
 				};
 		sign = md5(JSON.stringify(param) + method + reqtime + API_KEY);
-		$.ajax({
-			url: "../API/WebApi.ashx",
-			async: true,
-			type: "post",
-			dataType: 'json',
-			data: {
-				param: JSON.stringify(param),
-				method: method,
-				reqtime: reqtime,
-				sign: getSecret(param, method, reqtime)
-			},
-			success: function (delMsg) {
-				if(delMsg.status == 1){
-					window.location.href = getStorage('urlReference');
-				}
-			},
-			error: function (XMLHttpRequest, textStatus, errorThrown) {
 
-			}
+		confirmPanel("确认取消订单么？", function () {
+		    $.ajax({
+		        url: "../API/WebApi.ashx",
+		        async: true,
+		        type: "post",
+		        dataType: 'json',
+		        data: {
+		            param: JSON.stringify(param),
+		            method: method,
+		            reqtime: reqtime,
+		            sign: getSecret(param, method, reqtime)
+		        },
+		        success: function (delMsg) {
+		            if (delMsg.status == 1) {
+		                window.location.href = getStorage('urlReference');
+		            }
+		        },
+		        error: function (XMLHttpRequest, textStatus, errorThrown) {
+
+		        }
+		    });
 		});
+		
 	});
 
 	//确认收货
-	$('.cfrmReceipt').live('touchend',function(){
+	$('.cfrmReceipt').live('tap',function(){
 		var method = 'CancelOrder',
 				param = {
 					shopid: "3",
@@ -365,7 +411,7 @@
 
 	//payBtn 订单支付
 
-	$('.payBtn').live('touchend',function(){
+	$('.payBtn').live('tap',function(){
 		setCookie('orderId',oid);
 		setCookie('total',parseFloat($('#sumAll').html()));
 		window.location.href = 'Settlement.html';//结算页面
@@ -373,7 +419,7 @@
 
 	var ct = 0;
 	//催单
-	$('.HurryUp').live('touchend',function(){
+	$('.HurryUp').live('tap',function(){
 		if(getCookies('hurryTime')){
 			++ct;
 			setCookie('hurryTime',new Date().getTime());
@@ -424,7 +470,7 @@
 	});
 
 	//删除订单
-	$('.delOrder').live('touchend', function() {
+	$('.delOrder').live('tap', function() {
 		var method = 'DeleteOrder',
 				param = {
 					shopid: "3",
@@ -432,30 +478,33 @@
 					o_id: $(this).parents('.order-list-container').data('oid')
 				};
 		sign = md5(JSON.stringify(param) + method + reqtime + API_KEY);
-		$.ajax({
-			url: "../API/WebApi.ashx",
-			async: true,
-			type: "post",
-			dataType: 'json',
-			data: {
-				param: JSON.stringify(param),
-				method: method,
-				reqtime: reqtime,
-				sign: getSecret(param, method, reqtime)
-			},
-			success: function(delMsg) {
-				if (delMsg.status == 1) {
-					$('#allOrder').empty();
-					page = 1;
-					getOrderData(loadType, page, '');
-				}
-			},
-			error: function(XMLHttpRequest, textStatus, errorThrown) {
 
-			}
+		confirmPanel("确认删除订单么？", function () {
+		    $.ajax({
+		        url: "../API/WebApi.ashx",
+		        async: true,
+		        type: "post",
+		        dataType: 'json',
+		        data: {
+		            param: JSON.stringify(param),
+		            method: method,
+		            reqtime: reqtime,
+		            sign: getSecret(param, method, reqtime)
+		        },
+		        success: function (delMsg) {
+		            if (delMsg.status == 1) {
+		                $('#allOrder').empty();
+		                page = 1;
+		                getOrderData(loadType, page, '');
+		            }
+		        },
+		        error: function (XMLHttpRequest, textStatus, errorThrown) {
+
+		        }
+		    });
+
 		});
 
 	});
-
 
 </script>

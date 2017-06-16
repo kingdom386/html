@@ -15,7 +15,8 @@ window.addEventListener('pageshow',function(){
 });
 
 //页面的整体整天js css 加载完成
-window.onload = function(){
+window.onload = function () {
+    addStack();
 	//请求默认的收货地址
 	addAddr();
 	load();
@@ -52,6 +53,12 @@ function load() {
 		shrinkScrollbars: 'clip'
 	});
 
+	setTimeout(function () { Myscroll.refresh(); }, 300);
+
+	Myscroll.on('scrollEnd', function () {
+	    Myscroll.refresh();
+	});
+	
 	//配送方式选择事件
 	$(".order-select-handle select").on("change", function() {
 		$(this).siblings("span").text($(this).children("option:checked").text());

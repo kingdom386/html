@@ -12,6 +12,7 @@ function sendCode(phone, pType, obj) {
             u_id:getCookieVal('userid')
         };
     sign = md5(JSON.stringify(param) + method + reqtime + API_KEY);
+     
     $.ajax({
         url: "../API/WebApi.ashx",
         async: true,
@@ -24,10 +25,12 @@ function sendCode(phone, pType, obj) {
             sign: sign
         },
         success: function(iMessage) {
-           if(iMessage.status == 0){
-               if(pType == 1){
-                   showTip('该手机号码已注册 !').showError();
-               }
+            if (iMessage.status == 0) {
+                if (pType == 1) {
+                    showTip('该手机号码已注册 !').showError();
+                } else {
+                    showTip(iMessage.msg).showError();
+                }
            }
 
             if(iMessage.status == 1){
@@ -518,12 +521,55 @@ function  isAds(){
         clearInterval(timer);
     },60000);
 }
-
+//清理广告
 isAds();
 
-//订单中心跳转
+//网站页面控制管理器
+var url = window.location.href.split('/'),
+    pageName = '',
+    indexPageName = 'index.html';
+    pageName = url[url.length - 1];
 
+//入栈
+function addStack() {
+    var hashMap = [];
+    hashMap = (getStorage('pageStack') == null) ? [] : getStorage('pageStack');
+    if (hashMap.length >= 1) {
+        //获取栈顶记录
+        var stackRecorder = hashMap[hashMap.length - 1].pageName;
+        if (stackRecorder == pageName) {
+            return false;
+        }
+    }
 
+    if (pageName == indexPageName) {
+        hashMap = [];
+        var ls = {
+            'pageName': pageName
+        };
+        hashMap.push(ls);
+        removeLocalStorage('pageStack');
+        setStorage('pageStack', hashMap);
+        return false;
+    }
 
+    var ls = {
+        'pageName': pageName
+    };
+    hashMap.push(ls);
+    removeLocalStorage('pageStack');
+    setStorage('pageStack', hashMap);
+}
+//出栈
+function removeStack() {
+    var rs = [],
+        rs = (getStorage('pageStack') == null) ? [] : getStorage('pageStack');
+    if (rs.length > 1) {
+        rs.pop();
+        removeLocalStorage('pageStack');
+        setStorage('pageStack', rs);
+        window.location.href = './' + rs[rs.length - 1].pageName;
+    }
+}
 
 

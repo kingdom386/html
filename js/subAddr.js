@@ -38,6 +38,7 @@ $('.address-choose').on('touchend', function() {
 
 window.onload = function() {
     var nodes = '';
+    addStack();
     //判断是否修改页面跳转过来
     if (urlStr.indexOf('editId') != -1) {
         //提取需要修改的收货地址信息
@@ -79,12 +80,14 @@ $('.editBtn').on('touchend', function() {
     for (var ii = 0; ii < (urlStr.split('?')[1].split('&')).length; ii++) {
         aid = urlStr.split('?')[1].split('&')[ii].split('=')[1]
     }
+    removeStack();
     removeLocalStorage('editInfo');
     changeInfoFrm("EditAddress", aid);
 });
 
 //提交收货地址表单
 $('.submitBtn').on('touchend', function() {
+    removeStack()
     changeInfoFrm("PutAddress", 0);
 });
 
