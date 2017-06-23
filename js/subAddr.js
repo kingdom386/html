@@ -16,6 +16,7 @@ $('.address-choose').on('touchend', function() {
         options = {timeout: 8000};
     //获取精准位置
     geolocation.getLocation(showPosition, showErr, options);
+
     function showPosition(position){
         $('input[name="nation"]').val(position.province);
         $('input[name="province"]').val(position.province);
@@ -34,7 +35,6 @@ $('.address-choose').on('touchend', function() {
         $('#mapPage').show();
     },500);
 });
-
 
 window.onload = function() {
     var nodes = '';

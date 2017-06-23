@@ -54,19 +54,39 @@
     <div id="formDiv" style="display:none;">
     </div>
 </section>
-<script type="text/javascript" src="js/zepto.min.js"></script>
-<script type="text/javascript" src="js/common.js"></script>
+    <input type="hidden" id="TimeStamp" value="" />
+    <input type="hidden" id="NonceStr" value="" />
+    <input type="hidden" id="Package" value="" />
+    <input type="hidden" id="PaySign" value="" />
+    <script type="text/javascript" src="js/zepto.min.js"></script>
+    <script type="text/javascript" src="js/size.js"></script>
+    <script type="text/javascript" src="js/md5.js"></script>
+    <script type="text/javascript" src="js/secret.js"></script>
+    <script type="text/javascript" src="js/form.js"></script>
+    <script type="text/javascript" src="js/common.js"></script>
+    <script type="text/javascript" src="js/getRegister.js"></script>
 <script type="text/javascript">
+    var API_KEY = "gVzKTvzJyRTCkdDQ4AcQaCgp5iIpskbq";
+    var reqtime = Date.parse(new Date());
     var orderId = total = 0;
+    
     recharge();//单选
       if(getCookies('username')){
           setStorage('urlReference',window.location.href);
           window.location.href = 'register.html';
-      }else{
-          //获取主要支付的订单ID 和 支付的总金额
-          orderId = getCookieVal('orderId'),
-          total = getCookieVal('total');
+      } else {
+          var openId = getCookieVal('openId');
+  
+          if (openId == "" || openId==null) {
+              weiLog();
+          } else {
+              //去掉微信支付
+          }
 
+          //获取主要支付的订单ID 和 支付的总金额
+          orderId = getStorage('orderId'),
+          total = getStorage('total');
+          
           $('.purchase-order-money').html(total);
           $('.pay-confrm').on('touchend',function(){
               //1 微信支付  2 支付宝支付
@@ -74,6 +94,37 @@
               pay == 1 ? weiPay():zPay();
           });
 
+      }
+
+      //微信 授权
+      function weiLog() {
+          var method = 'WeChatRightApply',
+                  param = {
+                      shopid: getStorage('wginfo').id,
+                      device: "3",
+                      pageName: 'getOpentId.html',
+                      keyword: ''
+                  };
+          sign = md5(JSON.stringify(param) + method + reqtime + API_KEY);
+
+          $.ajax({
+              url: "/API/WebApi.ashx",
+              async: true,
+              type: "post",
+              dataType: 'json',
+              data: {
+                  param: JSON.stringify(param),
+                  method: method,
+                  reqtime: reqtime,
+                  sign: getSecret(param, method, reqtime)
+              },
+              success: function (logState) {
+                  window.location.href = logState.data;
+              },
+              error: function (XMLHttpRequest, textStatus, errorThrown) {
+
+              }
+          });
       }
 
     //微信支付
@@ -88,11 +139,51 @@
                 u_id: getCookieVal('userid')
             },
             success: function (data) {
+                if (data.status == 0) {
+                    
+                }
+                else {
+                    var msg = data.data;
+                    if (msg.TimeStamp != "" && msg.NonceStr != "" && msg.Package != "" && msg.PaySign != "") {
+                        $("#TimeStamp").val(msg.TimeStamp);
+                        $("#NonceStr").val(msg.NonceStr);
+                        $("#Package").val(msg.Package);
+                        $("#PaySign").val(msg.PaySign);
+                        wxzf();
+                    }
+
+                }
 
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
 
             }
+        });
+    }
+
+    function wxzf() {
+        WeixinJSBridge.invoke('getBrandWCPayRequest', {
+            "appId": "wxb0d9c9d597e5edff", //公众号名称，由商户传入
+            "timeStamp": $("#TimeStamp").val(), //时间戳
+            "nonceStr": $("#NonceStr").val(), //随机串
+            "package": $("#Package").val(), //扩展包
+            "signType": "MD5", //微信签名方式:1.sha1
+            "paySign": $("#PaySign").val() //微信签名
+        },
+        function (res) {
+            if (res.err_msg == "get_brand_wcpay_request:ok") {
+                
+                window.location.href ="payResult.html";
+            } else if (res.err_msg == "get_brand_wcpay_request:cancel") {
+                //alert("用户取消支付!");
+                showTip('支付失败！系统将跳转到订单列表页面').showError();
+                window.location.href = "orderList.html";
+            } else {
+                //alert(JSON.stringify(res));
+                //alert(res.err_msg);
+            }
+            // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
+            //因此微信团队建议，当收到ok返回时，向商户后台询问是否收到交易成功的通知，若收到通知，前端展示交易成功的界面；若此时未收到通知，商户后台主动调用查询订单接口，查询订单的当前状态，并反馈给前端展示相应的界面。
         });
     }
 
@@ -115,7 +206,6 @@
 
             }
         });
-
     }
 
     //取消支付
@@ -124,7 +214,7 @@
             window.location.href = 'orderList.html';
         });
     });
- 
+
 </script>
 </body>
 </html>

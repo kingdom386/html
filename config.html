@@ -37,6 +37,7 @@
 </body>
 </html>
 <script type="text/javascript" src="js/zepto.min.js"></script>
+<script type="text/javascript" src="js/touch.js"></script>
 <script type="text/javascript" src="js/size.js"></script>
 <script type="text/javascript" src="js/common.js"></script>
 <script type="text/javascript" src="js/md5.js"></script>
@@ -44,7 +45,7 @@
 <script type="text/javascript">
     addStack();
     //退出当前帐号
-    $('.log-off-button').on('touchend', function() {
+    $('.log-off-button').on('tap', function() {
         removeCookie('username');
         removeCookie('userid');
         removeCookie('pwd_pay');
@@ -52,7 +53,7 @@
         window.location.href = './person.html';
     });
 
-    $('.altMobile').on('touchend', function() {
+    $('.altMobile').on('tap', function() {
         if (getCookies('username')) {
             window.location.href = 'register.html';
         } else {
@@ -60,7 +61,7 @@
         }
     });
 
-    $('.userPwd').bind('touchend',function() {
+    $('.userPwd').bind('tap',function() {
         if(!getCookies('username')){
             if (getCookieVal('pwd_user') != 1) {
                 //当前用户没有设置支付密码
@@ -76,7 +77,7 @@
 
     });
 
-    $('.payPwdMgmt').bind('touchend', function() {
+    $('.payPwdMgmt').bind('tap', function() {
         if(!getCookies('username')){
             if(getCookieVal('pwd_pay') == 1){
                 //当前用户没有设置支付密码
@@ -92,7 +93,7 @@
 
     });
 
-    $('.addrMgmt').bind('touchend',function(){
+    $('.addrMgmt').bind('tap',function(){
         if(!getCookies('username')){
             setStorage('urlReference',window.location.href);
             window.location.href = 'addressList.html';

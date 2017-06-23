@@ -73,7 +73,7 @@ function deLoad() {
 
 
 //tabs锟叫伙拷
-$('.de-tabs-switch a').on('touchend', function() {
+$('.de-tabs-switch a').on('tap', function() {
 	$(".tabs-btn").removeClass('active');
 	$(this).addClass('active');
 	//锟斤拷前锟斤拷tabs锟斤拷锟斤拷
@@ -108,7 +108,7 @@ $('.de-collection').on('touchend', function() {
 function getShopInfo(){
 	var method = 'GetShopInfo',
 		param = {
-			shopid: "3",
+			shopid:getStorage('wginfo').id,
 			device: "3"
 		};
 	sign = md5(JSON.stringify(param) + method + reqtime + API_KEY);
@@ -137,7 +137,7 @@ function getShopInfo(){
 function change(pid) {
 	var method = 'PutCollection',
 		param = {
-			shopid: "3",
+			shopid: getStorage('wginfo').id,
 			device: "3",
 			u_id: getCookieVal('userid'),
 			p_id: pid
@@ -215,7 +215,7 @@ $('.fix-drag').bind('touchend', function(g) {
 function getDeInfo(pid) {
 	var method = 'GetProdDetail',
 		param = {
-			shopid: "3",
+			shopid: getStorage('wginfo').id,
 			device: "3",
 			p_id: pid,
 			u_id: getCookieVal('userid')
@@ -236,6 +236,14 @@ function getDeInfo(pid) {
 			var str = '',
 				idFlag = true;
 			$(deData.data).each(function(i, t) {
+				//判断库存
+				if(t.m_prod.l_storage<=0){
+					$('footer').addClass('footer-empty').removeClass('item-footer');
+					$('footer').empty();
+					$('footer').html('该商品暂无库存');
+					$('.de-price .ct-panel').hide();
+				}
+
 				$('#p_id').val(t.m_prod.id);
 				$('#p_name').html(t.m_prod.l_name);
 				$('#p_danjia').html(t.m_prod.l_danjia);

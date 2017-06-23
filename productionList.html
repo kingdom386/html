@@ -111,7 +111,7 @@
 			<div class="shop-info-container">
 				<h4 id="shopName"></h4>
 				<div class="shop-info">
-					。
+					 
 				</div>
 			</div>
 		</div>
@@ -185,3 +185,13 @@
 <script type="text/javascript" src="js/getList.js"></script>
 <script type="text/javascript" src="js/cartPublic.js"></script>
 <script type="text/javascript" src="js/item.js"></script>
+<script type="text/javascript">
+	//点击回车事件
+	document.onkeydown = function(e) {
+		var enterCode = e.which || e.keyCode;
+		if (enterCode == 13) {
+			searchByKeyword();
+			return false;
+		}
+	}
+</script>

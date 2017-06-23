@@ -1,7 +1,7 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
-	<meta charset="UTF-8">
+    <meta charset="UTF-8">
     <meta content="width=device-width,initial-scale=1.0, user-scalable=0" name="viewport"/>
     <meta name="x5-orientation" content="portrait">
     <meta content="yes" name="apple-mobile-web-app-capable"/>
@@ -16,23 +16,23 @@
 <body>
 <!--头部开始-->
 <header class="head-container common-head">
-	<a href="javascript:void(0);" onclick="removeStack()" class="back-button"></a>
-	<h4>收货地址管理</h4>
+    <a href="javascript:void(0);" onclick="removeStack()" class="back-button"></a>
+    <h4>收货地址管理</h4>
 </header>
 <!--头部结束-->
 
 <!--底部开始-->
 <footer class="footer-container address-footer">
-	<a href="javascript:void(0);" class="add-address">添加收货地址</a>
+    <a href="javascript:void(0);" class="add-address">添加收货地址</a>
 </footer>
 <!--底部结束-->
 
 <section id="scroll-wrapper">
-	<div id="scroll-container">
-		<div class="slide-list-container">
+    <div id="scroll-container">
+        <div class="slide-list-container">
 
-		</div>
-	</div>
+        </div>
+    </div>
 </section>
 
 </body>
@@ -46,186 +46,190 @@
 <script type="text/javascript" src="js/TouchScroll.js"></script>
 <script type="text/javascript" src="js/slideDelete.js"></script>
 <script type="text/javascript">
-	var Myscroll = '',
-			API_KEY = "gVzKTvzJyRTCkdDQ4AcQaCgp5iIpskbq",
-			reqtime = Date.parse(new Date()),
-			u_id = getCookieVal('userid');
+    var Myscroll = '',
+            API_KEY = "gVzKTvzJyRTCkdDQ4AcQaCgp5iIpskbq",
+            reqtime = Date.parse(new Date()),
+            u_id = getCookieVal('userid');
 
-	//页面的整体整天js css 加载完成
-	 window.onload = function(){
-		//请求后台
-		getAddrMgmt(u_id);
-		addStack();
-		load();
-	};
+    //页面的整体整天js css 加载完成
+    window.onload = function () {
+        //请求后台
+        getAddrMgmt(u_id);
+        addStack();
+        load();
+    };
 
-	//监听页面加载状态
-	$(document).on('ajaxComplete',function(e,xhr,op){
-		Myscroll.refresh();
-	});
+    //监听页面加载状态
+    $(document).on('ajaxComplete', function (e, xhr, op) {
+        Myscroll.refresh();
+    });
 
-	function load() {
-		Myscroll = new IScroll('#scroll-wrapper', {
-			click: true,
-			touchend: true,
-			preventDefaultException: {
-				tagName: /^(INPUT|BUTTON|A|SPAN)$/
-			},
-			bindToWrapper: true,
-			scrollbars: true,
-			fadeScrollbars: true,
-			shrinkScrollbars: 'clip'
-		});
+    function load() {
+        Myscroll = new IScroll('#scroll-wrapper', {
+            click: true,
+            touchend: true,
+            preventDefaultException: {
+                tagName: /^(INPUT|BUTTON|A|SPAN)$/
+            },
+            bindToWrapper: true,
+            scrollbars: true,
+            fadeScrollbars: true,
+            shrinkScrollbars: 'clip'
+        });
 
-		//添加收货地址
-		$('.add-address').bind('touchend', function() {
-			window.location.href = 'addressInfo.html';
-		});
+        //添加收货地址
+        $('.add-address').bind('touchend', function () {
+            window.location.href = 'addressInfo.html';
+        });
 
-		//返回上一页面
-		$('.back-button').bind('touchend',function(){
-		    window.location.href = getStorage('urlReference');
-		});
-	}
+        //返回上一页面
+        $('.back-button').bind('touchend', function () {
+            window.location.href = getStorage('urlReference');
+        });
+    }
 
-	// 获取当前用户的所有的收货地址
-	function getAddrMgmt(uid) {
-		var method = 'GetAddressList',
-				param = {
-					shopid: "3",
-					device: "3",
-					u_id: uid
-				};
-		sign = md5(JSON.stringify(param) + method + reqtime + API_KEY);
-		$.ajax({
-			url: "../API/WebApi.ashx",
-			async: true,
-			type: "post",
-			dataType: 'json',
-			data: {
-				param: JSON.stringify(param),
-				method: method,
-				reqtime: reqtime,
-				sign: getSecret(param, method, reqtime)
-			},
-			success: function(getAddrMsg) {
-				console.log(getAddrMsg);
-				$('.slide-list-container').empty();
-				var str = '';
-				$(getAddrMsg.data).each(function(i, t) {
-					str += '<div data-aid=' + t.id + ' data-uid=' + t.u_id + ' data-uname="' + t.u_name + '" data-usj= "' + t.u_sj + '" data-unation= "' + t.nation + '" data-uprovince= "' + t.province + '" data-ucity= "' + t.city + '" data-range= "' + t.d_range + '" data-district= "' + t.district + '" data-addr= "' + t.addr + '" data-lat= "' + t.lat + '" data-lng= "' + t.lng + '" class="slide-list-wrapper">';
-					//是否在配送范围之内 d_range
-					str += '<div class="slide-info-container">' ;
-					str += '<div class="address-info">' ;
-					str += '<div class="address-info-content">' ;
-					str += '<span>' + t.u_name + '</span>' ;
-					str += '<span>' + t.u_sj + '</span>' ;
-					str += '</div>' + '<div class="address-info-content">' + t.nation + t.province + t.city + t.district + t.addr + '</div>' ;
-					str += '</div>' + '<a href="javascript:void(0);" class="editBtn"><em></em></a>' + '</div>' ;
-					str += '<button class="slide-delete-button">删除</button>' + '</div>';
-				});
+    // 获取当前用户的所有的收货地址
+    function getAddrMgmt(uid) {
+        var method = 'GetAddressList',
+                param = {
+                    shopid: getStorage('wginfo').id,
+                    device: "3",
+                    u_id: uid
+                };
+        sign = md5(JSON.stringify(param) + method + reqtime + API_KEY);
+        $.ajax({
+            url: "../API/WebApi.ashx",
+            async: true,
+            type: "post",
+            dataType: 'json',
+            data: {
+                param: JSON.stringify(param),
+                method: method,
+                reqtime: reqtime,
+                sign: getSecret(param, method, reqtime)
+            },
+            success: function (getAddrMsg) {
+                $('.slide-list-container').empty();
+                var str = '';
+                $(getAddrMsg.data).each(function (i, t) {
+                    str += '<div data-range = ' + t.d_range + ' data-aid=' + t.id + ' data-uid=' + t.u_id + ' data-uname="' + t.u_name + '" data-usj= "' + t.u_sj + '" data-unation= "' + t.nation + '" data-uprovince= "' + t.province + '" data-ucity= "' + t.city + '" data-range= "' + t.d_range + '" data-district= "' + t.district + '" data-addr= "' + t.addr + '" data-lat= "' + t.lat + '" data-lng= "' + t.lng + '" class="slide-list-wrapper">';
+                    //是否在配送范围之内 d_range
+                    str += '<div class="slide-info-container">';
+                    str += '<div class="address-info">';
+                    str += '<div class="address-info-content">';
+                    str += '<span>' + t.u_name + '</span>';
+                    str += '<span>' + t.u_sj + '</span>';
+                    str += '</div>' + '<div class="address-info-content">' + t.nation + t.province + t.city + t.district + t.addr + '</div>';
+                    str += '</div>' + '<a href="javascript:void(0);" class="editBtn"><em></em></a>' + '</div>';
+                    str += '<button class="slide-delete-button">删除</button>' + '</div>';
+                });
 
-				$('.slide-list-container').append(str);
-				slideDelete();
-				//选择收货地址
-				$('.slide-list-wrapper').tap(function(e) {
-					var JSONVal = [];
-					var ev =  window.event?window.event:e;
-					var obj = ev.srcElement|| e.target;
-					if($(obj).attr('class') != 'slide-delete-button'){
-						var str = (ev.srcElement.nodeName|| ev.target).trim();
-						if (str.toLowerCase() == 'em') {
-							var tempAry = {
-								'ad_id':$(str).parents('.slide-list-wrapper').data('aid'),
-								'u_id': $(str).parents('.slide-list-wrapper').data('uid'),
-								'u_name':$(str).parents('.slide-list-wrapper').data('uname'),
-								'u_sj': $(str).parents('.slide-list-wrapper').data('usj'),
-								'nation': $(str).parents('.slide-list-wrapper').data('unation'),
-								'province': $(str).parents('.slide-list-wrapper').data('uprovince'),
-								'city': $(str).parents('.slide-list-wrapper').data('ucity'),
-								'district': $(str).parents('.slide-list-wrapper').data('district'),
-								'addr': $(str).parents('.slide-list-wrapper').data('addr'),
-								'lat':$(str).parents('.slide-list-wrapper').data('lat'),
-								'lng':$(str).parents('.slide-list-wrapper').data('lng')
-							};
-							console.log(tempAry);
-							JSONVal.push(tempAry);
-							setStorage('editInfo', JSONVal);
-							window.location.href = './addressInfo.html?editId=' + $(this).data('aid');
-						} else {
-							var tempAry = {
-								'ad_id':$(this).data('aid'),
-								'u_id': $(this).data('uid'),
-								'u_name': $(this).data('uname'),
-								'u_sj': $(this).data('usj'),
-								'nation': $(this).data('unation'),
-								'province': $(this).data('uprovince'),
-								'city': $(this).data('ucity'),
-								'district': $(this).data('district'),
-								'addr': $(this).data('addr'),
-								'lat':$(this).data('lat'),
-								'lng':$(this).data('lng')
-							};
-							JSONVal.push(tempAry);
-							var string = getStorage('urlReference').split('/'),
-									page = string[string.length-1];
-							if(page == 'orderConfirm.html'){
-								if ($(this).data('range') == 1) {
-									setStorage('changeInfo', JSONVal);
-									window.location.href = 'orderConfirm.html';
-								} else {
-									showTip('您当前选择的地址不在配送范围').showError();
-								}
-							}
-						}
-					}
+                $('.slide-list-container').append(str);
+                slideDelete();
+                //选择收货地址
+                $('.slide-list-wrapper').tap(function (e) {
+                    var JSONVal = [];
+                    var ev = window.event ? window.event : e;
+                    var obj = ev.srcElement || e.target;
+                    if ($(obj).attr('class') != 'slide-delete-button') {
+                        var str = (ev.srcElement.nodeName || ev.target).trim();
+                        if (str.toLowerCase() == 'em') {
+                            var tempAry = {
+                                'ad_id': $(str).parents('.slide-list-wrapper').data('aid'),
+                                'u_id': $(str).parents('.slide-list-wrapper').data('uid'),
+                                'u_name': $(str).parents('.slide-list-wrapper').data('uname'),
+                                'u_sj': $(str).parents('.slide-list-wrapper').data('usj'),
+                                'nation': $(str).parents('.slide-list-wrapper').data('unation'),
+                                'province': $(str).parents('.slide-list-wrapper').data('uprovince'),
+                                'city': $(str).parents('.slide-list-wrapper').data('ucity'),
+                                'district': $(str).parents('.slide-list-wrapper').data('district'),
+                                'addr': $(str).parents('.slide-list-wrapper').data('addr'),
+                                'lat': $(str).parents('.slide-list-wrapper').data('lat'),
+                                'lng': $(str).parents('.slide-list-wrapper').data('lng')
+                            };
+                            JSONVal.push(tempAry);
+                            setStorage('editInfo', JSONVal);
+                            window.location.href = './addressInfo.html?editId=' + $(this).data('aid');
+                        } else {
+                            var tempAry = {
+                                'range': $(this).data('range'),
+                                'ad_id': $(this).data('aid'),
+                                'u_id': $(this).data('uid'),
+                                'u_name': $(this).data('uname'),
+                                'u_sj': $(this).data('usj'),
+                                'nation': $(this).data('unation'),
+                                'province': $(this).data('uprovince'),
+                                'city': $(this).data('ucity'),
+                                'district': $(this).data('district'),
+                                'addr': $(this).data('addr'),
+                                'lat': $(this).data('lat'),
+                                'lng': $(this).data('lng')
 
-				});
-			},
-			error: function(XMLHttpRequest, textStatus, errorThrown) {}
-		});
-	}
+                            };
+                            JSONVal.push(tempAry);
+                            var string = getStorage('urlReference').split('/'),
+                                    page = string[string.length - 1];
+                            if (page == 'orderConfirm.html') {
+                                if ($(this).data('range') == 1) {
+                                    setStorage('changeInfo', JSONVal);
+                                    window.location.href = 'orderConfirm.html';
+                                } else {
+                                    confirmPanel("当前地址不在配送范围,是否自提", function () {
+                                        setStorage('changeInfo', JSONVal);
+                                        window.location.href = 'orderConfirm.html';
+                                    });
+                                }
+                            }
+                        }
+                    }
 
-	//用户删除收货地址
-	$('.slide-delete-button').live('touchend', function() {
-		var nodes = $(this);
-		confirmPanel("确认要删除地址么？", function () {
-			removeLocalStorage('changeInfo');
-			//删除当前的地址
-			var nodeIndx = nodes.parents('.slide-list-wrapper').index(),
-					u_id = getCookieVal('userid'),
-					ad_id = nodes.parents('.slide-list-wrapper').data('aid'),
-					method = 'DeleteAddress',
-					param = {
-						shopid: "3",
-						device: "3",
-						u_id: u_id,
-						ad_id: ad_id
-					};
-			sign = md5(JSON.stringify(param) + method + reqtime + API_KEY);
-			$.ajax({
-				url: "../API/WebApi.ashx",
-				async: true,
-				type: "post",
-				dataType: 'json',
-				data: {
-					param: JSON.stringify(param),
-					method: method,
-					reqtime: reqtime,
-					sign: getSecret(param, method, reqtime)
-				},
-				success: function(delAddrMsg) {
-					if (delAddrMsg.status == 1) {
-						$('.slide-list-wrapper').eq(nodeIndx).remove();
-						getAddrMgmt(u_id);
-						showTip(delAddrMsg.data).showSuccess();
-					}
-				},
-				error: function(XMLHttpRequest, textStatus, errorThrown) {
+                });
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+            }
+        });
+    }
 
-				}
-			});
-		});
-	});
+    //用户删除收货地址
+    $('.slide-delete-button').live('touchend', function () {
+        var nodes = $(this);
+        confirmPanel("确认要删除地址么？", function () {
+            removeLocalStorage('changeInfo');
+            //删除当前的地址
+            var nodeIndx = nodes.parents('.slide-list-wrapper').index(),
+                    u_id = getCookieVal('userid'),
+                    ad_id = nodes.parents('.slide-list-wrapper').data('aid'),
+                    method = 'DeleteAddress',
+                    param = {
+                        shopid: getStorage('wginfo').id,
+                        device: "3",
+                        u_id: u_id,
+                        ad_id: ad_id
+                    };
+            sign = md5(JSON.stringify(param) + method + reqtime + API_KEY);
+            $.ajax({
+                url: "../API/WebApi.ashx",
+                async: true,
+                type: "post",
+                dataType: 'json',
+                data: {
+                    param: JSON.stringify(param),
+                    method: method,
+                    reqtime: reqtime,
+                    sign: getSecret(param, method, reqtime)
+                },
+                success: function (delAddrMsg) {
+                    if (delAddrMsg.status == 1) {
+                        $('.slide-list-wrapper').eq(nodeIndx).remove();
+                        getAddrMgmt(u_id);
+                        showTip(delAddrMsg.data).showSuccess();
+                    }
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+
+                }
+            });
+        });
+    });
 
 </script>

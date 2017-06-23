@@ -30,6 +30,7 @@
                 Position.longitude = position.lng;
                 Position.latitude = position.lat;
                 clearInterval(Position.timer);
+                $(".location-fail, .in-the-location").hide();
                 if ( position.city == position.province ) {
                     $('#address-box em','').html( position.city + position.addr );
                 } else {
@@ -37,8 +38,10 @@
                 }
 
             }, function () {    //定位失败回调函数
-                alert("定位失败，请打开手机定位功能");
-                $('#address-box em').html("请选择当前位置");
+                //alert("定位失败，请打开手机定位功能");
+                $(".location-fail").show();
+                $(".in-the-location").hide();
+                //$('#address-box em').html("请选择当前位置");
                 clearInterval(Position.timer);
             }, options)
 

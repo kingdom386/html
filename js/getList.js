@@ -1,15 +1,15 @@
-//create by Roger 
-//²úÆ··ÖÀà ºóÌ¨ÇëÇó  GetProdTypeList
+ï»¿//create by Roger 
+//äº§å“åˆ†ç±» åå°è¯·æ±‚  GetProdTypeList
 
 var API_KEY = "gVzKTvzJyRTCkdDQ4AcQaCgp5iIpskbq";
 var reqtime = Date.parse(new Date());
 var cartInfo = '', ary = jry = [];
 
-//»ñÈ¡²úÆ·ÀàĞÍ
+//è·å–äº§å“ç±»å‹
 function getListType() {
     var method = "GetProdTypeList",
 		param = {
-		    shopid: "3",
+		    shopid: getStorage('wginfo').id,
 		    device: "3"
 		};
     sign = md5(JSON.stringify(param) + method + reqtime + API_KEY);
@@ -28,15 +28,15 @@ function getListType() {
         success: function (data) {
             var str = '', boxStr = '';
             $(data.data).each(function (i, t) {
-                boxStr += '<div class="item-box-'+i+'"><ul></ul></div>'
+                boxStr += '<div class="item-box-' + i + '"><ul></ul> <p class="bottom-loading">æ­£åœ¨æ‹¼å‘½åŠ è½½ä¸­</p></div>'
                 if (i == 0) {
-                    //Ä¬ÈÏÇëÇóµÚÒ»¸ö·ÖÀàÏÂµÄ²úÆ·
+                    //é»˜è®¤è¯·æ±‚ç¬¬ä¸€ä¸ªåˆ†ç±»ä¸‹çš„äº§å“
                     typeClass = ".item-box-" + i;
-                    //»ñÈ¡µ±Ç°ÀàĞÍÏÂ¶ÔÓ¦µÄ²úÆ·
+                    //è·å–å½“å‰ç±»å‹ä¸‹å¯¹åº”çš„äº§å“
                     getListPage(t.id, t.name,1,typeClass);
-                    //»ñÈ¡µ±Ç°µêÆÌµÄÏêÇé
+                    //è·å–å½“å‰åº—é“ºçš„è¯¦æƒ…
                     getShopInfo(t.shopID);
-                    //»ñÈ¡¹ºÎï³µĞÅÏ¢
+                    //è·å–è´­ç‰©è½¦ä¿¡æ¯
                     getCartLocalStorage();
                 }
                 str += ' <li data-typeClass= "item-box-'+i+'"  data-ci=' + t.id + ' data-name=' + t.name + ' class="' + (i == 0 ? "active" : "") + '"><a name="item-box-' + i + '" rel="' + i + '">' + t.name + '</a></li>'
@@ -49,11 +49,11 @@ function getListType() {
         }
     })
 }
-//»ñÈ¡ÉÌµêĞÅÏ¢
+//è·å–å•†åº—ä¿¡æ¯
 function getShopInfo(sid){
     var method = "GetShopInfo",
         param = {
-            shopid: "3",
+            shopid: getStorage('wginfo').id,
             device: "3",
         };
     sign = md5(JSON.stringify(param) + method + reqtime + API_KEY);
@@ -82,14 +82,14 @@ function getShopInfo(sid){
         }
     })
 }
-//²úÆ·ÁĞ±í ÁĞ±í GetProdByType
+//äº§å“åˆ—è¡¨ åˆ—è¡¨ GetProdByType
 function getListPage(ci, k, p,tc) {
     var method = "GetProdByType",
-        keyword =k ,//¹Ø¼ü´Ê
-        cateID= ci,//·ÖÀà±àºÅ
-        pageIndex= p,//Ò³Âë Ä¬ÈÏ1
+        keyword =k ,//å…³é”®è¯
+        cateID= ci,//åˆ†ç±»ç¼–å·
+        pageIndex= p,//é¡µç  é»˜è®¤1
 		param = {
-		    shopid: "3",
+		    shopid: getStorage('wginfo').id,
 		    device: "3",
 		    keyword:keyword,
             cateID:cateID,
@@ -109,10 +109,18 @@ function getListPage(ci, k, p,tc) {
             sign: getSecret(param, method, reqtime)
         },
         success: function (data) {
-            //Ìí¼Ó½ÚµãÊı¾İ
+            if (data.status == 1 && data.data.length == 0) {
+                $('.bottom-loading').html('æ²¡æœ‰æ›´å¤šçš„äº§å“å¯ä»¥åŠ è½½äº†');
+            }
+
+           // alert(pageIndex);
+            if(pageIndex == 1){
+                $('ul',$(tc)).empty();
+            }
+            //æ·»åŠ èŠ‚ç‚¹æ•°æ®
 			var str ='';
             $(data.data).each(function (i, t) {
-                //»ñÈ¡Êı¾İ
+                //è·å–æ•°æ®
                 str += ' <li class="publicCart generalCart" data-mxcontain = '+ t.l_storage+' data-id ='+ t.id+' data-price='+ t.l_danjia+' data-name = "'+ t.l_name+'"><a href="detail.html?p_Id='+t.id+'" ><div class="item-image">'+
                             '<img data-src="' + t.l_pic1 + '" class="img-responsive wait-load" alt="" />' +
                             '</div> <div class="item-info-container">'+
@@ -133,9 +141,9 @@ function getListPage(ci, k, p,tc) {
 
         },
         complete: function () {
-            //ÅĞ¶ÏÈç¹ûÊÇµãÎÒÏÂµ¥Ò³Ãæ£¬Ö´ĞĞ·ÉÈë¶¯»­
+            //åˆ¤æ–­å¦‚æœæ˜¯ç‚¹æˆ‘ä¸‹å•é¡µé¢ï¼Œæ‰§è¡Œé£å…¥åŠ¨ç”»
             if ($(".fly-item").length > 0) {
-                addItem();//¼ÓÈë¹ºÎï³µ¶¯»­
+                addItem();//åŠ å…¥è´­ç‰©è½¦åŠ¨ç”»
             }
         }
     })

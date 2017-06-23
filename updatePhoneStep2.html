@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
 	<meta charset="UTF-8">
@@ -112,7 +112,7 @@
 			nodes.bind('touchend',function(){
 				var method = 'UpdatePhone',
 						param = {
-							shopid: "3",
+						    shopid: getStorage('wginfo').id,
 							device: "3",
 							u_id:getCookieVal('userid'),
 							phone: p,

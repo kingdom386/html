@@ -102,13 +102,12 @@
 				<li>
 					<p>配送方式：</p>
 					<div href="javascript:;" class="order-handle order-select-handle">
-						<span>送货上门</span>
-						<select id="getPost">
+						<span id="postMethod">送货上门</span>
+						<select id="getPost" >
 							<option value="1">送货上门</option>
 							<option value="2">自提</option>
 						</select>
 					</div>
-
 				</li>
 				<li class="textarea-li">
 					<p>订单备注：</p>
@@ -129,63 +128,4 @@
 <script type="text/javascript" src="js/md5.js"></script>
 <script type="text/javascript" src="js/secret.js"></script>
 <script type="text/javascript" src="js/TouchScroll.js"></script>
-<script type="text/javascript" src="js/getOrderConfirm.js"></script>
-<script>
-    $(function () {
-        $(".order-select-handle select").on("change", function () {
-            var optionValue = $(this).children("option:checked").val();
-            switch (optionValue) {
-                case "1":
-                    //送货上门
-                    $(".address-select-container").show().siblings(".address-pick-up-container").hide();
-                    break;
-                case "2":
-                    //用户登录的状态下
-                    var method = 'GetShopAddr',
-                        param = {
-                            shopid: "3",
-                            device: "3"
-                        };
-                    sign = md5(JSON.stringify(param) + method + reqtime + API_KEY);
-                    $.ajax({
-                        url: "../API/WebApi.ashx",
-                        async: true,
-                        type: "post",
-                        dataType: 'json',
-                        data: {
-                            param: JSON.stringify(param),
-                            method: method,
-                            reqtime: reqtime,
-                            sign: getSecret(param, method, reqtime)
-                        },
-                        success: function (locMsg) {
-                            console.log(locMsg);
-                            if (locMsg.data != null) {
-                                addrFlag = true;
-                                btnChange();
-                                $('.address-pick-up').html('');
-                                var str ='';
-                                str+='<p><em>自提点</em>';
-                                str+='<span id="zt">'+locMsg.data.cityName+locMsg.data.districtName+'</span></p>';
-                                str+='<p id="ztAddr">'+locMsg.data.addr+'</p>';
-                                $('.address-pick-up').html(str);
-                            } else {
-                                addrFlag = false;
-                                btnChange();
-                                $('.address-pick-up').html('获取当前地点数据失败！');
-                            }
-                        },
-                        error: function(XMLHttpRequest, textStatus, errorThrown) {
-                            alert(textStatus);
-
-                        }
-                    });
-
-                    $(".address-select-container").hide().siblings(".address-pick-up-container").show();
-                    break;
-                default:
-                    break;
-            }
-        })
-    })
-</script>
+<script type="text/javascript" src="js/getOrderConfirm.js?111111"></script>

@@ -44,19 +44,11 @@
 <div class="cart-popover-content">
 	<div class="cart-popover-title">
 		<h4>购物车</h4>
-		<a href="javascript:;">清空购物车</a>
+		<a href="javascript:;" class="clearBtn">清空购物车</a>
 	</div>
 	<div class="scroll-wrapper cart-popover-wrapper">
-		<ul class="scroll-container">
-			<li>
-				<h5 class="text-ellipsis-2">鸡蛋卷</h5>
-				<p class="item-price">0.00</p>
-				<div class="number-handle-container">
-					<em class="reduce-button"></em>
-					<input type="tel" readonly="readonly" value="4" />
-					<em class="plus-button"></em>
-				</div>
-			</li>
+		<ul class="scroll-container" id="cart">
+
 		</ul>
 	</div>
 </div>
@@ -65,9 +57,11 @@
 
 <section id="scroll-wrapper">
 	<div id="scroll-container">
-		<div class="slide-list-container collect-list-container">			
+		<div class="slide-list-container collect-list-container">
 
 		</div>
+        <!-- 加载中 -->
+        <p class="bottom-loading">正在拼命加载中</p>
 	</div>
 </section>
 
@@ -92,7 +86,7 @@
 	     load();
 		 addStack();
 	     cartPopover();//购物车弹出层
-
+		 changeCart();
 		 $('.gyg').bind('touchend',function(){
 			 window.location.href = 'productionList.html';
 		 });
@@ -101,6 +95,7 @@
 	 //监听页面加载状态
 	 $(document).on('ajaxComplete',function(e,xhr,op){
 		 Myscroll.refresh();
+		 getCartLocalStorage();
 		 checkShow($(".collect-list-container"));
 	 });
 
@@ -108,7 +103,7 @@
 		  Myscroll = new IScroll('#scroll-wrapper', {
             touchend:true,
             preventDefault: false,
-            preventDefaultException: { tagName: /^(INPUT|BUTTON|A|SPAN)$/ },
+            preventDefaultException: { tagName: /^(INPUT|BUTTON|A|SPAN|EM)$/ },
             bindToWrapper: true,
             scrollbars: true,
             fadeScrollbars: true,
@@ -131,8 +126,11 @@
 				var curScrollDirection = Myscroll.directionY, maxScroll = Myscroll.maxScrollY + 80, y = Myscroll.y;
 				if (y <= maxScroll && curScrollDirection == 1) {
 					pullUp = true;
-					//开始请求后台数据
-					getCollInfo(++page);
+				    //开始请求后台数据
+					if (pullUp) {
+					    $('.bottom-loading').show();
+					    getCollInfo(++page);
+					}
 				} else {
 					pullUp = false;
 				}
@@ -145,7 +143,7 @@
 	function getCollInfo(pg){
 		var method = 'GetMyCollection',
 				param = {
-					shopid: "3",
+				    shopid: getStorage('wginfo').id,
 					device: "3",
 					u_id: getCookieVal('userid'),
 					coll_type:1,
@@ -191,7 +189,14 @@
 				if(collData.data.length == 0&&pg == 1){
 					$('#scroll-wrapper').hide();
 			        $('.default-page-container').show();
-			    }
+				}
+
+				if (collData.data.length == 0 && collData.status == 1) {
+				    $('.bottom-loading').html('没有更多的产品了');
+				    setTimeout(function () {
+				        $('.bottom-loading').hide();
+				    }, 800);
+				}
 
 			},
 			error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -215,7 +220,7 @@
 	function del(bry){
 		var method = 'DelCollectList',
 				param = {
-					shopid: "3",
+				    shopid: getStorage('wginfo').id,
 					device: "3",
 					u_id: getCookieVal('userid'),
 					coll_type:1,

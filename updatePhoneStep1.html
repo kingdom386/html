@@ -113,7 +113,7 @@
 			nodes.bind('touchend',function(){
 					var method = 'VerifyCode',
 							param = {
-								shopid: "3",
+							    shopid: getStorage('wginfo').id,
 								device: "3",
 								u_id:getCookieVal('userid'),
 								phone:p,

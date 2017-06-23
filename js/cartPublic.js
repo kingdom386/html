@@ -9,7 +9,7 @@ var cartAry = bry = jry = [];
 
 //操作购物车对应的产品数
 function changeCart(){
-    $(".number-handle-container em,.de-price a,.slide-list-wrapper a.slide-info-container em").live("click", function(e) {
+    $(".number-handle-container em,.de-price a,.search-list .search-buy-icon,.slide-list-container .search-buy-icon").live("click", function(e) {
         var inputVal = parseInt($(this).siblings("input").val()),
             id = $(this).parents('.generalCart').data('id'),
             maxVal = $(this).parents('.generalCart').data('mxcontain');
@@ -48,7 +48,9 @@ function changeCart(){
 }
 
 //加入购物车
-function publicAddCart(obj,inputVals){
+function publicAddCart(obj, inputVals) {
+    //存储当前店铺的id
+    setStorage('curSid', getStorage('wginfo').id);
     //全局变量 cartId
     var str='',
         contain = parseInt(obj.parents('.generalCart').data('mxcontain')),
@@ -93,6 +95,7 @@ function storageCartInfo(){
             prod_mxmony =(parseInt($('input[type="tel"]',$(t)).val())*parseFloat( $('.item-price',$(t)).html().trim())).toFixed(2);
 
         var ls = {
+           
             'p_id': pid,
             'prod_name': prod_name,
             'prod_mony': prod_mony,
@@ -148,7 +151,7 @@ $('.clearBtn').on('touchend',function(){
     }
 });
 
-function  cartClear(){
+function cartClear(){
     $('#allPrice').html(0.00);
     $('.badge').html(0);
     cartAry.length = 0;

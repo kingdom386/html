@@ -50,7 +50,8 @@ function load() {
         window.location.href = './register.html';
     } else {
         //获取所有的订单
-        getOrderData(loadType,page,'');
+        //setTimeout(function(){ getOrderData(loadType,page,'') },260);
+        getOrderData(loadType, page, '');
         Myscroll = new IScroll('#scroll-wrapper', {
             click: true,
             touchend: true,
@@ -74,6 +75,7 @@ function load() {
                 pullUp = true;
                 //开始请求后台数据
                 if (pullUp) {
+                    $('.bottom-loading').show();
                     getOrderData(loadType, ++page, '');
                 }
             } else {
@@ -89,6 +91,7 @@ function load() {
                 checkUrl = $(this).data('href');
 
             //0待审核 1已审核 2已下架  3 审核不通过
+
             if(checkType == 0){
                 showTip('该产品正在审核中').showError();
             }else if(checkType == 1){
@@ -104,7 +107,7 @@ function load() {
         $(".order-tab-container a").on("tap", function() {
             $('#allOrder').empty();
             //遍历节点 根据类型显示
-            //showType($(this).index());
+
             $(this).addClass("active").siblings("a").removeClass("active");
             $(this).siblings(".order-tab-border").css("left", $(this).width() * $(this).index());
             Myscroll.scrollTo(0, 0);
@@ -158,7 +161,7 @@ function getOrderPosting() {
 function getOrderData(orderState, pageIdx, orderKeyWord) {
     var method = 'GetOrderList',
         param = {
-            shopid: "3",
+            shopid: getStorage('wginfo').id,
             device: "3",
             u_id: getCookieVal('userid'),
             o_zt: orderState,
@@ -178,13 +181,20 @@ function getOrderData(orderState, pageIdx, orderKeyWord) {
             sign: getSecret(param, method, reqtime)
         },
         success: function(orderMsg) {
-            if(orderMsg.status == 1&&orderMsg.data == null){
+            if (orderMsg.status == 1 && orderMsg.data.length == 0 && pageIdx == 1 && o_zt == 0) {
                 //没有订单
                 $('.allOrderInfo').hide();
                 $('.default-page-container').show();
             }
 
-            if(pageIdx == 1){
+            if (orderMsg.status == 1 && orderMsg.data.length == 0) {
+                $('.bottom-loading').html('没有更多的产品了');
+                setTimeout(function () {
+                    $('.bottom-loading').hide();
+                }, 800);
+            }
+
+            if (pageIdx == 1) {
                 $('#allOrder').empty();
             }
 
@@ -193,7 +203,7 @@ function getOrderData(orderState, pageIdx, orderKeyWord) {
                 var stateNote = '',
                     stateBtn = '',
                     sumPrice = 0;
-                //1未付款 2已付款  3 配送中 4已配送
+                //1未付款 2已付款  3 配送中 4 已配送
                 if (t.o_zt == 1) {
                     var date = (new Date(t.start_date)).getTime(),
                         nowTime = (new Date()).getTime(),
@@ -210,12 +220,13 @@ function getOrderData(orderState, pageIdx, orderKeyWord) {
                     //已付款
                 } else if (t.o_zt == 2) {
                     stateNote = '已付款';
-                    //stateBtn = '<a href="javascript:void(0);" class="checkOrder order-grey-button">查看订单</a>';
+                    stateBtn = '';
                 } else if (t.o_zt == 3) {
                     stateNote = '配送中';
                     stateBtn = '<a href="javascript:void(0);" class="receiveConfrm order-red-button">确认收货</a>';
                 } else if (t.o_zt == 4) {
                     //其他类的订单
+                    stateNote = '已完成';
                     stateBtn = '<a href="javascript:void(0);" class="closeOrder order-grey-button">交易关闭</a> ';
                 }
 
@@ -253,12 +264,12 @@ $('.goPay').live('tap', function() {
 $('.cancleOrder').live('tap', function() {
     var method = 'CancelOrder',
         param = {
-            shopid: "3",
+            shopid: getStorage('wginfo').id,
             device: "3",
             o_id: $(this).parents('.order-list-container').data('oid')
         };
     sign = md5(JSON.stringify(param) + method + reqtime + API_KEY);
-    confirmPanel("确认删除订单么？", function () {
+    confirmPanel("确认取消订单么？", function () {
         $.ajax({
             url: "../API/WebApi.ashx",
             async: true,
@@ -288,7 +299,7 @@ $('.cancleOrder').live('tap', function() {
 $('.delOrder').live('tap', function () {
     var method = 'DeleteOrder',
       param = {
-          shopid: "3",
+          shopid: getStorage('wginfo').id,
           device: "3",
           o_id: $(this).parents('.order-list-container').data('oid')
       };

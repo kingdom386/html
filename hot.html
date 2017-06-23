@@ -71,6 +71,9 @@
 		<div class="search-list-container">
 			<ul class="search-list">
 			</ul>
+            <!-- 加载中 -->
+            <p class="bottom-loading">正在拼命加载中</p>
+
 		</div>
 		<!--搜索结果列表结束-->
 	</div>
@@ -168,7 +171,7 @@
 				getHotList(page);
 				load();
 				changeCart();
-			addStack();
+				addStack();
 			};
 
 	$(document).on('ajaxComplete',function(xhr,op){
@@ -209,20 +212,21 @@
 				pullUp = true;
 				//开始请求后台数据
 				if (pullUp) {
+				    $('.bottom-loading').show();
 					getHotList(++page);
 				}
 			} else {
 				pullUp = false;
 			}
 			Myscroll.refresh();
-			checkShow($(".search-list"));//懒加载
+			checkShow($(".search-list")); //懒加载
 		});
 	}
 
 	function getHotList(pgindx){
 		var method = "GetIndexHotSale",
 				param = {
-					shopid: "3",
+					shopid: getStorage('wginfo').id,
 					device: "3",
 					pageIndex:pgindx
 				};
@@ -239,6 +243,16 @@
 				sign: getSecret(param,method,reqtime)
 			},
 			success: function (hotData) {
+			    if (hotData.status == 1 && hotData.data.length == 0) {
+			        $('.bottom-loading').html('没有更多产品可以加载了');
+			        setTimeout(function () {
+			            $('.bottom-loading').hide();
+			        }, 800);
+			    }
+
+				if(pgindx == 1){
+					$('.search-list').empty();
+				}
 				var str = '';
 				$(hotData.data).each(function (i, t) {
 					str+='<li class="publicCart generalCart" data-mxcontain = '+ t.l_storage+' data-id ='+t.id+' data-name="'+ t.l_name+'" data-price='+ t.l_danjia+' data-cateId='+ t.cateID+' ><a href="detail.html?p_Id='+t.id+'"  >'+

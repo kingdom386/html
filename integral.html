@@ -50,6 +50,10 @@
 				<em>200</em>
 			</li>-->			
 		</ul>
+
+        <!-- 加载中 -->
+        <p class="bottom-loading">正在拼命加载中</p>
+
 	</div>
 </section>
 
@@ -130,7 +134,10 @@
 				if (y <= maxScroll && curScrollDirection == 1) {
 					pullUp = true;
 					//开始请求后台数据
-					getIngralinfo(++page);
+					if (pullUp) {
+					 $('.bottom-loading').show();
+					 getIngralinfo(++page);
+                 }
 				} else {
 					pullUp = false;
 				}
@@ -154,7 +161,7 @@
 	function getUserinfo(){
 		var method = 'GetUserInfo',
 				param = {
-					shopid: "3",
+				    shopid: getStorage('wginfo').id,
 					device: "3",
 					u_id: getCookieVal('userid')
 				};
@@ -172,7 +179,12 @@
 				sign: getSecret(param, method, reqtime)
 			},
 			success: function (userData) {
-				//$('.integral-head-content').html(userData.data.jifenLeft);
+			    if (userData.data.jifenLeft == 0) {
+			        $('.integral-head-content').html('0.00');
+			    }else{
+			        $('.integral-head-content').html(userData.data.jifenLeft);
+			    }
+				
 			},
 			error: function (XMLHttpRequest, textStatus, errorThrown) {
 
@@ -184,7 +196,7 @@
 	function getIngralinfo(pg) {
 		var method = 'GetJifenList',
 				param = {
-					shopid: "3",
+				    shopid: getStorage('wginfo').id,
 					device: "3",
 					u_id: getCookieVal('userid'),
 					pageIndex: pg,
@@ -203,7 +215,11 @@
 				reqtime: reqtime,
 				sign: getSecret(param, method, reqtime)
 			},
-			success: function(integralData) {
+			success: function (integralData) {
+			    if (integralData.status == 1 && integralData.data.length == 0) {
+			        $('.bottom-loading').html('没有更多的产品了');
+			        setTimeout(function () { $('.bottom-loading').hide() }, 800);
+			    }
 				var str='';
 				$(integralData.data).each(function(i,t){
 					if(t.type == 1){

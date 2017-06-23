@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
 	<meta charset="UTF-8">
@@ -43,69 +43,76 @@
 </body>
 </html>
 <script type="text/javascript" src="js/zepto.min.js"></script>
+<script type="text/javascript" src="js/touch.js"></script>
 <script type="text/javascript" src="js/size.js"></script>
 <script type="text/javascript" src="js/md5.js"></script>
 <script type="text/javascript" src="js/secret.js"></script>
 <script type="text/javascript">
 	var API_KEY = "gVzKTvzJyRTCkdDQ4AcQaCgp5iIpskbq";
 	//查询订单详情
-	var oid = getCookieVal('orderId');
+	var oid = getStorage('orderId');
 
-	document.addEventListener('DOMContentLoaded',function(){
+	window.onload = function () {
 
-		//根据传递过来的oid
-		  var method = 'GetOrderDetail',
-				param = {
-					shopid: "3",
-					device: "3",
-					o_id:oid
-				};
-		sign = md5(JSON.stringify(param) + method + reqtime + API_KEY);
-		$.ajax({
-			url: "../API/WebApi.ashx",
-			async: true,
-			type: "post",
-			dataType: 'json',
-			data: {
-				param: JSON.stringify(param),
-				method: method,
-				reqtime: reqtime,
-				sign: getSecret(param, method, reqtime)
-			},
-			success: function (oDeMsg) {
-				$('.pay-result').empty();
-				var str = '';
-				if(oDeMsg.data.o_zt == 2){
-					$('.pay-result').addClass('result-success').removeClass('result-failed');
-					str+='<em>支付成功</em>';
-					str+='<h4>送货信息：</h4>;
-					str+='<p>我们将尽快安排发货，请您保持手机畅通，以便配送人员能第一时间联系到您。</p>';
-					str+='<div class="pay-result-button">';
-					str+='<a href="index.html" class="result-yellow">继续购物</a>';
-					str+='<a href="javascript:void(0);" class="result-grey">查看订单</a>';
-					str+='</div>';
-				}
+	    //根据传递过来的oid
+	    var method = 'GetOrderDetail',
+              param = {
+                  shopid: getStorage('wginfo').id,
+                  device: "3",
+                  o_id: oid
+              };
+	    sign = md5(JSON.stringify(param) + method + reqtime + API_KEY);
+	    $.ajax({
+	        url: "../API/WebApi.ashx",
+	        async: true,
+	        type: "post",
+	        dataType: 'json',
+	        data: {
+	            param: JSON.stringify(param),
+	            method: method,
+	            reqtime: reqtime,
+	            sign: getSecret(param, method, reqtime)
+	        },
+	        success: function (oDeMsg) {
+	            $('.pay-result').empty();
+	            var str = '';
+	            if (oDeMsg.data.o_zt == 2) {
+	                $('.pay-result').addClass('result-success').removeClass('result-failed');
+	                str += '<em>支付成功</em>';
+	                str += '<h4>送货信息：</h4>';
+	                str += '<p>我们将尽快安排发货，请您保持手机畅通，以便配送人员能第一时间联系到您。</p>';
+	                str += '<div class="pay-result-button">';
+	                str += '<a href="index.html" class="result-yellow">继续购物</a>';
+	                str += '<a data-ozt =' + oDeMsg.data.o_zt + ' href="javascript:void(0);" class="checkOrder result-grey">查看订单</a>';
+	                str += '</div>';
+	            }
 
-				if(oDeMsg.data.o_zt == 1){
-					$('.pay-result').removeClass('result-success').addClass('result-failed');
-					str+='<em>支付失败</em>';
-					str+='<h4>送货信息：</h4>;
-					str+='<p>该订单会为您保留12小时（从下单之时算起），12小时之后如果还未付款，系统将自动取消该订单。</p>';
-					str+='<div class="pay-result-button">';
-					str+='<a href="index.html" class="result-yellow">继续购物</a>';
-					str+='<a href="javascript:void(0);" class="result-grey">查看订单</a>';
-					str+='</div>';
-				}
-				$('.pay-result').append(str);
-			},
-			error: function(XMLHttpRequest, textStatus, errorThrown) {
+	            if (oDeMsg.data.o_zt == 1) {
+	                $('.pay-result').removeClass('result-success').addClass('result-failed');
+	                str += '<em>支付失败</em>';
+	                str += '<h4>送货信息：</h4>';
+	                str += '<p>该订单会为您保留12小时（从下单之时算起），12小时之后如果还未付款，系统将自动取消该订单。</p>';
+	                str += '<div class="pay-result-button">';
+	                str += '<a href="index.html" class="result-yellow">继续购物</a>';
+	                str += '<a data-ozt =' + oDeMsg.data.o_zt + ' href="javascript:void(0);" class="checkOrder result-grey">查看订单</a>';
+	                str += '</div>';
+	            }
+	            $('.pay-result').append(str);
+	        },
+	        error: function (XMLHttpRequest, textStatus, errorThrown) {
 
-			}
-		});
-	},false)
+	        }
+	    });
+	};
 
 	$('.result-grey').live('touchend',function(){
 		window.location.href = './orderDetail.html?oid='+oid+'&tp=2';
+	});
+
+	//查看订单
+	$('.checkOrder').live('tap', function () {
+	    setStorage('urlReference', window.location.href);
+	    window.location.href = './orderDetail.html?oid=' + getStorage('orderId') + '&tp=' + $(this).data('ozt');
 	});
 
 </script>

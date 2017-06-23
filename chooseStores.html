@@ -15,8 +15,47 @@
     <link rel="stylesheet" type="text/css" href="css/common.css" media="screen" />
     <link rel="stylesheet" type="text/css" href="css/address.css" media="screen" />
     <title>选择门店</title>
+	<style type="text/css">
+		.showMap{
+			display: none;
+			position: absolute;
+			top:0;
+			left:0;
+			z-index:99999;
+			width:100%;
+			height:100%;
+			background: rgba(255,255,255,1);
+		}
+	</style>
 </head>
 <body>
+
+<!-- 定位中开始 -->
+<div class="in-the-location">
+    <div class="location-logo">
+        <img src="image/locationLogo.png" alt="" />
+    </div>
+    <div class="location-load-container">
+        <div class="location-load">
+            <img class="location-load-img" src="image/positionLoadIcon.png" alt="" />
+        </div>
+        <p>正在定位中...</p>
+    </div>
+</div>
+<!-- 定位中结束 -->
+
+<!-- 定位失败开始 -->
+<div class="location-fail" style="display:none;">
+    <div class="location-fail-content">
+        <img src="image/locationFail.png" alt="" />
+    </div>
+    <div class="location-fail-bottom">
+        <a href="#" class="refresh-location">刷新定位</a>
+        <a href="javascript:void(0);" class="location-input">手动输入</a>
+    </div>
+</div>
+<!-- 定位失败结束 -->
+
 <!--头部开始-->
 <header class="head-container common-head">
 	<a href="javascript:void(0);" onclick="removeStack()"  class="back-button"></a>
@@ -26,127 +65,64 @@
 <!--已选择门店开始-->
 <div class="selected-store" id="address-box">
 	<i></i>
-	<em>浙江省台州市椒江区东商务区霞址浙江省台州市椒江区东商务区霞址</em>
+	<em id="nowShop"></em>
 </div>
 <!--已选择门店结束-->
 <!--搜索门店开始-->
 <form action="">
 	<div class="search-content address-search">
-		<input type="search" />
+		<input type="search" id="skey" onkeyup="checkIp(this)" />
 	</div>
 </form>
 <!--搜索门店结束-->
 <h4 class="address-title">附近门店</h4>
 <section id="scroll-wrapper">
-	<div id="scroll-container">			
-		<a href="" class="store-list">
-			<h4>台州中心大道店台州中心大道店</h4>
-			<p class="store-phone">0576-88526969</p>
-			<p class="store-address">中心大道180号中心大道180号中心大道180号中心大道180号中心大道180号中心大道180号中心大道180号</p>
-			<em class="store-distance">2.53km</em>
-		</a>
-		<a href="" class="store-list">
-			<h4>台州中心大道店台州中心大道店</h4>
-			<p class="store-phone">0576-88526969</p>
-			<p class="store-address">中心大道180号中心大道180号中心大道180号中心大道180号中心大道180号中心大道180号中心大道180号</p>
-			<em class="store-distance">2.53km</em>
-		</a>
-		<a href="" class="store-list">
-			<h4>台州中心大道店台州中心大道店</h4>
-			<p class="store-phone">0576-88526969</p>
-			<p class="store-address">中心大道180号中心大道180号中心大道180号中心大道180号中心大道180号中心大道180号中心大道180号</p>
-			<em class="store-distance">2.53km</em>
-		</a>
-		<a href="" class="store-list">
-			<h4>台州中心大道店台州中心大道店</h4>
-			<p class="store-phone">0576-88526969</p>
-			<p class="store-address">中心大道180号中心大道180号中心大道180号中心大道180号中心大道180号中心大道180号中心大道180号</p>
-			<em class="store-distance">2.53km</em>
-		</a>
-		<a href="" class="store-list">
-			<h4>台州中心大道店台州中心大道店</h4>
-			<p class="store-phone">0576-88526969</p>
-			<p class="store-address">中心大道180号中心大道180号中心大道180号中心大道180号中心大道180号中心大道180号中心大道180号</p>
-			<em class="store-distance">2.53km</em>
-		</a>
-		<a href="" class="store-list">
-			<h4>台州中心大道店台州中心大道店</h4>
-			<p class="store-phone">0576-88526969</p>
-			<p class="store-address">中心大道180号中心大道180号中心大道180号中心大道180号中心大道180号中心大道180号中心大道180号</p>
-			<em class="store-distance">2.53km</em>
-		</a>
-		<a href="" class="store-list">
-			<h4>台州中心大道店台州中心大道店</h4>
-			<p class="store-phone">0576-88526969</p>
-			<p class="store-address">中心大道180号中心大道180号中心大道180号中心大道180号中心大道180号中心大道180号中心大道180号</p>
-			<em class="store-distance">2.53km</em>
-		</a>
-		<a href="" class="store-list">
-			<h4>台州中心大道店台州中心大道店</h4>
-			<p class="store-phone">0576-88526969</p>
-			<p class="store-address">中心大道180号中心大道180号中心大道180号中心大道180号中心大道180号中心大道180号中心大道180号</p>
-			<em class="store-distance">2.53km</em>
-		</a>
-		<a href="" class="store-list">
-			<h4>台州中心大道店台州中心大道店</h4>
-			<p class="store-phone">0576-88526969</p>
-			<p class="store-address">中心大道180号中心大道180号中心大道180号中心大道180号中心大道180号中心大道180号中心大道180号</p>
-			<em class="store-distance">2.53km</em>
-		</a>
-		<a href="" class="store-list">
-			<h4>台州中心大道店台州中心大道店</h4>
-			<p class="store-phone">0576-88526969</p>
-			<p class="store-address">中心大道180号</p>
-			<em class="store-distance">2.53km</em>
-		</a>
+	<div id="scroll-container" class="list-box" >
 	</div>
 </section>
 
 <!--定位进入页-->
 <div class="iframe-box hide" id="iframe-box"> </div>
 <!--定位出地址-->
-
-<div class="DOM-loadLayer" style="display: none;">
-	<div class="rotate-load">
-		<div class="load-box">
-		</div>
-	</div>
-	<!--rotate-load-->
+<div class="showMap">
+	<iframe id="mapPage"  width="100%" height="100%" frameborder="0"
+			src="http://apis.map.qq.com/tools/locpicker?
+type=1&effect=zoom&policy=1&mapdraggable=1&radius=3000&key=IFLBZ-ZVHRI-XDSGG-5NY25-IITSH-4HFXD&referer=O2O">
+	</iframe>
 </div>
-<!--DOM-loadLayer-->
-
 </body>
 </html>
 <script type="text/javascript" src="js/zepto.min.js"></script>
+<script type="text/javascript" src="js/cartPublic.js"></script>
+<script type="text/javascript" src="js/touch.js"></script>
 <script type="text/javascript" src="js/common.js"></script>
+<script type="text/javascript" src="js/address.js"></script>
 <script type="text/javascript" src="js/TouchScroll.js"></script>
-<script type="text/javascript" src="js/location.js"></script>
 <script src="https://3gimg.qq.com/lightmap/components/geolocation/geolocation.min.js" type="text/javascript"></script>
 
 <script type="text/javascript">
-	var Myscroll = '',
-		curScrollDirection = y = maxScroll = 0,
-		pullUp = true,//开关 启用上拉加载
+	var Myscroll = kw = '',
+		curScrollDirection = y = maxScroll = lat = lng = 0,
+		pullUp = false,//开关 启用上拉加载
 		page = 1;
-
 	//点击回车事件
 	document.onkeydown = function(e) {
 		var enterCode = e.which || e.keyCode;
 		if (enterCode == 13) {
-			
+			kw = $('#skey').val();
+			cur();
 			return false;
 		}
-
 	}
 
 	//页面的整体整天js css 加载完成
 	window.onload = function(){
 		load();
+		addStack();//页面信息入栈
 	};
 
 	//监听页面加载状态
 	$(document).on('ajaxComplete',function(e,xhr,op){
-		layerState();
 		Myscroll.refresh();
 	});
 
@@ -164,27 +140,131 @@
 		});
 
 		Myscroll.on('scrollEnd', function() {
-
+			//页面上拉加载
+			curScrollDirection = Myscroll.directionY,
+					maxScroll = Myscroll.maxScrollY + 120,
+					y = Myscroll.y;
+			if (y <= maxScroll && curScrollDirection == 1) {
+				pullUp = true;
+				//开始请求后台数据
+				if (pullUp) {
+					++page;
+					cur();
+				}
+			} else {
+				pullUp = false;
+			}
 			Myscroll.refresh();
 		});
+		//获取当前位置店铺列表
+		setTimeout(function(){
+			cur();
+		},800);
 
 	}
 
-	$(function(){
-		//显示、关闭我的地址页
-		$(document).on('click','.selected-store',function(){ 
-			$('#iframe-box').show();
-			if ( $('#iframe-box').find('#mapPage').length == 0 ) {
-				var html = '<iframe id="mapPage" width="100%" height="100%" frameborder=0 name="myFrame"';
-				html += 'src="https://apis.map.qq.com/tools/locpicker?search=1&type=1&coordtype=5&key=IFLBZ-ZVHRI-XDSGG-5NY25-IITSH-4HFXD&referer=O2O">'
-				html += '</iframe>';
-				$('#iframe-box').html(html);
-				Position.openPositionMap();
+	//用户清空搜索内容
+	function checkIp(obj){
+		var ipVal = ($(obj).val()).trim();
+		if(ipVal.length <=0){
+			page=1;
+			cur();
+		}
+	}
+
+	//开始执行地图API
+	var geolocation = new qq.maps.Geolocation("IFLBZ-ZVHRI-XDSGG-5NY25-IITSH-4HFXD", "O2O"),
+			options = {timeout: 2600};//获取地位位置有效时间
+	//获取精准位置
+	geolocation.getLocation(showPosition, showErr, options);
+	function showPosition(position){
+		lat = position.lat;
+		lng = position.lng;
+		$('#nowShop').html(position.province+position.city+position.addr);
+	};
+	function showErr() {};
+
+	//获取当前位置的所有店铺信息
+	function cur(){
+			var method = 'GetShopList',
+					param = {
+						shopid: getStorage('wginfo').id,
+						device: '3',
+						lat: lry[0].lat,
+						lng: lry[0].lng,
+						keyWord:kw
+					};
+			sign = md5(JSON.stringify(param) + method + reqtime + API_KEY);
+			$.ajax({
+				url: "../API/WebApi.ashx",
+				async: true,
+				type: "post",
+				dataType: 'json',
+				data: {
+					param: JSON.stringify(param),
+					method: method,
+					reqtime: reqtime,
+					sign: getSecret(param, method, reqtime)
+				},
+				success: function (geoData) {
+				    if (geoData.status == 0) {
+				        $('.location-fail').show();
+				        $('.in-the-location').hide();
+				    }
+
+				    if(page == 1){
+						$('.list-box').empty();
+						$('.in-the-location').hide();
+						$('.location-fail').hide();
+					}
+
+					if(geoData.data != ''){
+						var str = '';
+						$(geoData.data).each(function(i,t){
+							str+='<a data-range = '+ t.d_range+' data-id = '+ t.s_id+' href="javascript:void(0);" class="store-list">';
+							str+='<h4>'+ t.shop_name+'</h4>';
+							str+='<p class="store-phone">'+ t.telephone+'</p>';
+							str+='<p class="store-address">'+ t.address+'</p>';
+							str+='<em class="store-distance">'+ t.distance+'</em>';
+							str+='</a>';
+						});
+						$('.list-box').append(str);
+					}
+				},
+				error: function(XMLHttpRequest, textStatus, errorThrown) {
 			}
-			Position.page=1;
-		})
-		
-		
+	});
+	}
+
+	//地理位置选取
+	$('#address-box').bind('touchend',function(){
+		$('.showMap').show();
+	});
+	//选取门店
+	$('.store-list').live('tap', function () {
+	    //切换店铺 清空购物车
+	    var tempid = getStorage('curSid');
+	    if (tempid != $(this).data('id')) {
+	        removeLocalStorage('cart_info');
+	        removeLocalStorage('cartId');
+	    }
+
+		var ls = {
+			'id': $(this).data('id'),
+			'name': $('h4',this).html(),
+			'tel': $('.store-phone',this).html(),
+			'addr': $('.store-address',this).html(),
+			'range': $(this).data('range')
+		};
+		removeLocalStorage('wginfo');
+		setStorage('wginfo',ls);
+		if($(this).data('range') != 1){
+			confirmPanel("当前位置超出配送范围！是否选择", function () {
+				window.location.href = 'index.html';
+			});
+		}else{
+			window.location.href = 'index.html';
+		}
 	});
 
 </script>

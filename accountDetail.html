@@ -54,6 +54,8 @@
 
 			</ul>
 			<!--全部结束-->
+            <!-- 加载中 -->
+            <p class="bottom-loading">正在拼命加载中</p>
 		</div>
 	</div>
 </section>
@@ -127,9 +129,13 @@
 				//页面上拉加载
 				var curScrollDirection = Myscroll.directionY, maxScroll = Myscroll.maxScrollY + 80, y = Myscroll.y;
 				if (y <= maxScroll && curScrollDirection == 1) {
-					pullUp = true;
-					//开始请求后台数据
+				    pullUp = true;
+				    $('.bottom-loading').show();
+				    if (pullUp) {
+				        //开始请求后台数据
 					getAcountInfo(++page,getCookieVal('userid'),ptype);
+				    }
+					
 				} else {
 					pullUp = false;
 				}
@@ -141,9 +147,9 @@
 
 	//用户信息
 	function getUserinfo(){
-		var method = 'GetWalletList',
+	    var method = 'GetUserInfo',
 				param = {
-					shopid: "3",
+				    shopid: getStorage('wginfo').id,
 					device: "3",
 					u_id: getCookieVal('userid')
 				};
@@ -162,8 +168,8 @@
 				sign: getSecret(param, method, reqtime)
 			},
 			success: function (userData) {
-				if(userData.data.moneyLeft == null){
-					$('.restMoney').html(0.00);
+			    if (userData.data.moneyLeft == 0) {
+			        $('.restMoney').html('0.00');
 				}else{
 					$('.restMoney').html(userData.data.moneyLeft);
 				}
@@ -179,7 +185,7 @@
 		//获取当前用户的账户的详情
 		var method = 'GetWalletList',
 				param = {
-					shopid: "3",
+				    shopid: getStorage('wginfo').id,
 					device: "3",
 					u_id: uid,
 					pageIndex:pg,
@@ -198,6 +204,9 @@
 				sign: getSecret(param, method, reqtime)
 			},
 			success: function (walletData) {
+			    if (walletData.status == 1 && walletData.data.length == 0) {
+			        $('.bottom-loading').hide('没有更多信息了');
+			    }
 				var str='';
 				$(walletData.data).each(function(i,t){
 					//type  1 消费获得积分  2 兑换物品获得积分

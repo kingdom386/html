@@ -215,7 +215,7 @@
 		//根据传递过来的oid
 		var method = 'GetOrderDetail',
 				param = {
-					shopid: "3",
+					shopid: getStorage('wginfo').id,
 					device: "3",
 					o_id:oid
 				};
@@ -284,11 +284,10 @@
 
     }
 
-
 	function getShopInfo(){
 		var method = 'GetShopInfo',
 				param = {
-					shopid: "3",
+					shopid: getStorage('wginfo').id,
 					device: "3"
 				};
 		sign = md5(JSON.stringify(param) + method + reqtime + API_KEY);
@@ -346,7 +345,7 @@
        
 		var method = 'CancelOrder',
 				param = {
-					shopid: "3",
+					shopid: getStorage('wginfo').id,
 					device: "3",
 					o_id: oid
 				};
@@ -381,7 +380,7 @@
 	$('.cfrmReceipt').live('tap',function(){
 		var method = 'CancelOrder',
 				param = {
-					shopid: "3",
+					shopid: getStorage('wginfo').id,
 					device: "3",
 					o_id: oid
 				};
@@ -410,7 +409,6 @@
 	});
 
 	//payBtn 订单支付
-
 	$('.payBtn').live('tap',function(){
 		setCookie('orderId',oid);
 		setCookie('total',parseFloat($('#sumAll').html()));
@@ -425,7 +423,7 @@
 			setCookie('hurryTime',new Date().getTime());
 			var method = 'HurryOrder',
 					param = {
-						shopid: "3",
+						shopid: getStorage('wginfo').id,
 						device: "3",
 						o_id: oid
 					};
@@ -473,7 +471,7 @@
 	$('.delOrder').live('tap', function() {
 		var method = 'DeleteOrder',
 				param = {
-					shopid: "3",
+					shopid: getStorage('wginfo').id,
 					device: "3",
 					o_id: $(this).parents('.order-list-container').data('oid')
 				};

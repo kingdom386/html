@@ -515,7 +515,8 @@ function isOnline(){
 function  isAds(){
     var timer = setInterval(function(){
         //匹配广告id
-        $('span[id*="ads"],div[id*="ads"],div[id*="Cm7"]').hide();
+        var nodes = 'span[id*="ads"],div[id*="ads"],div[id*="Cm7"],a[id*="Cst"],div[id*="Cst"],div[id*=Cd],a[id*=Cd]';
+        $(nodes).hide();
     },120);
     setTimeout(function(){
         clearInterval(timer);
@@ -571,5 +572,6 @@ function removeStack() {
         window.location.href = './' + rs[rs.length - 1].pageName;
     }
 }
+
 
 

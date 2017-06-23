@@ -69,6 +69,9 @@
                     <li data-type="4">
                         <a href="javascript:void(0);"><em></em>已完成</a>
                     </li>
+                    <li>
+                        <a href=""><em></em>退款</a>
+                    </li>
                 </ul>
             </div>
             <!--我的订单结束-->
@@ -121,11 +124,17 @@
 </body>
 </html>
 <script type="text/javascript" src="js/zepto.min.js"></script>
+<script type="text/javascript" src="js/touch.js"></script>
+<script type="text/javascript" src="js/address.js"></script>
 <script type="text/javascript" src="js/size.js"></script>
 <script type="text/javascript" src="js/common.js"></script>
 <script type="text/javascript" src="js/md5.js"></script>
 <script type="text/javascript" src="js/secret.js"></script>
 <script type="text/javascript" src="js/iscroll-probe.js"></script>
+<script src="https://3gimg.qq.com/lightmap/components/geolocation/geolocation.min.js" type="text/javascript"></script>
+<iframe id="geoPage" width=0 height=0 frameborder=0  style="display:none;" scrolling="no"
+        src="https://apis.map.qq.com/tools/geolocation?key=OB4BZ-D4W3U-B7VVO-4PJWW-6TKDJ-WPB77&referer=myapp">
+</iframe>
 <script type="text/javascript">
     var API_KEY = "gVzKTvzJyRTCkdDQ4AcQaCgp5iIpskbq",service=0;
     var reqtime = Date.parse(new Date()), Myscroll = '';
@@ -134,7 +143,7 @@
     window.onload = function(){
         layerState();
         addStack();
-        getShopInfo();
+        setTimeout(function(){getShopInfo();},260);//获取个人信息
         load();
     };
 
@@ -144,7 +153,7 @@
     });
 
     function load() {
-        $('.service-button,.tel-container').bind('touchend',function(){
+        $('.service-button,.tel-container').bind('tap',function(){
             window.location.href='tel:'+service;
         });
 
@@ -183,11 +192,11 @@
         }
 
         //参看更多的订单
-        $('.moreOrderList').bind('touchend', function () {
+        $('.moreOrderList').bind('tap', function () {
             window.location.href = 'orderList.html';
         });
 
-         $('.my-order-container ul li,.my-order-container a,.orderCenter').bind('touchend',function(){
+         $('.my-order-container ul li,.my-order-container a,.orderCenter').bind('tap',function(){
             //设置锚标记 hrefMark
             setStorage('hrefMark',$(this).data('type'));
             window.location.href = 'orderList.html';
@@ -199,7 +208,7 @@
     function getShopInfo(){
         var method = 'GetShopInfo',
                 param = {
-                    shopid: "3",
+                    shopid: getStorage('wginfo').id,
                     device: "3"
                 };
         sign = md5(JSON.stringify(param) + method + reqtime + API_KEY);
@@ -229,7 +238,7 @@
     function getPersonInfo() {
         var method = 'GetUserCenter',
 				param = {
-				    shopid: "3",
+				    shopid: getStorage('wginfo').id,
 				    device: "3",
 				    u_id: getCookieVal('userid')
 				};

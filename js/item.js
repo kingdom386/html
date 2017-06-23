@@ -132,7 +132,6 @@ function prodList() {
     });
 
     contentBox.on("scrollEnd", function () {
-
         $('#typeList li').each(function(i,t){
             if($(t).hasClass('active')){
                 k = +$('a',t).html();
@@ -147,7 +146,9 @@ function prodList() {
         if (y <= maxScroll && curScrollDirection == 1) {
             pullUp = true;
             //开始请求后台数据
-            if(pullUp){
+            if (pullUp) {
+                $('.bottom-loading', tc).show();
+                //$('.bottom-loading').show();
                 ++p;
                 getListPage(ci, k, p, tc);
             }

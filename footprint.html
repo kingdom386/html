@@ -60,6 +60,9 @@
 		<div class="slide-list-container collect-list-container">
 
 		</div>
+        <!-- 加载中 -->
+        <p class="bottom-loading">正在拼命加载中</p>
+
 	</div>
 </section>
 
@@ -81,7 +84,7 @@
 	window.onload = function () {
 	    cartPopover();//购物车弹出层
 	    load();
-	    changeCart();
+		changeCart();
 		addStack()
 	};
 
@@ -89,6 +92,7 @@
 	$(document).on('ajaxComplete',function(e,xhr,op){
 		Myscroll.refresh();
 		popoverWrapper.refresh();
+		getCartLocalStorage();
 		checkShow($(".collect-list-container"));//懒加载
 	});
 
@@ -97,7 +101,7 @@
 		Myscroll = new IScroll('#scroll-wrapper', {
 			touchend: true,
 			preventDefault: true,
-			preventDefaultException: {tagName: /^(BUTTON|A|SPAN)$/},
+			preventDefaultException: {tagName: /^(BUTTON|A|SPAN|EM)$/},
 			bindToWrapper: true,
 			scrollbars: true,
 			fadeScrollbars: true,
@@ -130,8 +134,12 @@
 				var curScrollDirection = Myscroll.directionY, maxScroll = Myscroll.maxScrollY + 120, y = Myscroll.y;
 				if (y <= maxScroll && curScrollDirection == 1) {
 					pullUp = true;
-					//开始请求后台数据
-					getCollInfo(++page);
+				    //开始请求后台数据
+					if (pullUp) {
+					    $('.bottom-loading').show();
+                        getCollInfo(++page);
+					}
+				
 				} else {
 					pullUp = false;
 				}
@@ -147,7 +155,7 @@
 	function getCollInfo(pg){
 		var method = 'GetMyCollection',
 				param = {
-					shopid: "3",
+				    shopid: getStorage('wginfo').id,
 					device: "3",
 					u_id: getCookieVal('userid'),
 					coll_type:2,
@@ -192,6 +200,14 @@
 					$('.default-page-container').show();
 				}
 
+				if (collData.data.length == 0 && collData.status == 1) {
+				    $('.bottom-loading').html('没有更多的产品了');
+				    setTimeout(function () {
+				        $('.bottom-loading').hide();
+				        Myscroll.refresh();
+				    }, 800);
+				}
+
 				slideDelete();
 			},
 			error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -208,7 +224,7 @@
 		ary.push(ls);
 		var method = 'DelCollectList',
 				param = {
-					shopid: "3",
+				    shopid: getStorage('wginfo').id,
 					device: "3",
 					u_id: getCookieVal('userid'),
 					coll_type:2,
