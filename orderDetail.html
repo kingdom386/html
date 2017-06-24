@@ -158,7 +158,7 @@
 <script type="text/javascript">
 	var API_KEY = "gVzKTvzJyRTCkdDQ4AcQaCgp5iIpskbq",
 		reqtime = Date.parse(new Date()),service= 0,
-		Myscroll = restTime = '',
+		Myscroll = restTime = tempStore = '',
 		oid = window.location.search.replace('?',"").split('&')[0].split('=')[1],
 		tp =  window.location.search.replace('?',"").split('&')[1].split('=')[1];
 
@@ -204,13 +204,14 @@
 
 		if(tp == 3){
 			$('.process').addClass('process-3');
-			$('footer').append('<a href="javascript:void(0);" class="cfrmReceipt yellow-footer-button">确认收货</a>');
+			$('footer').append('<a href="javascript:void(0);" class="receiveConfrm yellow-footer-button">确认收货</a>');
 		}
 
 		if(tp == 4){
 			$('.process').addClass('process-4');
-			$('footer').append('<a href="javascript:void(0);" class="delOrder grey-footer-button">删除订单</a><a href="javascript:void(0);" class="yellow-footer-button">再来一单</a>');
+			$('footer').append('<a href="javascript:void(0);" class="delOrder grey-footer-button">删除订单</a><a href="javascript:void(0);" class="onemore yellow-footer-button">再来一单</a>');
 		}
+
 
 		//根据传递过来的oid
 		var method = 'GetOrderDetail',
@@ -220,6 +221,7 @@
 					o_id:oid
 				};
 		sign = md5(JSON.stringify(param) + method + reqtime + API_KEY);
+
 		$.ajax({
 			url: "../API/WebApi.ashx",
 			async: true,
@@ -232,6 +234,11 @@
 				sign: getSecret(param, method, reqtime)
 			},
 			success: function (oDeMsg) {
+				//临时物品信息存储
+				if(tp == 4){
+					 tempStore = oDeMsg.data.l_orderinfo;
+				}
+
 				restTime = oDeMsg.data.start_date;
 				var str = '', subPrice = 0;
 			    //dis_type 1 收货地址  2 自提地址
@@ -375,38 +382,42 @@
 		});
 		
 	});
+ 
+    //确认收货
+    $('.receiveConfrm').live('tap', function () {
+        var method = 'ConfirmOrder',
+            param = {
+                shopid: getStorage('wginfo').id,
+                device: "3",
+                o_id: oid
+            };
+        sign = md5(JSON.stringify(param) + method + reqtime + API_KEY);
+        confirmPanel("确认收货么？", function () {
+            $.ajax({
+                url: "../API/WebApi.ashx",
+                async: true,
+                type: "post",
+                dataType: 'json',
+                data: {
+                    param: JSON.stringify(param),
+                    method: method,
+                    reqtime: reqtime,
+                    sign: getSecret(param, method, reqtime)
+                },
+                success: function (delMsg) {
+                    if (delMsg.status == 1) {
+                        $('#allOrder').empty();
+                        page = 1;
+                        getOrderData(loadType, page, '');
+                    }
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
 
-	//确认收货
-	$('.cfrmReceipt').live('tap',function(){
-		var method = 'CancelOrder',
-				param = {
-					shopid: getStorage('wginfo').id,
-					device: "3",
-					o_id: oid
-				};
-		sign = md5(JSON.stringify(param) + method + reqtime + API_KEY);
-		/*$.ajax({
-			url: "../API/WebApi.ashx",
-			async: true,
-			type: "post",
-			dataType: 'json',
-			data: {
-				param: JSON.stringify(param),
-				method: method,
-				reqtime: reqtime,
-				sign: getSecret(param, method, reqtime)
-			},
-			success: function (delMsg) {
-				if(delMsg.status == 1){
-					window.location.href = getStorage('urlReference');
-				}
-			},
-			error: function (XMLHttpRequest, textStatus, errorThrown) {
+                }
+            });
+        });
 
-			}
-		});*/
-
-	});
+    });
 
 	//payBtn 订单支付
 	$('.payBtn').live('tap',function(){
@@ -450,9 +461,8 @@
 			});
 		}else{
 			var now = (new Date().getTime()-getCookieVal('hurryTime'))/60/1000%60;
-				console.log(Math.floor(now));
+				//console.log(Math.floor(now));
 				++ct;
-
 			if(ct == 1){
 			 showTip('15分钟过后才可以催单').showSuccess();
 			}
@@ -504,5 +514,38 @@
 		});
 
 	});
+
+	//再来一单
+	$('.onemore').live('tap',function(){
+		//遍历当前物品信息
+		//将存储的物品信息加入到购物车中
+		var tempJry =[], tempAry = [];
+		$(tempStore).each(function(i,t){
+		var	pid = t.p_id,
+			prod_name = t.prod_name,
+			prod_mony = t.prod_mony,
+			prod_numb = t.prod_numb,
+			prod_maxStorage = t.storage,
+			prod_mxmony = t.prod_mxmony;
+
+			tempAry.push(pid);
+			var ls = {
+				'p_id': pid,
+				'prod_name': prod_name,
+				'prod_mony': prod_mony,
+				'prod_numb': prod_numb,
+				'prod_maxStorage':prod_maxStorage,
+				'prod_mxmony': prod_mxmony
+			};
+			tempJry.push(ls);
+		});
+
+		removeLocalStorage('cart_info');
+		setStorage('cart_info', tempJry);
+		removeLocalStorage('cartId');
+		setStorage('cartId',tempAry);
+		window.location.href = 'orderConfirm.html';
+	});
+
 
 </script>

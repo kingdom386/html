@@ -212,7 +212,7 @@
 				pullUp = true;
 				//开始请求后台数据
 				if (pullUp) {
-				    $('.bottom-loading').show();
+				    
 					getHotList(++page);
 				}
 			} else {
@@ -265,6 +265,7 @@
 							'</a>'+
 							'</li>';
 				});
+				$('.bottom-loading').show();
 				$('.search-list').append(str);
 			},
 			error: function (XMLHttpRequest, textStatus, errorThrown) {

@@ -69,8 +69,8 @@
                     <li data-type="4">
                         <a href="javascript:void(0);"><em></em>已完成</a>
                     </li>
-                    <li>
-                        <a href=""><em></em>退款</a>
+                    <li data-type="5">
+                        <a href="javascript:void(0);"><em></em>退款</a>
                     </li>
                 </ul>
             </div>
@@ -125,16 +125,16 @@
 </html>
 <script type="text/javascript" src="js/zepto.min.js"></script>
 <script type="text/javascript" src="js/touch.js"></script>
-<script type="text/javascript" src="js/address.js"></script>
+<!--<script type="text/javascript" src="js/address.js"></script>-->
 <script type="text/javascript" src="js/size.js"></script>
 <script type="text/javascript" src="js/common.js"></script>
 <script type="text/javascript" src="js/md5.js"></script>
 <script type="text/javascript" src="js/secret.js"></script>
 <script type="text/javascript" src="js/iscroll-probe.js"></script>
-<script src="https://3gimg.qq.com/lightmap/components/geolocation/geolocation.min.js" type="text/javascript"></script>
+<!--<script src="https://3gimg.qq.com/lightmap/components/geolocation/geolocation.min.js" type="text/javascript"></script>
 <iframe id="geoPage" width=0 height=0 frameborder=0  style="display:none;" scrolling="no"
         src="https://apis.map.qq.com/tools/geolocation?key=OB4BZ-D4W3U-B7VVO-4PJWW-6TKDJ-WPB77&referer=myapp">
-</iframe>
+</iframe>-->
 <script type="text/javascript">
     var API_KEY = "gVzKTvzJyRTCkdDQ4AcQaCgp5iIpskbq",service=0;
     var reqtime = Date.parse(new Date()), Myscroll = '';
@@ -143,7 +143,8 @@
     window.onload = function(){
         layerState();
         addStack();
-        setTimeout(function(){getShopInfo();},260);//获取个人信息
+        //setTimeout(function(){getShopInfo();},260);//获取个人信息
+        getShopInfo();
         load();
     };
 
@@ -193,17 +194,17 @@
 
         //参看更多的订单
         $('.moreOrderList').bind('tap', function () {
+            //默认查看所有的订单
             window.location.href = 'orderList.html';
         });
 
          $('.my-order-container ul li,.my-order-container a,.orderCenter').bind('tap',function(){
-            //设置锚标记 hrefMark
-            setStorage('hrefMark',$(this).data('type'));
+            //设置锚标记 hrefMark 表示订单类型
+             var fmk = $(this).data('type');
+            setStorage('hrefMark',fmk);
             window.location.href = 'orderList.html';
         });
-
     }
-
 
     function getShopInfo(){
         var method = 'GetShopInfo',

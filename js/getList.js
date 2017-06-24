@@ -28,7 +28,7 @@ function getListType() {
         success: function (data) {
             var str = '', boxStr = '';
             $(data.data).each(function (i, t) {
-                boxStr += '<div class="item-box-' + i + '"><ul></ul> <p class="bottom-loading">正在拼命加载中</p></div>'
+                boxStr += '<div class="item-box-' + i + '"><ul></ul><p class="bottom-loading">正在拼命加载中</p></div>'
                 if (i == 0) {
                     //默认请求第一个分类下的产品
                     typeClass = ".item-box-" + i;
@@ -113,7 +113,6 @@ function getListPage(ci, k, p,tc) {
                 $('.bottom-loading').html('没有更多的产品可以加载了');
             }
 
-           // alert(pageIndex);
             if(pageIndex == 1){
                 $('ul',$(tc)).empty();
             }
@@ -136,6 +135,8 @@ function getListPage(ci, k, p,tc) {
             });
             $('ul',$(tc)).append(str);
             checkShow($(tc));
+            $('.bottom-loading', tc).show();
+            
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
 

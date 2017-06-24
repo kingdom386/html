@@ -61,6 +61,7 @@ function getProduct(defaultPage) {
             if (msg.data.length == 0 && msg.status == 1) {
                 //没有产品可以加载了
                 $('.bottom-loading').html('没有更多的产品了');
+                return false;
             }
 
             var str = '';
@@ -68,6 +69,7 @@ function getProduct(defaultPage) {
                 str += "<li><a href='detail.html?p_Id="+t.id+"'><div class='production-image'><img data-src='" + t.l_pic1 + "' class='img-responsive wait-load' alt='" + t.l_name + "' /></div><p class='text-ellipsis-1'>" + t.l_name + "</p><em class='production-price'>" + t.l_danjia + "</em></a></li>"
             });
             $('.production-list').append(str);
+            $('.bottom-loading').show();
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
 

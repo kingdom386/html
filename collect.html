@@ -128,7 +128,7 @@
 					pullUp = true;
 				    //开始请求后台数据
 					if (pullUp) {
-					    $('.bottom-loading').show();
+					   
 					    getCollInfo(++page);
 					}
 				} else {
@@ -183,6 +183,7 @@
 
 					});
 					$('.collect-list-container').append(str);
+					$('.bottom-loading').show();
 					slideDelete();
 			    }
 

@@ -1,5 +1,6 @@
 /**
  * Created by Roger on 2017/5/15.
+ * 获取所有订单有关的数据
  */
 
 var API_KEY = "gVzKTvzJyRTCkdDQ4AcQaCgp5iIpskbq",
@@ -28,10 +29,19 @@ window.onload = function(){
     var pageUrl = getStorage('hrefMark');
     addStack();
     if(pageUrl != null){
+
         loadType = parseInt(pageUrl);
         lazyIndx = parseInt(pageUrl);
-        $(".order-tab-border").css("left",$(".order-tab-container a").eq(lazyIndx).width()*lazyIndx+'px');
-        $('.order-tab-container a').eq(lazyIndx).addClass('active').siblings('a').removeClass('active')
+        // 已完成 或 退款 导航栏隐藏
+        if(pageUrl == 4|| pageUrl == 5){
+            //
+            $('.order-tab-container').hide();
+            $('#scroll-wrapper').css('top','1.86rem');
+        }else{
+            $(".order-tab-border").css("left",$(".order-tab-container a").eq(lazyIndx).width()*lazyIndx+'px');
+            $('.order-tab-container a').eq(lazyIndx).addClass('active').siblings('a').removeClass('active')
+        }
+
     }
     load();
 };
@@ -75,7 +85,6 @@ function load() {
                 pullUp = true;
                 //开始请求后台数据
                 if (pullUp) {
-                    $('.bottom-loading').show();
                     getOrderData(loadType, ++page, '');
                 }
             } else {
@@ -118,6 +127,8 @@ function load() {
                 case 1:{ getOrderNeedPay();break;}
                 case 2:{ getOrderPay();break;}
                 case 3:{ getOrderPosting();break;}
+                case 4:{ getPayed();break;}
+                case 5:{ getReturn();break;}
                 default:{break;}
             }
 
@@ -126,7 +137,7 @@ function load() {
 }
 
 //所有订单
-//1未付款 2已付款  3 配送中 4已配送
+//订单状态 0.全部订单 1.待付款 2.待配货 3.配送中 4 已完成 5 以退款
 
 function getOrderAll() {
     // type all need post payed posting 所有的订单  need 待付款 post 配送中 pay 已付款
@@ -157,6 +168,21 @@ function getOrderPosting() {
     getOrderData(loadType, page, '');
 }
 
+//已完成
+function getPayed() {
+    loadType = 4;
+    page = 1;
+    getOrderData(loadType, page, '');
+}
+
+//已退款
+
+function getReturn() {
+    loadType = 5;
+    page = 1;
+    getOrderData(loadType, page, '');
+}
+
 //获取订单数据
 function getOrderData(orderState, pageIdx, orderKeyWord) {
     var method = 'GetOrderList',
@@ -181,7 +207,7 @@ function getOrderData(orderState, pageIdx, orderKeyWord) {
             sign: getSecret(param, method, reqtime)
         },
         success: function(orderMsg) {
-            if (orderMsg.status == 1 && orderMsg.data.length == 0 && pageIdx == 1 && o_zt == 0) {
+            if (orderMsg.status == 1 && orderMsg.data.length == 0 && pageIdx == 1 && orderState == 0) {
                 //没有订单
                 $('.allOrderInfo').hide();
                 $('.default-page-container').show();
@@ -225,9 +251,15 @@ function getOrderData(orderState, pageIdx, orderKeyWord) {
                     stateNote = '配送中';
                     stateBtn = '<a href="javascript:void(0);" class="receiveConfrm order-red-button">确认收货</a>';
                 } else if (t.o_zt == 4) {
-                    //其他类的订单
+                    //已完成
                     stateNote = '已完成';
-                    stateBtn = '<a href="javascript:void(0);" class="closeOrder order-grey-button">交易关闭</a> ';
+                    stateBtn = '<a href="javascript:void(0);" class="delOrder order-grey-button">删除订单</a> ';
+                }else if(t.o_zt == 5){
+                    //退款
+                    stateNote = '已退款';
+                    stateBtn = '<a href="javascript:void(0);" class="delOrder order-grey-button">删除订单</a> ';
+                }else{
+                    //do nothing just relax !
                 }
 
                 str += '<div data-oid = ' + t.o_id + ' data-state = ' + t.o_zt + ' class="order-list-container bgWhite">' + '<div class="order-number checkOrder" >' + '<span>订单编号：<em>' + t.o_dh + '</em></span>' + '<em>' + stateNote + '</em>' + '</div>';
@@ -236,8 +268,11 @@ function getOrderData(orderState, pageIdx, orderKeyWord) {
                     str += '<a data-checktype='+ t.l_orderinfo[i].check_flag +' data-href="./detail.html?p_id=' + t.l_orderinfo[i].p_id + '" class="order-list">' + '<div class="production-image">' + '<img data-src="' + t.l_orderinfo[i].prod_pic + '" class="img-responsive wait-load" alt="" />' + '</div>' + ' <div class="production-info">' + ' <h4 class="text-ellipsis-2">' + t.l_orderinfo[i].prod_name + '</h4>' + ' <div class="production-price">' + ' <span>' + t.l_orderinfo[i].prod_numb + '</span>' + ' <em>' + t.l_orderinfo[i].prod_mony + '</em>' + '</div></div></a>'
                 }
                 str += '<div class="order-time">' + '<span>订单时间：<em>' + t.start_date + '</em></span>' + '<span>应付款：<em class="totalPay">' + sumPrice.toFixed(2) + '</em></span>' + '</div>' + '<div class="order-button-container txt-right">' + stateBtn + '</div></div>';
-
             });
+
+            if (orderMsg.data.length >= 12) {
+                $('.bottom-loading').show();
+            }
 
             $('#allOrder').append(str);
 
@@ -331,6 +366,43 @@ $('.delOrder').live('tap', function () {
     });
 
 });
+
+//确认收货
+$('.receiveConfrm').live('tap',function(){
+    var method = 'ConfirmOrder',
+        param = {
+            shopid: getStorage('wginfo').id,
+            device: "3",
+            o_id: $(this).parents('.order-list-container').data('oid')
+        };
+    sign = md5(JSON.stringify(param) + method + reqtime + API_KEY);
+    confirmPanel("确认收货么？", function () {
+        $.ajax({
+            url: "../API/WebApi.ashx",
+            async: true,
+            type: "post",
+            dataType: 'json',
+            data: {
+                param: JSON.stringify(param),
+                method: method,
+                reqtime: reqtime,
+                sign: getSecret(param, method, reqtime)
+            },
+            success: function (delMsg) {
+                if (delMsg.status == 1) {
+                    $('#allOrder').empty();
+                    page = 1;
+                    getOrderData(loadType, page, '');
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+
+            }
+        });
+    });
+
+});
+
 
 //查看订单
 $('.checkOrder').live('tap', function() {

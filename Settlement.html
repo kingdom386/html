@@ -25,10 +25,10 @@
 <section class="positionRelative">
     <h4 class="purchase-way-title">选择支付方式</h4>
     <div class="order-payment-method">
-        <div class="order-payment-method-items ">
+        <div class="order-payment-method-items sel-active">
             <span class="payment-items-left-icon iconfont icon-my-weixin"></span>
             <!--payment-items-left-icon-->
-            <span class="payment-sel-radio iconfont icon-my-ok-gray"><input type="radio" value="1" name="payWays"></span>
+            <span class="payment-sel-radio iconfont icon-my-ok-gray"><input type="radio" checked value="1" name="payWays"></span>
             <div class="payment-items-content">
                 <p class="payment-title">微信支付</p>
                 <p class="payment-intro">使用微信支付，安全便捷</p>
@@ -36,10 +36,10 @@
 
         </div>
         <!--order-payment-method-items-->
-        <div class="order-payment-method-items sel-active">
+        <div class="order-payment-method-items ">
             <span class="payment-items-left-icon bank-pay-icon"></span>
             <!--payment-items-left-icon-->
-            <span class="payment-sel-radio iconfont icon-my-ok-gray"><input type="radio" value="2" checked name="payWays"></span>
+            <span class="payment-sel-radio iconfont icon-my-ok-gray"><input type="radio" value="2"  name="payWays"></span>
             <div class="payment-items-content">
                 <p class="payment-title">支付宝支付</p>
                 <p class="payment-intro">使用支付宝支付，安全便捷</p>
@@ -211,7 +211,9 @@
     //取消支付
     $('.back-button').bind('touchend',function(){
         confirmPanel("真的要放弃支付么？", function () {
+            setStorage('hrefMark',0);
             window.location.href = 'orderList.html';
+
         });
     });
 

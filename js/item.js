@@ -68,6 +68,7 @@ function prodList() {
     contentBox = new IScroll(".item-content", {
         click: true,
         touchend: true,
+        probeType:2,
         preventDefaultException: { tagName: /^(INPUT|A|SPAN)$/ },
         bindToWrapper: true,
         scrollbars: true,
@@ -147,8 +148,6 @@ function prodList() {
             pullUp = true;
             //开始请求后台数据
             if (pullUp) {
-                $('.bottom-loading', tc).show();
-                //$('.bottom-loading').show();
                 ++p;
                 getListPage(ci, k, p, tc);
             }
