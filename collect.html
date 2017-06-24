@@ -183,7 +183,9 @@
 
 					});
 					$('.collect-list-container').append(str);
-					$('.bottom-loading').show();
+					if (collData.data.length>=12) {
+					    $('.bottom-loading').show();
+					}
 					slideDelete();
 			    }
 
